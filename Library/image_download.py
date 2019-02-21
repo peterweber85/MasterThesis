@@ -1,5 +1,5 @@
 
-
+import os
 import math
 import numpy as np
 import scipy.optimize as so
@@ -112,6 +112,7 @@ def generate_gmaps_links(lat, long, zoom, pixels, num_images, center=True):
                              size_x=pixels,
                              size_y=pixels,
                              zoom=zoom,
-                             key='AIzaSyBjxPteGfNHGyVRCOvLCt87DLenOBVE7LQ')
+                             key=os.environ['GMAPS_API_KEY']
+                             )
             urls.append(cmap.generate_url())
     return urls

@@ -15,9 +15,10 @@ import os
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-# In parent directory, to get goole maps api key
+# In parent directory, to get google maps api key
 dotenv_path = ('../.env')
 load_dotenv(dotenv_path)
+
 
 def zoom_in_meters_per_pixel(zoom, lat):
     """
@@ -29,6 +30,7 @@ def zoom_in_meters_per_pixel(zoom, lat):
     """
     meters_per_px = 156543.03392 * math.cos(lat * math.pi / 180) / 2 ** zoom
     return meters_per_px
+
 
 def measure_distance(lat1, lon1, lat2, lon2):
     """

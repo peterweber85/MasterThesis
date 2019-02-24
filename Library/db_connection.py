@@ -25,5 +25,3 @@ def connect(credentials, db_name):
     db = db_conn[db_name]
 
     return db
-
-    # db["images_lib"]

@@ -13,6 +13,10 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 from PIL import Image
 from urllib import request
+import imageio
+
+# Library
+import db_connection as dbcon
 
 
 # In file directory, to get google maps api key
@@ -139,35 +143,10 @@ def generate_gmaps_links(lat, long, zoom, pixels, num_images, center=True, xy_to
                              size_x=pixels,
                              size_y=pixels,
                              zoom=zoom,
-                             format='JPEG',
                              key=os.getenv("GMAPS_API_KEY")
                              )
             urls.append(cmap.generate_url())
     return urls
-
-
-def download_images(links, plot_images=False):
-    """
-    Downloads and returns (optionally plots) images from google maps static api links
-    :param links: list of strings
-        output of generate_gmaps_links
-    :param plot_images: bool
-        whether to plot the images, be careful when downloading many images, it will plot all
-    :return:
-    """
-
-    images = []
-    for url in links:
-        buffer = BytesIO(request.urlopen(url).read())
-        image = Image.open(buffer)
-        images.append(image)
-        if plot_images:
-            image.show()
-    if plot_images:
-        plt.show()
-
-    return images
-
 
 def download_image(lat, lon, zoom, pixels, gmaps_key, folder='', plot_image=False):
     """
@@ -214,3 +193,161 @@ def download_image(lat, lon, zoom, pixels, gmaps_key, folder='', plot_image=Fals
         plt.show()
 
     return img_metadata
+
+
+def download_and_save_image(name, lat, lon, zoom, pixels, gmaps_key, folder='', save_image = True):
+    """
+    Downloads and returns an image from Google Maps static API
+    :param lat: float
+        central lat coordinate
+    :param lon: float
+        central lon coordinate
+    :param zoom: int
+        google maps api zoom
+    :param pixels: int
+        maximum of 640
+    :param gmaps_key: string
+        Google Maps API key
+    :param folder: string
+        where to save the image
+    :param save_image: bool
+        whether to save the image
+    :return:
+    """
+    url = CenterMap(lat=lat, lon=lon, maptype='satellite', size_x=pixels, size_y=pixels, zoom=zoom,
+                    key=gmaps_key).generate_url()
+    image = Image.open(BytesIO(request.urlopen(url).read()))
+    fname_suffix = name + '_' + str(lat) + '_' + str(lon) + '_' + str(zoom) + '_' + str(pixels) + '.png'
+    if save_image:
+        image.save(folder + fname_suffix, "PNG")
+    return image
+
+def generate_metadata(name, lat, lon, zoom, pixels, gmaps_key):
+    """
+    Generates metadata of provided parameters for image
+    :param name: string
+        name identifier of the image group, e.g. name of city
+    :param label: int
+        one of 0,1,2,3,4 where 0 maximum natural and 4 maximum man-made
+    :param lat: float
+        central lat coordinate
+    :param lon: float
+        central lon coordinate
+    :param zoom: int
+        google maps api zoom
+    :param pixels: int
+        maximum of 640
+    :param gmaps_key: string
+        Google Maps API key
+    :return:
+    """
+    img_metadata = {}
+    img_metadata["name"] = name
+    img_metadata["lat"] = lat
+    img_metadata["lon"] = lon
+    img_metadata["zoom"] = zoom
+    img_metadata["pixels"] = pixels
+    meters_per_px = zoom_in_meters_per_pixel(zoom, lat)
+    image_size = meters_per_px * pixels
+    img_metadata["meters_per_px"] = meters_per_px
+    img_metadata["img_size"] = image_size
+    url = CenterMap(lat=lat, lon=lon, maptype='satellite', size_x=pixels, size_y=pixels, zoom=zoom,
+                    key=gmaps_key).generate_url()
+    img_metadata["url"] = url
+    img_metadata["filename"] = name + '_' + str(lat) + '_' + str(lon) + '_' + str(zoom) + '_' + str(pixels) + '.png'
+    img_metadata["saved_dt"] = datetime.datetime.today()
+    return img_metadata
+
+
+def download_images_random_location(locations, zoom, pixels, samples_per_location, precision,
+                                    api_key, img_folder, save_image=True):
+    """
+
+    :param locations: dict
+     with keys: 'name', 'lat', 'lon'
+    :param zoom: int
+    :param pixels: int
+    :param samples_per_location: int
+    :param precision: int
+        roundinf precision when choosing random location
+    :param api_key: str
+    :param img_folder: str
+    :param save_image: bool
+    :return:
+    """
+    images = []
+    mdata = []
+
+    db = dbcon.connect("../credentials/mlab_db.txt", "mfp")
+    images_lib_col = db["images_lib"]
+
+    for location in locations:
+        print("Saving images of " + location["name"] + "...")
+        for i in range(samples_per_location):
+            lat = round(location["lat"] + np.random.normal(0, 0.1), precision)
+            lon = round(location["lon"] + np.random.normal(0, 0.1), precision)
+            image = download_and_save_image(location['name'], lat, lon, zoom, pixels, api_key,
+                                                folder=img_folder, save_image=save_image)
+            images.append(image)
+            if save_image:
+                metadata = generate_metadata(location['name'], lat, lon, zoom, pixels, api_key)
+                mdata.append(metadata)
+                images_lib_col.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
+
+    return images, mdata
+
+
+def download_images_defined_location(locations, zoom, pixels, center, xy_to_ij, num_images,
+                                     api_key, img_folder, distance_factor=1, save_image=True):
+    """
+    Returns num_images ** 2 at locations defined by locations and array generated by lat_long_array()
+    
+    :param locations: dict
+     with keys: 'name', 'lat', 'lon'
+    :param zoom: int
+    :param pixels: int
+    :param center: bool
+    :param xy_to_ij: bool
+        if True then coordinates of array will be indexed as in matrix (left to right, up to down)
+        if False then coordinates of array will be indexed as in cartesian coordinate system, first quadrant
+            (left to right, down to up)
+    :param num_images: int
+        int**2 number of images will be returned
+    :param api_key: str
+    :param img_folder: str
+    :param distance_factor: int
+        if 1 then generates array with images 'touching' each other
+        if > 1 then generates array where images are separated by the factor
+    :param center: bool
+        see lat/long parameters
+    :param save_image: bool
+    :return:
+    """
+    images = []
+    mdata = []
+
+    db = dbcon.connect("../credentials/mlab_db.txt", "mfp")
+    images_lib_col = db["images_lib"]
+
+    for location in locations:
+        print("Saving images of " + location["name"] + "...")
+
+        coord = lat_long_array(location['lat'],
+                               location['lon'],
+                               zoom, pixels, num_images,
+                               distance_factor=distance_factor,
+                               center=center,
+                               xy_to_ij=xy_to_ij)
+        for i in range(coord.shape[0]):
+            for j in range(coord.shape[1]):
+                lat = coord[i, j, 0]
+                lon = coord[i, j, 1]
+                image = download_and_save_image(location['name'], lat, lon, zoom, pixels, api_key,
+                                                folder=img_folder, save_image=save_image)
+                images.append(image)
+                if save_image:
+                    metadata = generate_metadata(location['name'], lat, lon, zoom, pixels, api_key)
+                    mdata.append(metadata)
+                    images_lib_col.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
+
+    return images, mdata

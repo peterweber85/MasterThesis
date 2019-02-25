@@ -1,15 +1,19 @@
 
+# GENERAL:
 import math
 import numpy as np
 import scipy.optimize as so
+from dotenv import load_dotenv
+import os
+import datetime
+
+# MAP & IMG:
 from motionless import CenterMap
 import matplotlib.pyplot as plt
 from io import BytesIO
 from PIL import Image
 from urllib import request
 
-from dotenv import load_dotenv
-import os
 
 # In file directory, to get google maps api key
 dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
@@ -162,3 +166,50 @@ def download_images(links, plot_images=False):
         plt.show()
 
     return images
+
+
+def download_image(lat, lon, zoom, pixels, gmaps_key, folder='', plot_image=False):
+    """
+    Downloads and returns (optionally plots) an image from Google Maps static API
+    :param lat: float
+        central lat coordinate
+    :param lon: float
+        central lon coordinate
+    :param zoom: int
+        google maps api zoom
+    :param pixels: int
+        maximum of 640
+    :param gmaps_key: string
+        Google Maps API key
+    :param folder: string
+        where to save the image
+    :param plot_image: bool
+        whether to plot the image
+    :return:
+    """
+
+    img_metadata = {}
+    img_metadata["lat"] = lat
+    img_metadata["lon"] = lon
+    img_metadata["zoom"] = zoom
+    img_metadata["pixels"] = pixels
+
+    meters_per_px = zoom_in_meters_per_pixel(zoom, lat)
+    image_size = meters_per_px * pixels
+    img_metadata["meters_per_px"] = meters_per_px
+    img_metadata["img_size"] = image_size
+
+    # download image
+    url = CenterMap(lat=lat, lon=lon, maptype='satellite', size_x=pixels, size_y=pixels, zoom=zoom, key=gmaps_key).generate_url()
+    img_metadata["url"] = url
+    image = Image.open(BytesIO(request.urlopen(url).read()))
+
+    img_metadata["filename"] = str(lat) + '_' + str(lon) + '_' + str(zoom) + '_' + str(pixels) + '.png'
+    image.save(folder + img_metadata["filename"], "PNG")
+    img_metadata["saved_dt"] = datetime.datetime.today()
+
+    if plot_image:
+        image.show()
+        plt.show()
+
+    return img_metadata

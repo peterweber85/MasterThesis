@@ -135,6 +135,7 @@ def generate_gmaps_links(lat, long, zoom, pixels, num_images, center=True, xy_to
                              size_x=pixels,
                              size_y=pixels,
                              zoom=zoom,
+                             format='JPEG',
                              key=os.getenv("GMAPS_API_KEY")
                              )
             urls.append(cmap.generate_url())

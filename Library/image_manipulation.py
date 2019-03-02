@@ -76,3 +76,49 @@ def label_image(filename, label):
     new_val = {"$set": {"label": label}}
     images_lib_col.update_one(query, new_val)
     print("Image with filename", filename, "was labelled with", label)
+
+
+def get_image_filenames(img_folder, img_ext = ['png']):
+    """
+    Returns list of all image filenames in 'img_folder'
+    :param img_folder:
+    :param img_ext:
+    :return:
+    """
+    images_files = [file for file in os.listdir(img_folder) if any(file.endswith(ext) for ext in img_ext)]
+    print("Existing images files:", len(images_files))
+    return images_files
+
+def get_metadata_filenames(db_collection):
+    """
+    Returns filenames of metadata entries in db_collection
+    :param db_collection:
+    :return:
+    """
+    images_metadata = [img_metadata["filename"] for img_metadata in db_collection.find({})]
+    print("Existing images metadata:", len(images_metadata))
+    return images_metadata
+
+
+def get_discrepancies_between_metadata_and_images(images_files, images_metadata):
+    """
+    Returns both
+        - missing metadata where existing image and
+        - missing image where existing metadata
+    :param images_files: list
+        of filenames from shared folder
+    :param images_metadata: list
+        of filenames of metadata in db
+    :return:
+    """
+    missing_metadata = list(set(images_files) - set(images_metadata))
+    print("Missing metadata for " + str(len(missing_metadata)) + " files:")
+    for name in missing_metadata:
+        print(" " + name)
+
+    missing_files = list(set(images_metadata) - set(images_files))
+    print("Missing files for " + str(len(missing_files)) + " metadata:")
+    for name in missing_files:
+        print(" " + name)
+
+    return missing_metadata, missing_files

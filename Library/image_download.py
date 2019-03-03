@@ -259,7 +259,7 @@ def generate_metadata(name, lat, lon, zoom, pixels, gmaps_key):
     return img_metadata
 
 
-def download_images_random_location(locations, zoom, pixels, samples_per_location, precision,
+def download_images_random_gaussian(locations, zoom, pixels, samples_per_location, precision,
                                     api_key, img_folder, save_image=True):
     """
 
@@ -351,3 +351,55 @@ def download_images_defined_location(locations, zoom, pixels, center, xy_to_ij, 
                     images_lib_col.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
 
     return images, mdata
+
+
+
+def generate_random_location_in_rectangle(lat_tpl, lon_tpl):
+    """
+    Returns (lat, lon) tuple of random location determined by the borders the input tuples
+    :param lat_tpl: tuple
+    :param lon_tpl: tuple
+    :return:
+    """
+    lat = np.random.uniform(lat_tpl[0], lat_tpl[1])
+    lon = np.random.uniform(lon_tpl[0], lon_tpl[1])
+    return lat, lon
+
+
+def download_save_images_in_random_rectangle(db_collection,
+                                              name,
+                                              lat_tpl,
+                                              lon_tpl,
+                                              num_locations,
+                                              zoom_levels,
+                                              pixels,
+                                              api_key,
+                                              img_folder):
+    """
+    Generates num_locations random locations within rectangle defined by lat_tpl, lon_tpl
+    Downloads images at these locations and stores metadata in db
+    It does this for all the zoom levels
+
+    :param db_collection:
+    :param name: str
+        name used to identify image group when later labelling
+    :param lat_tpl: tuple of floats
+    :param lon_tpl: tuple of floats
+    :param num_locations: int
+        number of different locations to download images
+    :param zoom_levels:
+    :param pixels:
+    :param api_key:
+    :param img_folder:
+    :return:
+    """
+    for _ in range(num_locations):
+        lat, lon = generate_random_location_in_rectangle(lat_tpl, lon_tpl)
+        print("Coordinates: ", (lat, lon))
+        for zoom in zoom_levels:
+            print("Zoom: ", zoom)
+            download_and_save_image(name, lat, lon, zoom, pixels, api_key,
+                                    folder=img_folder, save_image=True)
+            metadata = generate_metadata(name, lat, lon, zoom, pixels, api_key)
+            db_collection.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
+            print("Image and Metadata with filename '"+metadata["filename"]+"' saved!\n")

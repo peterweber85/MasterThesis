@@ -3,10 +3,12 @@
 # GENERAL:
 from dotenv import load_dotenv
 import os
+import csv
 
 # MAP & IMG:
 from PIL import Image
 import imageio
+from IPython.display import display, clear_output
 
 # Library
 import db_connection as dbcon
@@ -45,7 +47,7 @@ def load_images_from_gdrive(fnames, folder):
     return images
 
 
-def get_filenames_of_city(city, folder):
+def get_filenames_of_city(city, folder, zoom = None):
     """
     Return list of filenames that contain the name of the city specified by city,
     can also be a general name for an area
@@ -56,26 +58,14 @@ def get_filenames_of_city(city, folder):
     """
     fnames = []
     for fname in os.listdir(folder):
-        if city in fname:
-            fnames.append(fname)
+        if not zoom is None:
+            zoom_str = '_' + str(zoom) + '_'
+            if city in fname and zoom_str in fname:
+                fnames.append(fname)
+        else:
+            if city in fname:
+                fnames.append(fname)
     return fnames
-
-
-def label_image(filename, label):
-    """
-    Give label to image in db that corresponds to filename=filename
-    :param filename: str
-    :param label: int
-        one of 0,1,2,3,4 where 0 maximum natural and 4 maximum man-made
-    :return:
-    """
-    db = dbcon.connect("../credentials/mlab_db.txt", "mfp")
-    images_lib_col = db["images_lib"]
-
-    query = {"filename": filename}
-    new_val = {"$set": {"label": label}}
-    images_lib_col.update_one(query, new_val)
-    print("Image with filename", filename, "was labelled with", label)
 
 
 def get_image_filenames(img_folder, img_ext = ['png']):
@@ -122,3 +112,72 @@ def get_discrepancies_between_metadata_and_images(images_files, images_metadata)
         print(" " + name)
 
     return missing_metadata, missing_files
+
+
+def add_labels_to_image_info(images_info_list):
+    """
+    Adds multi level and binary label to images_info_list. Precisely, it will create
+    images_info_list['label_multi' + <name_initials>]
+    images_info_list['label_binary' + <name_initials>]
+
+    :param images_info_list: list of dict
+        output of load_images_from_gdrive, i.e. every list element must contain key 'image'
+    :return:
+    """
+    cnt = 0
+    for image_info in images_info_list:
+        display(image_info['image'])
+
+        # Determine author of the label
+        if cnt == 0:
+            name = input("Your name? ")
+            cnt += 1
+        if name[:3].lower() == 'edu':
+            label_multi = 'label_multi_er'
+            label_binary = 'label_binary_er'
+        elif name[:3].lower() == 'pet':
+            label_multi = 'label_multi_pw'
+            label_binary = 'label_binary_pw'
+        else:
+            label_multi = 'label_multi_other'
+            label_binary = 'label_binary_other'
+
+        # multi level label from 0 to 4
+        image_info[label_multi] = int(input("\nProvide multiclass label: "))
+
+        # binary label, is automatically = 1 if multi label > 0
+        if image_info[label_multi] > 0:
+            image_info[label_binary] = 1
+        else:
+            image_info[label_binary] = int(input("\nProvide binary label: "))
+        # clear image output
+        clear_output()
+
+    return images_info_list
+
+
+def save_labels_as_csv(images_info_list, output_folder, output_name, label_multi_name, label_binary_name):
+    """
+    Takes label info provided in images_info_list and writes a csv file with three columns
+        - label_binary + <name>
+        - label_multi + <name>
+        - filename
+    The csv file is saved in output_folder under output_name.
+
+    :param images_info_list: list of dict
+        output of add_labels_to_image_info
+    :param output_folder: str
+    :param output_name: str
+    :param label_multi_name: str
+    :param label_binary_name: str
+    :return:
+    """
+    labels_multi = [images_info_list[i][label_multi_name] for i in range(len(images_info_list))]
+    labels_binary = [images_info_list[i][label_binary_name] for i in range(len(images_info_list))]
+    filenames = [images_info_list[i]["fname"] for i in range(len(images_info_list))]
+
+    pd.DataFrame({
+        label_multi_name: labels_multi,
+        label_binary_name: labels_binary,
+        'filename': filenames
+    }).to_csv(output_folder + output_name, index=None, header=True)

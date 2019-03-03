@@ -1,6 +1,7 @@
 
 import pymongo
 import os
+import csv
 
 
 def connect(credentials, db_name):
@@ -25,3 +26,39 @@ def connect(credentials, db_name):
     db = db_conn[db_name]
 
     return db
+
+
+
+def write_labels_from_csv_to_db(db_collection, folder_name, csv_filename):
+    """
+    Writes both the multi label and the binary label to the db, it takes the info from the csv file
+    and matches on the metadata filename.
+
+    :param db_collection: mongodb connection and define collection
+    :param folder_name: str
+    :param csv_filename: str
+    :return:
+    """
+    with open(folder_name + csv_filename) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                label_multi_name = row[0]
+                label_binary_name = row[1]
+                line_count += 1
+            else:
+                query = {"filename": row[2]}
+                new_multi_label = {"$set": {label_multi_name: row[0]}}
+                new_binary_label = {"$set": {label_binary_name: row[1]}}
+                db_collection.update_one(query, new_multi_label)
+                db_collection.update_one(query, new_binary_label)
+                line_count += 1
+        print(f'{line_count} labels added to db!')
+
+
+
+def delete_all_metadata_with_labels(db_collection, label_name):
+    for label in [0,1,2,3,4]:
+        query = {label_name: str(label)}
+        db_collection.delete_many(query)

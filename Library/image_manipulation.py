@@ -3,7 +3,7 @@
 # GENERAL:
 from dotenv import load_dotenv
 import os
-import csv
+import pandas as pd
 
 # MAP & IMG:
 from PIL import Image

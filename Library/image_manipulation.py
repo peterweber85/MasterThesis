@@ -23,7 +23,7 @@ dotenv_path = ('../.env')
 load_dotenv(dotenv_path)
 
 
-def load_images_from_gdrive(fnames, folder):
+def load_images_from_gdrive(fnames, folder, return_list = False):
     """
     Returns list of dictionaries where every list entry has attributes
         'array': numpy array of the image
@@ -37,13 +37,23 @@ def load_images_from_gdrive(fnames, folder):
         folder of images in gdrive
     :return:
     """
-    images = []
-    for fname in fnames:
-        dict_ = {}
-        dict_["array"] = imageio.imread(folder+fname)[:,:,:3]
-        dict_["image"] = Image.open(folder+fname)
-        dict_["fname"] = fname
-        images.append(dict_)
+    if return_list:
+        images = []
+        for fname in fnames:
+            dict_ = {}
+            dict_["array"] = imageio.imread(folder+fname)[:,:,:3]
+            dict_["image"] = Image.open(folder+fname)
+            dict_["fname"] = fname
+            images.append(dict_)
+    else:
+        images = {}
+        images["array"] = []
+        images["image"] = []
+        images["fname"] = []
+        for fname in fnames:
+            images["array"].append(imageio.imread(folder + fname)[:, :, :3])
+            images["image"].append(Image.open(folder + fname))
+            images["fname"].append(fname)
     return images
 
 
@@ -114,24 +124,24 @@ def get_discrepancies_between_metadata_and_images(images_files, images_metadata)
     return missing_metadata, missing_files
 
 
-def add_labels_to_image_info(images_info_list):
+def add_labels_to_image_info(images_info):
     """
     Adds multi level and binary label to images_info_list. Precisely, it will create
-    images_info_list['label_multi' + <name_initials>]
-    images_info_list['label_binary' + <name_initials>]
+    images_info['label_multi' + <name_initials>]
+    images_info'label_binary' + <name_initials>]
 
-    :param images_info_list: list of dict
+    :param images_info: dict of lists
         output of load_images_from_gdrive, i.e. every list element must contain key 'image'
     :return:
     """
     cnt = 0
-    for image_info in images_info_list:
-        display(image_info['image'])
+    for i in range(len(images_info['fname'])):
+        display(images_info['image'][i])
 
         # Determine author of the label
         if cnt == 0:
             name = input("Your name? ")
-            cnt += 1
+
         if name[:3].lower() == 'edu':
             label_multi = 'label_multi_er'
             label_binary = 'label_binary_er'
@@ -143,20 +153,24 @@ def add_labels_to_image_info(images_info_list):
             label_binary = 'label_binary_other'
 
         # multi level label from 0 to 4
-        image_info[label_multi] = int(input("\nProvide multiclass label: "))
+        if cnt == 0:
+            images_info[label_multi] = []
+            images_info[label_binary] = []
+            cnt += 1
+        images_info[label_multi].append(int(input("\nProvide multiclass label: ")))
 
         # binary label, is automatically = 1 if multi label > 0
-        if image_info[label_multi] > 0:
-            image_info[label_binary] = 1
+        if images_info[label_multi][-1] > 0:
+            images_info[label_binary].append(1)
         else:
-            image_info[label_binary] = int(input("\nProvide binary label: "))
+            images_info[label_binary].append(int(input("\nProvide binary label: ")))
         # clear image output
         clear_output()
 
-    return images_info_list
+    return images_info
 
 
-def save_labels_as_csv(images_info_list, output_folder, output_name, label_multi_name, label_binary_name):
+def save_labels_as_csv(images_info, output_folder, output_name, label_multi_name, label_binary_name):
     """
     Takes label info provided in images_info_list and writes a csv file with three columns
         - label_binary + <name>
@@ -164,7 +178,7 @@ def save_labels_as_csv(images_info_list, output_folder, output_name, label_multi
         - filename
     The csv file is saved in output_folder under output_name.
 
-    :param images_info_list: list of dict
+    :param images_info_list: dict of lists
         output of add_labels_to_image_info
     :param output_folder: str
     :param output_name: str
@@ -172,12 +186,8 @@ def save_labels_as_csv(images_info_list, output_folder, output_name, label_multi
     :param label_binary_name: str
     :return:
     """
-    labels_multi = [images_info_list[i][label_multi_name] for i in range(len(images_info_list))]
-    labels_binary = [images_info_list[i][label_binary_name] for i in range(len(images_info_list))]
-    filenames = [images_info_list[i]["fname"] for i in range(len(images_info_list))]
-
     pd.DataFrame({
-        label_multi_name: labels_multi,
-        label_binary_name: labels_binary,
-        'filename': filenames
+        label_multi_name: images_info[label_multi_name],
+        label_binary_name: images_info[label_binary_name],
+        'filename': images_info['fname']
     }).to_csv(output_folder + output_name, index=None, header=True)

@@ -2,6 +2,7 @@
 import pymongo
 import os
 import csv
+import pandas as pd
 
 
 def connect(credentials, db_name):
@@ -62,3 +63,20 @@ def delete_all_metadata_with_labels(db_collection, label_name):
     for label in [0,1,2,3,4]:
         query = {label_name: str(label)}
         db_collection.delete_many(query)
+
+
+def query_filenames_of_labelled_images(db_collection, label_name):
+    """
+    Returns dataframe with filenames and label of labelled images
+    :param db_collection: mongodb collection object
+    :param label_name: str
+    :return:
+    """
+    output = list(db_collection.find({label_name: {"$exists": True}}))
+    filenames = [(el['filename']) for el in output]
+    labels = [(el[label_name]) for el in output]
+
+    return pd.DataFrame({
+        'filename': filenames,
+        'label': labels
+    })

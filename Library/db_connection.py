@@ -29,7 +29,6 @@ def connect(credentials, db_name):
     return db
 
 
-
 def write_labels_from_csv_to_db(db_collection, folder_name, csv_filename):
     """
     Writes both the multi label and the binary label to the db, it takes the info from the csv file
@@ -57,13 +56,14 @@ def write_labels_from_csv_to_db(db_collection, folder_name, csv_filename):
                 db_collection.update_one(query, new_binary_label)
                 line_count += 1
         print(f'{line_count-1} labels added to db!')
-
+    return
 
 
 def delete_all_metadata_with_labels(db_collection, label_name):
     for label in [0,1,2,3,4]:
         query = {label_name: str(label)}
         db_collection.delete_many(query)
+    return
 
 
 def query_filenames_of_labelled_images(db_collection, label_name):

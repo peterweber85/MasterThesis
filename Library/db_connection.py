@@ -55,7 +55,7 @@ def write_labels_from_csv_to_db(db_collection, folder_name, csv_filename):
                 db_collection.update_one(query, new_multi_label)
                 db_collection.update_one(query, new_binary_label)
                 line_count += 1
-        print(f'{line_count-1} labels added to db!')
+        print(str(line_count-1) + ' labels added to db!')
     return
 
 

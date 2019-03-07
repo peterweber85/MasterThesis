@@ -89,13 +89,13 @@ def get_image_filenames(img_folder, img_ext = ['png']):
     print("Existing images files:", len(images_files))
     return images_files
 
-def get_metadata_filenames(db_collection):
+def get_metadata_filenames(db_collection, query={}):
     """
     Returns filenames of metadata entries in db_collection
     :param db_collection:
     :return:
     """
-    images_metadata = [img_metadata["filename"] for img_metadata in db_collection.find({})]
+    images_metadata = [img_metadata["filename"] for img_metadata in db_collection.find(query)]
     print("Existing images metadata:", len(images_metadata))
     return images_metadata
 
@@ -191,3 +191,66 @@ def save_labels_as_csv(images_info, output_folder, output_name, label_multi_name
         label_binary_name: images_info[label_binary_name],
         'filename': images_info['fname']
     }).to_csv(output_folder + output_name, index=None, header=True)
+
+
+def add_labels_and_save_csv(images_info, output_folder, output_name):
+    """
+    Adds multi level and binary label to images_info_list. Precisely, it will create
+    images_info['label_multi' + <name_initials>]
+    images_info'label_binary' + <name_initials>]
+
+    :param images_info: dict of lists
+        output of load_images_from_gdrive, i.e. every list element must contain key 'image'
+    :return:
+    """
+
+    labeling_info_multi = "Multiclass: 0 = 0-20%, 1 = 20-40%, 2 = 40-60%, 3 = 60-80%, 4 = 80-100%"
+    labeling_info_binary = "Binary:    0 = no human impact, 1 = human impact"
+
+    name = input("Your name? ")
+
+    if name[:3].lower() == 'edu':
+        label_multi = 'label_multi_er'
+        label_binary = 'label_binary_er'
+    elif name[:3].lower() == 'pet':
+        label_multi = 'label_multi_pw'
+        label_binary = 'label_binary_pw'
+    else:
+        label_multi = 'label_multi_other'
+        label_binary = 'label_binary_other'
+
+    # TO-DO: input for changing default label
+    print("Labels: " + label_multi + ", " + label_binary )
+
+    images_info[label_multi] = []
+    images_info[label_binary] = []
+    labeling_df = pd.DataFrame(index=[], columns=[label_multi, label_binary, 'filename'])
+
+    num_images = len(images_info['fname'])
+    for i in range(num_images):
+        display(images_info['image'][i])
+        print(labeling_info_multi)
+        print(labeling_info_binary)
+
+        label_multi_i = int(input("\nProvide multiclass label: "))
+        images_info[label_multi].append(label_multi_i)
+
+        # binary label, is automatically = 1 if multi label > 0
+        if label_multi_i > 0:
+            label_binary_i = 1
+            images_info[label_binary].append(label_binary_i)
+        else:
+            label_binary_i = int(input("\nProvide binary label: "))
+            images_info[label_binary].append(label_binary_i)
+
+        labeling_df = labeling_df.append({
+            'filename': images_info['fname'][i],
+            label_multi: label_multi_i,
+            label_binary: label_binary_i
+        }, ignore_index=True)
+        labeling_df.to_csv(output_folder + output_name, index=None, header=True)
+
+        # clear image output
+        clear_output()
+
+    return images_info

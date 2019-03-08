@@ -201,6 +201,8 @@ def add_labels_and_save_csv(images_info, output_folder, output_name):
 
     :param images_info: dict of lists
         output of load_images_from_gdrive, i.e. every list element must contain key 'image'
+    :param output_folder: str
+    :param output_name: str
     :return:
     """
 

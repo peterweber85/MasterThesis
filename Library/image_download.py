@@ -11,7 +11,7 @@ import datetime
 from motionless import CenterMap
 import matplotlib.pyplot as plt
 from io import BytesIO
-from PIL import Image
+from PIL import Image, ImageOps
 from urllib import request
 import imageio
 
@@ -148,7 +148,8 @@ def generate_gmaps_links(lat, long, zoom, pixels, num_images, center=True, xy_to
             urls.append(cmap.generate_url())
     return urls
 
-def download_image(lat, lon, zoom, pixels, gmaps_key, folder='', plot_image=False):
+
+def download_image(lat, lon, zoom, pixels, gmaps_key, crop_px=20, name='', folder='', plot_image=False, save_image=True):
     """
     Downloads and returns (optionally plots) an image from Google Maps static API
     :param lat: float
@@ -161,41 +162,50 @@ def download_image(lat, lon, zoom, pixels, gmaps_key, folder='', plot_image=Fals
         maximum of 640
     :param gmaps_key: string
         Google Maps API key
+    :param crop_px: int
+        number of pixels to crop for each border
+    :param name: str
+        name identifier of the image group, e.g. name of city
     :param folder: string
         where to save the image
     :param plot_image: bool
         whether to plot the image
+    :param save_image: bool
+        whether to save the image
     :return:
     """
 
-    img_metadata = {}
-    img_metadata["lat"] = lat
-    img_metadata["lon"] = lon
-    img_metadata["zoom"] = zoom
-    img_metadata["pixels"] = pixels
+    metadata = {}
+    metadata["lat"] = lat
+    metadata["lon"] = lon
+    metadata["zoom"] = zoom
+    metadata["pixels"] = pixels
+    metadata["name"] = name
 
     meters_per_px = zoom_in_meters_per_pixel(zoom, lat)
     image_size = meters_per_px * pixels
-    img_metadata["meters_per_px"] = meters_per_px
-    img_metadata["img_size"] = image_size
+    metadata["meters_per_px"] = meters_per_px
+    metadata["img_size"] = image_size
 
     # download image
-    url = CenterMap(lat=lat, lon=lon, maptype='satellite', size_x=pixels, size_y=pixels, zoom=zoom, key=gmaps_key).generate_url()
-    img_metadata["url"] = url
+    url = CenterMap(lat=lat, lon=lon, maptype='satellite', size_x=pixels+2*crop_px, size_y=pixels+2*crop_px, zoom=zoom, key=gmaps_key).generate_url()
+    metadata["url"] = url
     image = Image.open(BytesIO(request.urlopen(url).read()))
+    image = ImageOps.crop(image, (crop_px, crop_px, crop_px, crop_px)) # borders: left, up, right, bottom
 
-    img_metadata["filename"] = str(lat) + '_' + str(lon) + '_' + str(zoom) + '_' + str(pixels) + '.png'
-    image.save(folder + img_metadata["filename"], "PNG")
-    img_metadata["saved_dt"] = datetime.datetime.today()
+    metadata["filename"] = name + '_' + str(lat) + '_' + str(lon) + '_' + str(zoom) + '_' + str(pixels) + '.png'
+    if save_image:
+        image.save(folder + metadata["filename"], "PNG")
+    metadata["saved_dt"] = datetime.datetime.today()
 
     if plot_image:
         image.show()
         plt.show()
 
-    return img_metadata
+    return image, metadata
 
 
-def download_and_save_image(name, lat, lon, zoom, pixels, gmaps_key, folder='', save_image = True):
+def download_and_save_image(name, lat, lon, zoom, pixels, gmaps_key, folder='', save_image=True):
     """
     Downloads and returns an image from Google Maps static API
     :param lat: float
@@ -217,10 +227,12 @@ def download_and_save_image(name, lat, lon, zoom, pixels, gmaps_key, folder='', 
     url = CenterMap(lat=lat, lon=lon, maptype='satellite', size_x=pixels, size_y=pixels, zoom=zoom,
                     key=gmaps_key).generate_url()
     image = Image.open(BytesIO(request.urlopen(url).read()))
+
     fname_suffix = name + '_' + str(lat) + '_' + str(lon) + '_' + str(zoom) + '_' + str(pixels) + '.png'
     if save_image:
         image.save(folder + fname_suffix, "PNG")
     return image
+
 
 def generate_metadata(name, lat, lon, zoom, pixels, gmaps_key):
     """

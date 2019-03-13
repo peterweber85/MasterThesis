@@ -271,40 +271,40 @@ def generate_metadata(name, lat, lon, zoom, pixels, gmaps_key):
     return img_metadata
 
 
-def download_images_random_gaussian(locations, zoom, pixels, samples_per_location, precision,
-                                    api_key, img_folder, save_image=True):
+def download_images_random_gaussian(location, samples_per_location, sd, coord_precision, zooms, pixels,
+                                    api_key, img_folder, db_col, plot_image=False, save_image=True):
     """
-
-    :param locations: dict
+    :param location: dict
      with keys: 'name', 'lat', 'lon'
-    :param zoom: int
-    :param pixels: int
     :param samples_per_location: int
-    :param precision: int
-        roundinf precision when choosing random location
+    :param sd: float
+    :param coord_precision: int
+        rounding precision when choosing random location
+    :param zooms: list of int
+    :param pixels: int
     :param api_key: str
     :param img_folder: str
+    :param db_col: Collection
+    :param plot_image: bool
     :param save_image: bool
     :return:
     """
+
     images = []
     mdata = []
 
-    db = dbcon.connect("../credentials/mlab_db.txt", "mfp")
-    images_lib_col = db["images_lib"]
-
-    for location in locations:
-        print("Saving images of " + location["name"] + "...")
-        for i in range(samples_per_location):
-            lat = round(location["lat"] + np.random.normal(0, 0.1), precision)
-            lon = round(location["lon"] + np.random.normal(0, 0.1), precision)
-            image = download_and_save_image(location['name'], lat, lon, zoom, pixels, api_key,
-                                                folder=img_folder, save_image=save_image)
+    for i in range(samples_per_location):
+        lat = round(location["lat"] + np.random.normal(0, sd), coord_precision)
+        lon = round(location["lon"] + np.random.normal(0, sd), coord_precision)
+        for zoom in zooms:
+            image, metadata = download_image(
+                lat, lon, zoom, pixels, api_key,
+                crop_px=20, name=location["name"], folder=img_folder,
+                plot_image=plot_image, save_image=save_image
+            )
             images.append(image)
-            if save_image:
-                metadata = generate_metadata(location['name'], lat, lon, zoom, pixels, api_key)
-                mdata.append(metadata)
-                images_lib_col.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
+            mdata.append(metadata)
+            db_col.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
 
     return images, mdata
 

@@ -256,3 +256,19 @@ def add_labels_and_save_csv(images_info, output_folder, output_name):
         clear_output()
 
     return images_info
+
+
+def delete_images_files(folder, filenames):
+    """
+    Deletes image files from local folder
+    :param folder: str
+    :param filenames: list of str
+    :return: number of files deleted
+    """
+    deleted_count = 0
+    for filename in filenames:
+        file_path = folder + filename
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            deleted_count += 1
+    return deleted_count

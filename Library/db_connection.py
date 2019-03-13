@@ -66,6 +66,18 @@ def delete_all_metadata_with_labels(db_collection, label_name):
     return
 
 
+def delete_images_metadata(db_collection, filenames):
+    """
+    Deletes the metadata of the given filenames in the DB
+    :param db_collection: mongodb collection object
+    :param filenames: list of str
+    :return: number of documents deleted
+    """
+    query = {"filename": { "$in": filenames }}
+    result = db_collection.delete_many(query)
+    return result.deleted_count
+
+
 def query_filenames_of_labelled_images(db_collection, label_name):
     """
     Returns dataframe with filenames and label of labelled images

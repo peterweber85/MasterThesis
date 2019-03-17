@@ -89,6 +89,7 @@ def get_image_filenames(img_folder, img_ext = ['png']):
     print("Existing images files:", len(images_files))
     return images_files
 
+
 def get_metadata_filenames(db_collection, query={}):
     """
     Returns filenames of metadata entries in db_collection

@@ -9,6 +9,7 @@ import pandas as pd
 from PIL import Image
 import imageio
 from IPython.display import display, clear_output
+import gist
 
 # Library
 import db_connection as dbcon
@@ -123,6 +124,47 @@ def get_discrepancies_between_metadata_and_images(images_files, images_metadata)
         print(" " + name)
 
     return missing_metadata, missing_files
+
+
+def delete_images_files(folder, filenames):
+    """
+    Deletes image files from local folder
+    :param folder: str
+    :param filenames: list of str
+    :return: number of files deleted
+    """
+    deleted_count = 0
+    for filename in filenames:
+        file_path = folder + filename
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            deleted_count += 1
+    return deleted_count
+
+
+def gist_calculate_and_load(filenames, folder, db_collection):
+    """
+    Calculates gist vectors of the images and uploads them to the DB
+    :param filenames: list of str
+    :param folder: str
+    :param db_collection: mongodb collection object
+    :return: number of DB documents updated and computed gist vectors
+    """
+
+    images_files = load_images_from_gdrive(filenames, folder, return_list=True)
+
+    gist_uploaded = 0
+    gist_vectors = []
+    for image in images_files:
+        gist_vector = gist.extract(image["array"])
+        gist_vectors.append(gist_vector)
+        result = db_collection.update(
+            {"filename": image["fname"]},
+            {"$set": {"gist": gist_vector.tolist()}}
+        )
+        gist_uploaded += result["nModified"]
+
+    return gist_uploaded, gist_vectors
 
 
 def add_labels_to_image_info(images_info):
@@ -259,17 +301,3 @@ def add_labels_and_save_csv(images_info, output_folder, output_name):
     return images_info
 
 
-def delete_images_files(folder, filenames):
-    """
-    Deletes image files from local folder
-    :param folder: str
-    :param filenames: list of str
-    :return: number of files deleted
-    """
-    deleted_count = 0
-    for filename in filenames:
-        file_path = folder + filename
-        if os.path.exists(file_path):
-            os.remove(file_path)
-            deleted_count += 1
-    return deleted_count

@@ -33,11 +33,12 @@ import image_download as imd
 
 
 GMAPS_API_KEY = os.getenv("GMAPS_API_KEY")
-IMG_FOLDER = os.environ["MFP_IMG_FOLDER"]
+DATASET = 'gmaps'
+IMG_FOLDER = os.environ["MFP_IMG_FOLDER"] + DATASET + "/"
 
 # number of images to be download for each dataset
 NUM_IMAGES = {
-    "per_city": 0,
+    "per_city": 1,
     "per_capital": 0,
     "per_centroid": 0,
 }
@@ -64,7 +65,7 @@ if __name__ == '__main__':
         print("  " + city["name"] + "...")
         images, mdata = imd.download_images_random_gaussian(
             city, NUM_IMAGES["per_city"], SD, COORDINATES_PRECISION, ZOOM_LEVELS, PIXELS,
-            GMAPS_API_KEY, IMG_FOLDER, images_lib_col, plot_image=False, save_image=True)
+            GMAPS_API_KEY, DATASET, IMG_FOLDER, images_lib_col, plot_image=False, save_image=True)
         NUM_IMAGES_DOWNLOADED += len(mdata)
     t2 = time.time()
     print("time: {:.2f} s".format(t2-t1))
@@ -79,7 +80,7 @@ if __name__ == '__main__':
         print("  " + capital["name"] + "...")
         images, mdata = imd.download_images_random_gaussian(
             capital, NUM_IMAGES["per_capital"], SD, COORDINATES_PRECISION, ZOOM_LEVELS, PIXELS,
-            GMAPS_API_KEY, IMG_FOLDER, images_lib_col, plot_image=False, save_image=True)
+            GMAPS_API_KEY, DATASET, IMG_FOLDER, images_lib_col, plot_image=False, save_image=True)
         NUM_IMAGES_DOWNLOADED += len(mdata)
     t2 = time.time()
     print("time: {:.2f} s".format(t2 - t1))
@@ -94,7 +95,7 @@ if __name__ == '__main__':
         print("  " + centroid["name"] + "...")
         images, mdata = imd.download_images_random_gaussian(
             centroid, NUM_IMAGES["per_centroid"], 10, COORDINATES_PRECISION, ZOOM_LEVELS, PIXELS,
-            GMAPS_API_KEY, IMG_FOLDER, images_lib_col, plot_image=False, save_image=True)
+            GMAPS_API_KEY, DATASET, IMG_FOLDER, images_lib_col, plot_image=False, save_image=True)
         NUM_IMAGES_DOWNLOADED += len(mdata)
     t2 = time.time()
     print("time: {:.2f} s".format(t2 - t1))

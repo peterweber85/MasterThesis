@@ -285,7 +285,10 @@ def add_labels_and_save_csv(images_info, output_folder, output_name):
         draw.line([(2 * width / 3, 0), (2 * width / 3, height)], fill=1000)
         display(im)
 
-        print("image", i+1, "of", num_images)
+        print(i+1, "/", num_images)
+        print(images_info['fname'][i])
+        print()
+
         print(labeling_info_multi)
         print(labeling_info_binary)
 
@@ -297,7 +300,8 @@ def add_labels_and_save_csv(images_info, output_folder, output_name):
             label_binary_i = 1
             images_info[label_binary].append(label_binary_i)
         else:
-            label_binary_i = int(input("\nProvide binary label: "))
+            #label_binary_i = int(input("\nProvide binary label: "))
+            label_binary_i = 0
             images_info[label_binary].append(label_binary_i)
 
         labeling_df = labeling_df.append({
@@ -310,6 +314,7 @@ def add_labels_and_save_csv(images_info, output_folder, output_name):
         # clear image output
         clear_output()
 
+    print("DONE!")
     print("Output file:", output_name)
 
     return images_info

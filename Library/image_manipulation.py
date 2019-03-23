@@ -4,6 +4,7 @@
 from dotenv import load_dotenv
 import os
 import pandas as pd
+import numpy as np
 
 # MAP & IMG:
 from PIL import Image, ImageDraw
@@ -140,6 +141,40 @@ def delete_images_files(folder, filenames):
             os.remove(file_path)
             deleted_count += 1
     return deleted_count
+
+
+def reduce_image_quality(im, factor):
+    """
+    Reduce the number of pixels of an image by factor. factor should be a multiple of 2.
+
+    Loaded libraries:
+    - import numpy as np
+    - from PIL import Image
+
+    :param im: np.array or PIL.Image
+    :param factor: int
+        mulitpler of 2
+    :return: np.array
+    """
+    # In case image is format PIL.Image convert to np.array
+    if isinstance(im, Image.Image):
+        im = np.array(im)
+    # In case factor is smaller 1, return original image
+    if factor <= 1:
+        return im
+    # Image dimensions
+    length = im.shape[0]
+    new_length = int(length / factor)
+    channels = im.shape[2]
+    # Use these indices from old image to construct new, downsized image
+    indices = np.linspace(0 + int(factor / 2), length - int(factor / 2), new_length, dtype=int)
+    # Initialize new, downsized image
+    output = np.zeros((new_length, new_length, channels))
+    for channel in range(channels):
+        output[:, :, channel] = np.array([[im[row, col, channel] for col in indices] for row in indices])
+    output = output.astype('uint8')
+
+    return output
 
 
 def gist_calculate_and_load(filenames, folder, db_collection):

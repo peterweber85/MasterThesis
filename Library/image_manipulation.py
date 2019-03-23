@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 
 # MAP & IMG:
-from PIL import Image
+from PIL import Image, ImageDraw
 import imageio
 from IPython.display import display, clear_output
 import gist
@@ -176,6 +176,7 @@ def reduce_image_quality(im, factor):
 
     return output
 
+
 def gist_calculate_and_load(filenames, folder, db_collection):
     """
     Calculates gist vectors of the images and uploads them to the DB
@@ -283,8 +284,9 @@ def add_labels_and_save_csv(images_info, output_folder, output_name):
     :return:
     """
 
-    labeling_info_multi = "Multiclass: 0 = 0-20%, 1 = 20-40%, 2 = 40-60%, 3 = 60-80%, 4 = 80-100%"
-    labeling_info_binary = "Binary:    0 = no human impact, 1 = human impact"
+    #labeling_info_multi = "Multiclass: 0 = 0-20%, 1 = 20-40%, 2 = 40-60%, 3 = 60-80%, 4 = 80-100%"
+    labeling_info_multi = "Multiclass: 0-9 cells with human impact"
+    labeling_info_binary = "Binary:     0 = no human impact, 1 = human impact"
 
     name = input("Your name? ")
 
@@ -307,7 +309,21 @@ def add_labels_and_save_csv(images_info, output_folder, output_name):
 
     num_images = len(images_info['fname'])
     for i in range(num_images):
-        display(images_info['image'][i])
+
+        # load image and overlay 3x3 grid
+        im = images_info['image'][i]
+        width, height = im.size
+        draw = ImageDraw.Draw(im)
+        draw.line([(0, height / 3), (width, height / 3)], fill=1000)
+        draw.line([(0, 2 * height / 3), (width, 2 * height / 3)], fill=1000)
+        draw.line([(width / 3, 0), (width / 3, height)], fill=1000)
+        draw.line([(2 * width / 3, 0), (2 * width / 3, height)], fill=1000)
+        display(im)
+
+        print(i+1, "/", num_images)
+        print(images_info['fname'][i])
+        print()
+
         print(labeling_info_multi)
         print(labeling_info_binary)
 
@@ -319,7 +335,8 @@ def add_labels_and_save_csv(images_info, output_folder, output_name):
             label_binary_i = 1
             images_info[label_binary].append(label_binary_i)
         else:
-            label_binary_i = int(input("\nProvide binary label: "))
+            #label_binary_i = int(input("\nProvide binary label: "))
+            label_binary_i = 0
             images_info[label_binary].append(label_binary_i)
 
         labeling_df = labeling_df.append({
@@ -331,6 +348,9 @@ def add_labels_and_save_csv(images_info, output_folder, output_name):
 
         # clear image output
         clear_output()
+
+    print("DONE!")
+    print("Output file:", output_name)
 
     return images_info
 

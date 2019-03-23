@@ -38,7 +38,7 @@ IMG_FOLDER = os.environ["MFP_IMG_FOLDER"] + DATASET + "/"
 
 # number of images to be download for each dataset
 NUM_IMAGES = {
-    "per_city": 10,
+    "per_city": 1,
     "per_capital": 0,
     "per_centroid": 0,
 }

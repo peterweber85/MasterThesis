@@ -149,7 +149,7 @@ def generate_gmaps_links(lat, long, zoom, pixels, num_images, center=True, xy_to
     return urls
 
 
-def download_image(lat, lon, zoom, pixels, gmaps_key, crop_px=20, name='', folder='', plot_image=False, save_image=True):
+def download_image(lat, lon, zoom, pixels, gmaps_key, crop_px=20, name='', dataset='', folder='', plot_image=False, save_image=True):
     """
     Downloads and returns (optionally plots) an image from Google Maps static API
     :param lat: float
@@ -166,6 +166,8 @@ def download_image(lat, lon, zoom, pixels, gmaps_key, crop_px=20, name='', folde
         number of pixels to crop for each border
     :param name: str
         name identifier of the image group, e.g. name of city
+    :param dataset: str
+        dataset identifier
     :param folder: string
         where to save the image
     :param plot_image: bool
@@ -181,6 +183,7 @@ def download_image(lat, lon, zoom, pixels, gmaps_key, crop_px=20, name='', folde
     metadata["zoom"] = zoom
     metadata["pixels"] = pixels
     metadata["name"] = name
+    metadata["dataset"] = dataset
 
     meters_per_px = zoom_in_meters_per_pixel(zoom, lat)
     image_size = meters_per_px * pixels
@@ -272,7 +275,7 @@ def generate_metadata(name, lat, lon, zoom, pixels, gmaps_key):
 
 
 def download_images_random_gaussian(location, samples_per_location, sd, coord_precision, zooms, pixels,
-                                    api_key, img_folder, db_col, plot_image=False, save_image=True):
+                                    api_key, dataset, img_folder, db_col, plot_image=False, save_image=True):
     """
     :param location: dict
      with keys: 'name', 'lat', 'lon'
@@ -283,6 +286,7 @@ def download_images_random_gaussian(location, samples_per_location, sd, coord_pr
     :param zooms: list of int
     :param pixels: int
     :param api_key: str
+    :param dataset: str
     :param img_folder: str
     :param db_col: Collection
     :param plot_image: bool
@@ -299,7 +303,7 @@ def download_images_random_gaussian(location, samples_per_location, sd, coord_pr
         for zoom in zooms:
             image, metadata = download_image(
                 lat, lon, zoom, pixels, api_key,
-                crop_px=20, name=location["name"], folder=img_folder,
+                crop_px=20, name=location["name"], dataset=dataset, folder=img_folder,
                 plot_image=plot_image, save_image=save_image
             )
             images.append(image)

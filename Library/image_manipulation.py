@@ -156,12 +156,12 @@ def reduce_image_quality(im, factor):
         mulitpler of 2
     :return: np.array
     """
+    # In case image is format PIL.Image convert to np.array
+    if isinstance(im, Image.Image):
+        im = np.array(im)
     # In case factor is smaller 1, return original image
     if factor <= 1:
         return im
-    # In case image is format PIL.Image convert to np.array
-    if isinstance(im, Image.Image):
-        im = Image.fromarray(im)
     # Image dimensions
     length = im.shape[0]
     new_length = int(length / factor)

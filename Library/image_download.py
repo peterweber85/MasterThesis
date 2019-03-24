@@ -16,6 +16,7 @@ from urllib import request
 import imageio
 
 # Library
+import image_manipulation as ima
 import db_connection as dbcon
 
 
@@ -419,3 +420,100 @@ def download_save_images_in_random_rectangle(db_collection,
             metadata = generate_metadata(name, lat, lon, zoom, pixels, api_key)
             db_collection.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
             print("Image and Metadata with filename '"+metadata["filename"]+"' saved!\n")
+
+
+def get_image_grid(imarray, size):
+    """
+    From large image obtain a grid to crop several smaller images.
+    It also centers the grid.
+
+    :param imarray: np.array
+        of large image
+    :param size: int
+        distance of grid elements
+    :return: dict
+        keys are grid indices
+        values are grid coordinates
+    """
+
+    dim = imarray.shape[:2]
+
+    # Number of images along every axis
+    num_x = int((dim[1] - size) / size) + 1
+    num_y = int((dim[0] - size) / size) + 1
+
+    # Center images
+    x_move_by = int((dim[1] - num_x * size) / 2)
+    y_move_by = int((dim[0] - num_y * size) / 2)
+
+    # create dictionary of grid points
+    grid = dict()
+    for ix in range(num_x):
+        for iy in range(num_y):
+            grid[(iy, ix)] = (size * iy + y_move_by, size * ix + x_move_by)
+    return grid
+
+
+def get_cropped_images(imarray, grid):
+    """
+    Returns several cropped images from one large image provided a grid
+    :param imarray: np.array
+        of large image
+    :param grid: dict
+        Output of get_image_grid with
+            keys are grid indices
+            values are grid coordinates
+    :return: dict
+        keys are coordinate of image
+        values are image
+    """
+    x_coord = [x[0] for x in list(grid.values())]
+    size = x_coord[1] - x_coord[0]
+
+    output = dict()
+    for coord in grid.values():
+        img = imarray[coord[0]:coord[0] + size, coord[1]:coord[1] + size]
+        output[coord] = img
+
+    return output
+
+
+def save_cropped_images(imcropped, input_fname, output_folder):
+    """
+    :param imcropped: dict
+        Output of get_cropped_images
+            keys are coordinate of image
+            values are image
+    :param input_fname: str
+        filename of large image
+    :param output_folder: str
+    :return:
+    """
+    for coordinate in imcropped.keys():
+        imarray = imcropped[coordinate]
+        filename_pure = input_fname.split(".")[0]
+        output_path = output_folder + filename_pure + "_x" + str(coordinate[0]) + "_y" + str(coordinate[1]) + ".png"
+        Image.fromarray(imarray).save(output_path)
+
+
+def process_raw_images_and_save_usgs(paths, size, output_folder):
+    """
+    Processing function that combines
+        - loading image
+        - obtaining grid for cropping
+        - cropping small images from large image
+        - saving cropped images
+    :param paths: list of str
+    :param size: int
+        size of cropped images
+    :param output_folder: str
+    :return:
+    """
+    if isinstance(paths, str):
+        paths = [paths]
+    for path in paths:
+        filename = path.split("/")[-1]
+        imarray = ima.load_image_as_rgb_array(path)
+        grid = get_image_grid(imarray, size)
+        imcropped = get_cropped_images(imarray, grid)
+        save_cropped_images(imcropped, filename, output_folder)

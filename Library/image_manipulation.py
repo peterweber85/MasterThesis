@@ -355,3 +355,7 @@ def add_labels_and_save_csv(images_info, output_folder, output_name):
     return images_info
 
 
+def load_image_as_rgb_array(file):
+    img = Image.open(file)
+    array = np.array(img)[:,:,:3]
+    return array

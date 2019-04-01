@@ -45,14 +45,6 @@ def list_path_of_images_by_category(image_folder, category):
     return paths
 
 #%%
-start_point = 3000
-end_point = 3800
-size = 256
-
-shrubland = list_path_of_images_by_category(RAW_IMAGE_FOLDER, 'shrubland-grassland')
-
-
-#%%
 def get_image_grid(imarray, size=512):
     dim = imarray.shape[:2]
 
@@ -83,11 +75,28 @@ def get_cropped_images(imarray, grid):
 
     return output
 
+
+def main(raw_image_filename):
+    # 1. CROP image
+    # 2. Generate DOWNGRADE images
+    # 3. Compute GISTS
+    return
+
+
 #%%
-imarray = ima.load_image_as_rgb_array(shrubland[0])
-grid = get_image_grid(imarray, size)
-imcropped = get_cropped_images(imarray, grid)
-imcropped
+if __name__ == '__main__':
+    # %%
+    start_point = 3000
+    end_point = 3800
+    size = 256
+
+    shrubland = list_path_of_images_by_category(RAW_IMAGE_FOLDER, 'shrubland-grassland')
+
+
+    imarray = ima.load_image_as_rgb_array(shrubland[0])
+    grid = get_image_grid(imarray, size)
+    imcropped = get_cropped_images(imarray, grid)
+    imcropped
 
 
 #%%

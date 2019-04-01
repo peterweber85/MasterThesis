@@ -73,9 +73,3 @@ for i in range(len(CATEGORIES)):
         ima.degrade_images_and_save(images_fullnames, params, subfolder_size, CATEGORIES[i])
 
 #%%
-
-
-
-
-
-#%%

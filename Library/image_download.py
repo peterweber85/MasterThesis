@@ -478,25 +478,34 @@ def get_cropped_images(imarray, grid):
     return output
 
 
-def save_cropped_images(imcropped, input_fname, output_folder):
+def save_cropped_images(imcropped, params, input_fname, output_folder):
     """
     :param imcropped: dict
         Output of get_cropped_images
             keys are coordinate of image
             values are image
+    :param params: dict
+        parameter with image properties
+        params['size'] = size
+        params['res'] = resolution
     :param input_fname: str
         filename of large image
     :param output_folder: str
     :return:
     """
+    size = params['size']
+    resolution = params['res']
     for coordinate in imcropped.keys():
         imarray = imcropped[coordinate]
         filename_pure = input_fname.split(".")[0]
-        output_path = output_folder + filename_pure + "_x" + str(coordinate[0]) + "_y" + str(coordinate[1]) + ".png"
+        coordinate_string = "_x" + str(coordinate[0]) + "_y" + str(coordinate[1])
+        size_string = "_size" + str(size)
+        res_string = "_res" + str(resolution) + "m"
+        output_path = output_folder + filename_pure + coordinate_string + size_string + res_string + ".png"
         Image.fromarray(imarray).save(output_path)
 
 
-def process_raw_images_and_save_usgs(paths, size, output_folder):
+def process_raw_images_and_save_usgs(paths, params, output_folder):
     """
     Processing function that combines
         - loading image
@@ -504,16 +513,21 @@ def process_raw_images_and_save_usgs(paths, size, output_folder):
         - cropping small images from large image
         - saving cropped images
     :param paths: list of str
-    :param size: int
-        size of cropped images
+    :param params: dict
+        parameter with image properties
+        params['size'] = size
+        params['res'] = resolution
     :param output_folder: str
     :return:
     """
     if isinstance(paths, str):
         paths = [paths]
+
+    ima.create_directory(output_folder)
+
     for path in paths:
         filename = path.split("/")[-1]
         imarray = ima.load_image_as_rgb_array(path)
-        grid = get_image_grid(imarray, size)
+        grid = get_image_grid(imarray, params['size'])
         imcropped = get_cropped_images(imarray, grid)
-        save_cropped_images(imcropped, filename, output_folder)
+        save_cropped_images(imcropped, params, filename, output_folder)

@@ -30,66 +30,52 @@ from datetime import datetime
 dotenv_path = ('../.env')
 load_dotenv(dotenv_path)
 
-#%% parameters
-PROCESS_RAW_IMAGES = False
+#%% Parameters
+# PROCESSING PARAMETERS
+PROCESS_RAW_IMAGES = True
+DEGRADE_IMAGES = True
 
+# IMAGE PARAMETERS
+SIZE = 512 # in pixels
+BASE_RESOLUTION = 1 # in meter
+
+# THESE ARE ONLY APPROXIMATE -->  integer(SIZE/DEGRADED_RESOLUTION)
+DEGRADED_RESOLUTIONS = [2, 5, 10, 20, 50] # in meter
+# THESE ARE ONLY APPROXIMATE -->  integer(SIZE/DEGRADED_RESOLUTION)
+
+# FOLDER PARAMETERS
 GDRIVE_FOLDER = os.getenv('GDRIVE_FOLDER')
-RAW_IMAGE_FOLDER = GDRIVE_FOLDER + 'images_usgs/'
-IMAGE_FOLDER = GDRIVE_FOLDER + 'MFP - Satellogic/images/usgs/'
-CATEGORIES = ['agriculture', 'city', 'forest-woodland', 'semidesert', 'shrubland-grassland']
+RAW_IMAGE_FOLDER = GDRIVE_FOLDER + 'MFP - Satellogic/images/raw_images_usgs/'
+MFP_IMG_FOLDER = GDRIVE_FOLDER + 'MFP - Satellogic/images/'
+CATEGORIES = ['city', 'agriculture', 'forest-woodland', 'semidesert', 'shrubland-grassland']
 
-#%% Helpers
-def list_path_of_images_by_category(image_folder, category):
-    filenames = os.listdir(image_folder + category)
-    paths = [image_folder + category + '/' + filename for filename in filenames if filename.startswith("m")]
-    return paths
+# Compute more parameters
+params = {'size': SIZE, 'res': BASE_RESOLUTION, 'res_degr': DEGRADED_RESOLUTIONS}
+subfolder_size = MFP_IMG_FOLDER + 'usgs_' + str(SIZE) + "/"
+subfolder_base_res = subfolder_size  + "usgs_" + str(SIZE) + "_" + str(BASE_RESOLUTION) + "m/"
 
-#%%
-start_point = 3000
-end_point = 3800
-size = 256
+#%% Processing
+ima.create_directory(subfolder_size)
+ima.create_directory(subfolder_base_res)
 
-shrubland = list_path_of_images_by_category(RAW_IMAGE_FOLDER, 'shrubland-grassland')
+for i in range(len(CATEGORIES)):
+    # Process raw images and save
+    if PROCESS_RAW_IMAGES:
+        print("Processing raw images of category", CATEGORIES[i], "...")
+        output_folder = subfolder_base_res + CATEGORIES[i] + "/"
+        raw_images_fullnames = ima.list_path_of_images_by_category(RAW_IMAGE_FOLDER, CATEGORIES[i])
+        imd.process_raw_images_and_save_usgs(raw_images_fullnames, params, output_folder)
 
-
-#%%
-def get_image_grid(imarray, size=512):
-    dim = imarray.shape[:2]
-
-    # Number of images along every axis
-    num_x = int((dim[1] - size) / size) + 1
-    num_y = int((dim[0] - size) / size) + 1
-
-    # Center images
-    x_move_by = int((dim[1] - num_x * size) / 2)
-    y_move_by = int((dim[0] - num_y * size) / 2)
-
-    # create dictionary of grid points
-    grid = dict()
-    for ix in range(num_x):
-        for iy in range(num_y):
-            grid[(iy, ix)] = (size * iy + y_move_by, size * ix + x_move_by)
-    return grid
-
-
-def get_cropped_images(imarray, grid):
-    x_coord = [x[0] for x in list(grid.values())]
-    size = x_coord[1] - x_coord[0]
-
-    output = dict()
-    for coord in grid.values():
-        img = imarray[coord[0]:coord[0] + size, coord[1]:coord[1] + size]
-        output[coord] = img
-
-    return output
+    # Degrade images and save
+    if DEGRADE_IMAGES:
+        print("Degrading images of category", CATEGORIES[i], "...")
+        images_fullnames = ima.list_path_of_images_by_category(subfolder_base_res, CATEGORIES[i])
+        ima.degrade_images_and_save(images_fullnames, params, subfolder_size, CATEGORIES[i])
 
 #%%
-imarray = ima.load_image_as_rgb_array(shrubland[0])
-grid = get_image_grid(imarray, size)
-imcropped = get_cropped_images(imarray, grid)
-imcropped
 
 
-#%%
+
+
 
 #%%

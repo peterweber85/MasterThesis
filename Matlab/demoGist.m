@@ -1,12 +1,12 @@
 % EXAMPLE 1
 % Load image
-img1 = imread('images/row=0_col=0.png');
+img1 = imread('images/human_row=0_col=0.png');
 
 % Parameters:
 clear param
-param.imageSize = [512 512]; % it works also with non-square images
-param.orientationsPerScale = [8 8 8 8];
-param.numberBlocks = 2;
+param.imageSize = [256 256]; % it works also with non-square images
+param.orientationsPerScale = [8 8 4 4];
+param.numberBlocks = 1;
 param.fc_prefilt = 4;
 
 % Computing gist requires 1) prefilter image, 2) filter image and collect

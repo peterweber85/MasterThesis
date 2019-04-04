@@ -238,7 +238,7 @@ def download_and_save_image(name, lat, lon, zoom, pixels, gmaps_key, folder='', 
     return image
 
 
-def generate_metadata(name, lat, lon, zoom, pixels, gmaps_key):
+def generate_metadata_gmaps(name, lat, lon, zoom, pixels, gmaps_key):
     """
     Generates metadata of provided parameters for image
     :param name: string
@@ -363,7 +363,7 @@ def download_images_defined_location(locations, zoom, pixels, center, xy_to_ij, 
                                                 folder=img_folder, save_image=save_image)
                 images.append(image)
                 if save_image:
-                    metadata = generate_metadata(location['name'], lat, lon, zoom, pixels, api_key)
+                    metadata = generate_metadata_gmaps(location['name'], lat, lon, zoom, pixels, api_key)
                     mdata.append(metadata)
                     images_lib_col.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
 
@@ -417,7 +417,7 @@ def download_save_images_in_random_rectangle(db_collection,
             print("Zoom: ", zoom)
             download_and_save_image(name, lat, lon, zoom, pixels, api_key,
                                     folder=img_folder, save_image=True)
-            metadata = generate_metadata(name, lat, lon, zoom, pixels, api_key)
+            metadata = generate_metadata_gmaps(name, lat, lon, zoom, pixels, api_key)
             db_collection.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
             print("Image and Metadata with filename '"+metadata["filename"]+"' saved!\n")
 
@@ -476,6 +476,40 @@ def get_cropped_images(imarray, grid):
         output[coord] = img
 
     return output
+
+
+def generate_metadata_usgs(
+        category, orig_img, filename,
+        coordinates, size, res, dataset='usgs'
+):
+    """
+    Generates metadata of provided parameters for image
+    :param name: string
+        name identifier of the image group, e.g. name of city
+    :param label: int
+        one of 0,1,2,3,4 where 0 maximum natural and 4 maximum man-made
+    :param lat: float
+        central lat coordinate
+    :param lon: float
+        central lon coordinate
+    :param zoom: int
+        google maps api zoom
+    :param pixels: int
+        maximum of 640
+    :param gmaps_key: string
+        Google Maps API key
+    :return:
+    """
+    img_metadata = {}
+    img_metadata["dataset"] = dataset
+    img_metadata["category"] = category
+    img_metadata["orig_img"] = orig_img
+    img_metadata["filename"] = filename
+    img_metadata["coordinates"] = coordinates
+    img_metadata["size"] = size
+    img_metadata["res"] = res
+    img_metadata["saved_dt"] = datetime.datetime.today()
+    return img_metadata
 
 
 def save_cropped_images(imcropped, params, input_fname, output_folder):

@@ -370,7 +370,7 @@ def list_path_of_images_by_category(image_folder, category):
 def create_directory(path):
     try:
         os.mkdir(path)
-        print("Directory\n", path, "\nwas created!")
+        print("Directory", path, "was created!")
     except:
         print("Directory", path, "already exists!")
 
@@ -378,14 +378,14 @@ def create_directory(path):
 #%% Degrade images and save
 def degrade_images_and_save(paths, params, root_folder, category, downsample = Image.LANCZOS):
 
-    res_degraded = params['res_degr']
-    res = params['res']
     size = params['size']
+    res = params['res']
+    res_degraded = params['res_degr']
 
     if isinstance(res_degraded, int) or isinstance(res_degraded, float):
         res_degraded = [res_degraded]
 
-    for factor in res_degraded:
+    for factor in res_degraded: # factor: degraded resolution in meters
         new_size = int(size/factor)
         new_folder = root_folder + "usgs_" + str(size) + "_" + str(factor) + "m/"
         create_directory(new_folder)

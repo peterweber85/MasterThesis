@@ -1,39 +1,32 @@
 
-#%%
-import gist
+#%% IMPORTS
 
-from PIL import Image
-import imageio
-from IPython.display import display, clear_output
-
-import sys
-sys.path.append("../Library/")
-import image_download as imd
-import image_manipulation as ima
-
+import os
 import random
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import imshow
-from dotenv import load_dotenv
-import os
-load_dotenv("../.env")
+from datetime import datetime
 import csv
 
-import numpy as np
+import sys
+sys.path.append("../Library/")
+import image_download as imd
+import image_manipulation as ima
 import db_connection as dbcon
-from datetime import datetime
 
-#%%
-# In parent directory, to get env variables
+from dotenv import load_dotenv
+load_dotenv("../.env")
 dotenv_path = ('../.env')
 load_dotenv(dotenv_path)
 
-#%% Parameters
+
+#%% PARAMETERS
+
 # PROCESSING PARAMETERS
 PROCESS_RAW_IMAGES = True
-DEGRADE_IMAGES = True
+DEGRADE_IMAGES = False
 
 # IMAGE PARAMETERS
 SIZE = 512 # in pixels
@@ -52,12 +45,13 @@ CATEGORIES = ['city', 'agriculture', 'forest-woodland', 'semidesert', 'shrubland
 # Compute more parameters
 params = {'size': SIZE, 'res': BASE_RESOLUTION, 'res_degr': DEGRADED_RESOLUTIONS}
 subfolder_size = MFP_IMG_FOLDER + 'usgs_' + str(SIZE) + "/"
-subfolder_base_res = subfolder_size  + "usgs_" + str(SIZE) + "_" + str(BASE_RESOLUTION) + "m/"
+subfolder_base_res = subfolder_size + "usgs_" + str(SIZE) + "_" + str(BASE_RESOLUTION) + "m/"
 
 #%% Processing
 ima.create_directory(subfolder_size)
 ima.create_directory(subfolder_base_res)
 
+CATEGORIES = CATEGORIES[:1]
 for i in range(len(CATEGORIES)):
     # Process raw images and save
     if PROCESS_RAW_IMAGES:

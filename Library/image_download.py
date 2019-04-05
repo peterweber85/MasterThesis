@@ -544,7 +544,7 @@ def save_cropped_images(imcropped, params, input_fname, category, output_folder,
         filename = filename_pure + coordinate_string + size_string + res_string + ".png"
         output_path = output_folder + filename
         Image.fromarray(imarray).save(output_path)
-        gist_vector = gist.extract(imarray).tolist()
+        gist_vector = gist.extract(imarray, nblocks=1, orientations_per_scale=(8, 8, 4)).tolist()
         metadata = generate_metadata_usgs(
             category, filename_pure, filename, coordinate, size, resolution,
             gist_vector, dataset='usgs' + '_res' + str(resolution) + "m" + '_size' + str(size))

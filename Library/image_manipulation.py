@@ -402,7 +402,7 @@ def degrade_images_and_save(paths, params, root_folder, category, db_collection,
             new_filename = filename.replace("res" + str(res) + "m", "res" + str(factor) + "m")
             output_path = new_folder + new_filename
             imresize.save(output_path)
-            gist_vector = gist.extract(np.array(imresize)).tolist()
+            gist_vector = gist.extract(np.array(imresize), nblocks=1, orientations_per_scale=(8, 8, 4)).tolist()
             result = db_collection.update(
                 {"filename": filename},
                 {"$set": {"gist_"+str(factor): gist_vector}}

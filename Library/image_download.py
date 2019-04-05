@@ -14,6 +14,7 @@ from io import BytesIO
 from PIL import Image, ImageOps
 from urllib import request
 import imageio
+import gist
 
 # Library
 import image_manipulation as ima
@@ -478,41 +479,42 @@ def get_cropped_images(imarray, grid):
     return output
 
 
-def generate_metadata_usgs(
-        category, orig_img, filename,
-        coordinates, size, res, dataset='usgs'
-):
+def generate_metadata_usgs(category, orig_img, filename, coordinate, size, res, gist_vector, dataset):
     """
     Generates metadata of provided parameters for image
-    :param name: string
-        name identifier of the image group, e.g. name of city
-    :param label: int
-        one of 0,1,2,3,4 where 0 maximum natural and 4 maximum man-made
-    :param lat: float
-        central lat coordinate
-    :param lon: float
-        central lon coordinate
-    :param zoom: int
-        google maps api zoom
-    :param pixels: int
-        maximum of 640
-    :param gmaps_key: string
-        Google Maps API key
+    :param category: string
+        name identifier of the image group/category
+    :param orig_img: string
+        filename of the original, complete image
+    :param filename: string
+        filename of the cropped image
+    :param coordinate: list
+        x,y coordinates of the cropped image
+    :param size: int
+        images size, in pixels
+    :param res: int
+        image resolution, in meter
+    :param gist_vector:
+        gist vector of the image
+    :param dataset: string
+        dataset name identifier
     :return:
     """
     img_metadata = {}
     img_metadata["dataset"] = dataset
     img_metadata["category"] = category
-    img_metadata["orig_img"] = orig_img
+    img_metadata["original_image"] = orig_img
     img_metadata["filename"] = filename
-    img_metadata["coordinates"] = coordinates
+    img_metadata["coordinate_x"] = coordinate[0]
+    img_metadata["coordinate_y"] = coordinate[1]
     img_metadata["size"] = size
     img_metadata["res"] = res
+    img_metadata["gist_"+str(res)] = gist_vector
     img_metadata["saved_dt"] = datetime.datetime.today()
     return img_metadata
 
 
-def save_cropped_images(imcropped, params, input_fname, output_folder):
+def save_cropped_images(imcropped, params, input_fname, category, output_folder, db_collection):
     """
     :param imcropped: dict
         Output of get_cropped_images
@@ -524,22 +526,31 @@ def save_cropped_images(imcropped, params, input_fname, output_folder):
         params['res'] = resolution
     :param input_fname: str
         filename of large image
+    :param category: str
+        name identifier of the image group/category
     :param output_folder: str
+    :param db_collection: mongodb collection object
     :return:
     """
     size = params['size']
     resolution = params['res']
+
     for coordinate in imcropped.keys():
         imarray = imcropped[coordinate]
         filename_pure = input_fname.split(".")[0]
         coordinate_string = "_x" + str(coordinate[0]) + "_y" + str(coordinate[1])
         size_string = "_size" + str(size)
         res_string = "_res" + str(resolution) + "m"
-        output_path = output_folder + filename_pure + coordinate_string + size_string + res_string + ".png"
+        filename = filename_pure + coordinate_string + size_string + res_string + ".png"
+        output_path = output_folder + filename
         Image.fromarray(imarray).save(output_path)
+        gist_vector = gist.extract(imarray).tolist()
+        metadata = generate_metadata_usgs(
+            category, filename_pure, filename, coordinate, size, resolution,
+            gist_vector, dataset='usgs' + '_res' + str(resolution) + "m" + '_size' + str(size))
+        db_collection.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
 
-
-def process_raw_images_and_save_usgs(paths, params, output_folder):
+def process_raw_images_and_save_usgs(paths, params, category, output_folder, db_collection):
     """
     Processing function that combines
         - loading image
@@ -551,7 +562,10 @@ def process_raw_images_and_save_usgs(paths, params, output_folder):
         parameter with image properties
         params['size'] = size
         params['res'] = resolution
+    :param category: str
+        name identifier of the image group/category
     :param output_folder: str
+    :param db_collection: mongodb collection object
     :return:
     """
     if isinstance(paths, str):
@@ -564,4 +578,4 @@ def process_raw_images_and_save_usgs(paths, params, output_folder):
         imarray = ima.load_image_as_rgb_array(path)
         grid = get_image_grid(imarray, params['size'])
         imcropped = get_cropped_images(imarray, grid)
-        save_cropped_images(imcropped, params, filename, output_folder)
+        save_cropped_images(imcropped, params, filename, category, output_folder, db_collection)

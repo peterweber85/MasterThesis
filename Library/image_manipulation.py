@@ -24,6 +24,8 @@ load_dotenv(dotenv_path)
 dotenv_path = ('../.env')
 load_dotenv(dotenv_path)
 
+IMG_EXTENSIONS = ['.tif','.png','.jpg']
+
 
 def load_images_from_gdrive(fnames, folder, return_list = False):
     """
@@ -361,9 +363,11 @@ def load_image_as_rgb_array(file):
     return array
 
 
-def list_path_of_images_by_category(image_folder, category):
-    filenames = os.listdir(image_folder + category)
-    paths = [image_folder + category + '/' + filename for filename in filenames if filename.startswith("m")]
+def list_path_of_images_by_category(image_folder, category, extensions=IMG_EXTENSIONS):
+    paths = []
+    for filename in os.listdir(image_folder + category):
+        if os.path.splitext(filename)[1] in extensions:
+            paths.append(image_folder + category + '/' + filename)
     return paths
 
 
@@ -376,7 +380,7 @@ def create_directory(path):
 
 
 #%% Degrade images and save
-def degrade_images_and_save(paths, params, root_folder, category, downsample = Image.LANCZOS):
+def degrade_images_and_save(paths, params, root_folder, category, db_collection, downsample = Image.LANCZOS):
 
     size = params['size']
     res = params['res']
@@ -398,3 +402,23 @@ def degrade_images_and_save(paths, params, root_folder, category, downsample = I
             new_filename = filename.replace("res" + str(res) + "m", "res" + str(factor) + "m")
             output_path = new_folder + new_filename
             imresize.save(output_path)
+            gist_vector = gist.extract(np.array(imresize)).tolist()
+            result = db_collection.update(
+                {"filename": filename},
+                {"$set": {"gist_"+str(factor): gist_vector}}
+            )
+            if result["nModified"] == 0:
+                print(filename, "GIST not uploaded to the DB!")
+
+
+def move_folder_content(source_folder, target_folder, extensions=IMG_EXTENSIONS):
+
+    create_directory(target_folder)
+
+    for filename in os.listdir(source_folder):
+        if os.path.splitext(filename)[1] in extensions:
+            os.rename(
+                os.path.join(source_folder, filename),
+                os.path.join(target_folder, filename)
+            )
+    return

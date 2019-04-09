@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import os
 import pandas as pd
 import numpy as np
+from scipy import misc
 
 # MAP & IMG:
 from PIL import Image, ImageDraw
@@ -356,11 +357,28 @@ def add_labels_and_save_csv(images_info, output_folder, output_name):
 
     return images_info
 
+def correct_tile(img):
+    x_correction = img.tile[0][1][2]
+    y_correction = img.tile[0][1][3]
+
+    img.tile = [e for e in img.tile if e[1][2] < img.size[0] and e[1][3] < img.size[1]]
+
+    array = np.array(img)[:-x_correction, :-y_correction, :3]
+    return array
 
 def load_image_as_rgb_array(file):
-    img = Image.open(file)
-    array = np.array(img)[:,:,:3]
-    return array
+    try:
+        array = misc.imread(file, mode='RGB')
+        if array.size <= 1:
+            print("File with filename", file, "couldn't be processed with SCIPY, correcting tile...")
+            img = array.all()
+            array = correct_tile(img)
+        return array
+    except:
+        print("File with filename", file, "couldn't be processed with SCIPY, correcting tile...")
+        img = Image.open(file)
+        array = correct_tile(img)
+        return array
 
 
 def list_path_of_images_by_category(image_folder, category, extensions=IMG_EXTENSIONS):
@@ -390,7 +408,7 @@ def degrade_images_and_save(paths, params, root_folder, category, db_collection,
         res_degraded = [res_degraded]
 
     for factor in res_degraded: # factor: degraded resolution in meters
-        new_size = int(size/factor)
+        new_size = round(size/(factor/res))
         new_folder = root_folder + "usgs_" + str(size) + "_" + str(factor) + "m/"
         create_directory(new_folder)
         new_folder = new_folder + category + "/"
@@ -399,7 +417,7 @@ def degrade_images_and_save(paths, params, root_folder, category, db_collection,
             imarray = load_image_as_rgb_array(path)
             imresize = Image.fromarray(imarray).resize((new_size, new_size), resample = downsample)
             filename = path.split("/")[-1]
-            new_filename = filename.replace("res" + str(res) + "m", "res" + str(factor) + "m")
+            new_filename = filename.replace("_res" + str(res) + "m", "_res" + str(factor) + "m")
             output_path = new_folder + new_filename
             imresize.save(output_path)
             gist_vector = gist.extract(np.array(imresize), nblocks=1, orientations_per_scale=(8, 8, 4)).tolist()
@@ -413,6 +431,9 @@ def degrade_images_and_save(paths, params, root_folder, category, db_collection,
 
 def move_folder_content(source_folder, target_folder, extensions=IMG_EXTENSIONS):
 
+    # create parent of target_folder
+    create_directory("/".join(target_folder.split("/")[:-1]))
+    # create target_folder
     create_directory(target_folder)
 
     for filename in os.listdir(source_folder):

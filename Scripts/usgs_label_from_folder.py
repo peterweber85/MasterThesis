@@ -25,13 +25,14 @@ load_dotenv(dotenv_path)
 #%% PARAMETERS
 
 # PROCESSING PARAMETERS
-LABEL_FROM_FOLDER = True
+CREATE_LABEL_FOLDERS = True
+LABEL_FROM_FOLDER = False
 UPLOAD_LABEL_TO_DB = False
 
 # FOLDER PARAMETERS
 GDRIVE_FOLDER = os.getenv('GDRIVE_FOLDER')
 MFP_IMG_FOLDER = GDRIVE_FOLDER + 'MFP - Satellogic/images/'
-BASE_FOLDER = 'usgs_256'
+BASE_FOLDER = 'usgs_512/usgs_512_1m/'
 LABELS_FOLDER = MFP_IMG_FOLDER + 'labels/'
 CATEGORIES = ['city', 'agriculture', 'forest-woodland', 'semi-desert', 'shrubland-grassland']
 LABEL_FOLDERS = ['label_0','label_1','label_2']
@@ -48,6 +49,11 @@ db = dbcon.connect("../credentials/mlab_db.txt", "mfp")
 images_usgs_col = db["images_lib_usgs"]
 labels_df = pd.DataFrame(columns=df_fields)
 labels_list = []
+
+if CREATE_LABEL_FOLDERS:
+    for category in CATEGORIES:
+        for label_folder in LABEL_FOLDERS:
+            ima.create_directory(MFP_IMG_FOLDER + BASE_FOLDER + '/' + category + '/' + label_folder)
 
 if LABEL_FROM_FOLDER:
     for category in CATEGORIES:
@@ -78,7 +84,8 @@ if LABEL_FROM_FOLDER:
         print("[{:.2f} s]".format(t2 - t1))
 
     labels_df = pd.DataFrame.from_dict(labels_list)
-    labels_csv_name = "usgs_"+str(datetime.today())[:16].replace(':','.').replace('-','.').replace(' ','_') + ".csv"
+    # name should include resolution
+    #labels_csv_name = "usgs_"+str(datetime.today())[:16].replace(':','.').replace('-','.').replace(' ','_') + ".csv"
     labels_df.to_csv(LABELS_FOLDER + labels_csv_name, index=False)
 
 # Degrade images and save

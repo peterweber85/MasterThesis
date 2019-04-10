@@ -45,7 +45,7 @@ GDRIVE_FOLDER = os.getenv('GDRIVE_FOLDER')
 RAW_IMAGE_FOLDER = GDRIVE_FOLDER + 'MFP - Satellogic/images/raw_images_usgs_0.3m/'
 PROCESSED_IMAGE_FOLDER = RAW_IMAGE_FOLDER + 'processed/'
 MFP_IMG_FOLDER = GDRIVE_FOLDER + 'MFP - Satellogic/images/'
-CATEGORIES = ['city', 'agriculture', 'forest-woodland', 'semi-desert', 'shrubland-grassland']
+CATEGORIES = ['agriculture', 'shrubland-grassland', 'city', 'forest-woodland', 'semi-desert']
 
 # Compute more parameters
 params = {'size': SIZE, 'res': BASE_RESOLUTION, 'res_degr': DEGRADED_RESOLUTIONS}

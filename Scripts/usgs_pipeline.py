@@ -35,6 +35,7 @@ SAVE_LABELS = True
 # IMAGE PARAMETERS
 SIZE = 1000 # in pixels
 BASE_RESOLUTION = 0.3 # in meter
+LABELS = [0, 1, 2]
 
 # THESE ARE ONLY APPROXIMATE -->  integer(SIZE/DEGRADED_RESOLUTION)
 DEGRADED_RESOLUTIONS = [0.6, 1, 2, 3, 5, 10, 15, 20, 30] # in meter
@@ -89,40 +90,11 @@ for category in CATEGORIES:
         print("[{:.2f} s]".format(t2 - t1))
     #%%
     if SAVE_LABELS:
-        IMG_EXTENSIONS = ['.tif', '.png', '.jpg']
-        LABELS = [0, 1, 2]
-
-
-        def find_csv_filenames(path_to_dir, suffix=".csv"):
-            filenames = os.listdir(path_to_dir)
-            return [filename for filename in filenames if filename.endswith(suffix)]
-
-
-        def write_labels_from_csv_to_db_usgs(db_collection, folder_name, csv_filename):
-            """
-
-            :param db_collection: mongodb connection and define collection
-            :param folder_name: str
-            :param csv_filename: str
-            :return:
-            """
-            with open(folder_name + csv_filename) as csv_file:
-                csv_reader = csv.reader(csv_file, delimiter=',')
-                line_count = 0
-                for row in csv_reader:
-                    if line_count == 0:
-                        print("loading labels from file " + csv_filename + " to db ...")
-                        line_count += 1
-                    else:
-                        query = {"filename": row[0], "label": row[1]}
-                        db_collection.insert_one(query)
-                        line_count += 1
-                print(str(line_count - 1) + ' labels added to db!')
-            return
-
+        print("\nSave labels of category", category.upper(), "to csv ...")
+        t1 = time.time()
         ima.create_csv_with_labels_by_category_usgs(subfolder_base_res, category, LABELS)
-        write_labels_from_csv_to_db_usgs(labels_usgs_col, subfolder_base_res, "labels-" + category + ".csv")
-
+        t2 = time.time()
+        print("[{:.2f} s]".format(t2 - t1))
 
 #%%
 print("\nDONE! [{:.2f} s]\n".format(t2 - t0))
@@ -130,4 +102,26 @@ print("\nDONE! [{:.2f} s]\n".format(t2 - t0))
 #%%
 
 
-#%%
+#%% DEPRECATED
+def write_labels_from_csv_to_db_usgs(db_collection, folder_name, csv_filename):
+    """
+
+    :param db_collection: mongodb connection and define collection
+    :param folder_name: str
+    :param csv_filename: str
+    :return:
+    """
+    with open(folder_name + csv_filename) as csv_file:
+        csv_reader = csv.reader(csv_file, delimiter=',')
+        line_count = 0
+        for row in csv_reader:
+            if line_count == 0:
+                print("loading labels from file " + csv_filename + " to db ...")
+                line_count += 1
+            else:
+                query = {"filename": row[0]}
+                label = {"$set": {"label": row[1]}}
+                db_collection.update(query, label)
+                line_count += 1
+        print(str(line_count - 1) + ' labels added to db!')
+    return

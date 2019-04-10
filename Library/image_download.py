@@ -533,21 +533,23 @@ def save_cropped_images(imcropped, params, input_fname, category, output_folder,
     :return:
     """
     size = params['size']
-    resolution = params['res']
+    baseres = params['res']
+    res = params['res']
 
     for coordinate in imcropped.keys():
         imarray = imcropped[coordinate]
         filename_pure = input_fname.split(".")[0]
         coordinate_string = "_x" + str(coordinate[0]) + "_y" + str(coordinate[1])
         size_string = "_size" + str(size)
-        res_string = "_res" + str(resolution) + "m"
-        filename = filename_pure + coordinate_string + size_string + res_string + ".png"
+        baseres_string = "_baseres" + str(baseres) + "m"
+        res_string = "_res" + str(res) + "m"
+        filename = filename_pure + coordinate_string + size_string + baseres_string + res_string + ".png"
         output_path = output_folder + filename
         Image.fromarray(imarray).save(output_path)
         gist_vector = gist.extract(imarray, nblocks=1, orientations_per_scale=(8, 8, 4)).tolist()
         metadata = generate_metadata_usgs(
-            category, filename_pure, filename, coordinate, size, resolution,
-            gist_vector, dataset='usgs' + '_res' + str(resolution) + "m" + '_size' + str(size))
+            category, filename_pure, filename, coordinate, size, baseres,
+            gist_vector, dataset='usgs' + '_res' + str(baseres) + "m" + '_size' + str(size))
         db_collection.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
 
 def process_raw_images_and_save_usgs(paths, params, category, output_folder, db_collection):
@@ -575,6 +577,7 @@ def process_raw_images_and_save_usgs(paths, params, category, output_folder, db_
 
     for path in paths:
         filename = path.split("/")[-1]
+        print("\n-------------------------------------------- Processing image", filename, "!!! --------------------------------------------")
         imarray = ima.load_image_as_rgb_array(path)
         grid = get_image_grid(imarray, params['size'])
         imcropped = get_cropped_images(imarray, grid)

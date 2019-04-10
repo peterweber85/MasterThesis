@@ -388,6 +388,22 @@ def list_path_of_images_by_category(image_folder, category, extensions=IMG_EXTEN
             paths.append(image_folder + category + '/' + filename)
     return paths
 
+def list_path_of_images_by_category_and_label(image_folder, category, label, extensions=IMG_EXTENSIONS):
+    paths = []
+    for filename in os.listdir(image_folder + category + "/label_" + str(label)):
+        if os.path.splitext(filename)[1] in extensions:
+            paths.append(image_folder + category + '/' + filename)
+    return paths
+
+def create_csv_with_labels_by_category_usgs(folder_base_res, category, labels):
+    dict_labels = {}
+    for label in labels:
+        paths = list_path_of_images_by_category_and_label(folder_base_res, category, label)
+        for path in paths:
+            filename = path.split("/")[-1]
+            dict_labels[filename] = label
+    df_labels = pd.DataFrame(list(dict_labels.items()), columns = ['filename', 'label'])
+    df_labels.to_csv(folder_base_res + "labels-" + category + ".csv", index=False)
 
 def create_directory(path):
     try:

@@ -30,7 +30,7 @@ load_dotenv(dotenv_path)
 PROCESS_RAW_IMAGES = False
 MOVE_PROCESSED_IMAGES = False
 DEGRADE_IMAGES = False
-SAVE_LABELS = True
+SAVE_LABELS = False
 
 # IMAGE PARAMETERS
 SIZE = 1000 # in pixels

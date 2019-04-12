@@ -439,7 +439,7 @@ def degrade_images_and_save(paths, params, root_folder, category, db_collection,
             gist_vector = gist.extract(np.array(imresize), nblocks=1, orientations_per_scale=(8, 8, 4)).tolist()
             result = db_collection.update(
                 {"filename": filename},
-                {"$set": {"gist_"+str(factor): gist_vector}}
+                {"$set": {"gist_"+str(factor).replace(".", "_"): gist_vector}}
             )
             if result["nModified"] == 0:
                 print(filename, "GIST not uploaded to the DB!")

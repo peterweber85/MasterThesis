@@ -514,7 +514,7 @@ def generate_metadata_usgs(category, orig_img, filename, coordinate, size, res, 
     return img_metadata
 
 
-def save_cropped_images(imcropped, params, input_fname, category, output_folder, db_collection):
+def save_cropped_images(imcropped, params, input_fname, category, output_folder, db_collection = None):
     """
     :param imcropped: dict
         Output of get_cropped_images
@@ -534,7 +534,6 @@ def save_cropped_images(imcropped, params, input_fname, category, output_folder,
     """
     size = params['size']
     baseres = params['res']
-    res = params['res']
 
     for coordinate in imcropped.keys():
         imarray = imcropped[coordinate]
@@ -542,17 +541,18 @@ def save_cropped_images(imcropped, params, input_fname, category, output_folder,
         coordinate_string = "_x" + str(coordinate[0]) + "_y" + str(coordinate[1])
         size_string = "_size" + str(size)
         baseres_string = "_baseres" + str(baseres) + "m"
-        res_string = "_res" + str(res) + "m"
-        filename = filename_pure + coordinate_string + size_string + baseres_string + res_string + ".png"
-        output_path = output_folder + filename
+        filename = filename_pure + coordinate_string + size_string + baseres_string + ".png"
+        output_path = os.path.join(output_folder, filename)
         Image.fromarray(imarray).save(output_path)
-        gist_vector = gist.extract(imarray, nblocks=1, orientations_per_scale=(8, 8, 4)).tolist()
-        metadata = generate_metadata_usgs(
-            category, filename_pure, filename, coordinate, size, baseres,
-            gist_vector, dataset='usgs' + '_res' + str(baseres) + "m" + '_size' + str(size))
-        db_collection.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
 
-def process_raw_images_and_save_usgs(paths, params, category, output_folder, db_collection):
+        if not db_collection is None:
+            gist_vector = gist.extract(imarray, nblocks=1, orientations_per_scale=(8, 8, 4)).tolist()
+            metadata = generate_metadata_usgs(
+                category, filename_pure, filename, coordinate, size, baseres,
+                gist_vector, dataset='usgs' + '_res' + str(baseres) + "m" + '_size' + str(size))
+            db_collection.replace_one({"filename": metadata["filename"]}, metadata, upsert=True)
+
+def process_raw_images_and_save_usgs(paths, params, category, output_folder, db_collection = None):
     """
     Processing function that combines
         - loading image
@@ -581,4 +581,4 @@ def process_raw_images_and_save_usgs(paths, params, category, output_folder, db_
         imarray = ima.load_image_as_rgb_array(path)
         grid = get_image_grid(imarray, params['size'])
         imcropped = get_cropped_images(imarray, grid)
-        save_cropped_images(imcropped, params, filename, category, output_folder, db_collection)
+        save_cropped_images(imcropped, params, filename, category, output_folder)

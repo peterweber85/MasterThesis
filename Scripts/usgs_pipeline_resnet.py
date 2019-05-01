@@ -9,6 +9,8 @@ import matplotlib.pyplot as plt
 from matplotlib.pyplot import imshow
 from datetime import datetime
 import time
+import csv
+import pymongo
 
 import sys
 sys.path.append("../Library/")
@@ -26,59 +28,44 @@ load_dotenv(dotenv_path)
 
 # PROCESSING PARAMETERS
 PROCESS_RAW_IMAGES = True
-MOVE_PROCESSED_IMAGES = True
-DEGRADE_IMAGES = True
+MOVE_PROCESSED_IMAGES = False
 
 # IMAGE PARAMETERS
 SIZE = 512 # in pixels
-BASE_RESOLUTION = 1 # in meter
-
-# THESE ARE ONLY APPROXIMATE -->  integer(SIZE/DEGRADED_RESOLUTION)
-DEGRADED_RESOLUTIONS = [2, 5, 10, 20, 50] # in meter
-# THESE ARE ONLY APPROXIMATE -->  integer(SIZE/DEGRADED_RESOLUTION)
+BASE_RESOLUTION = 0.3 # in meter
 
 # FOLDER PARAMETERS
 GDRIVE_FOLDER = os.getenv('GDRIVE_FOLDER')
-RAW_IMAGE_FOLDER = GDRIVE_FOLDER + 'MFP - Satellogic/images/raw_images_usgs/'
+RAW_IMAGE_FOLDER = GDRIVE_FOLDER + 'MFP - Satellogic/images/raw_images_usgs_0.3m/'
 PROCESSED_IMAGE_FOLDER = RAW_IMAGE_FOLDER + 'processed/'
 MFP_IMG_FOLDER = GDRIVE_FOLDER + 'MFP - Satellogic/images/'
-CATEGORIES = ['city', 'agriculture', 'forest-woodland', 'semi-desert', 'shrubland-grassland']
+CATEGORIES = ['agriculture']#, 'semi-desert', 'shrubland-grassland', 'forest-woodland']
 
 # Compute more parameters
-params = {'size': SIZE, 'res': BASE_RESOLUTION, 'res_degr': DEGRADED_RESOLUTIONS}
-subfolder_size = MFP_IMG_FOLDER + 'usgs_' + str(SIZE) + "/"
-subfolder_base_res = subfolder_size + "usgs_" + str(SIZE) + "_" + str(BASE_RESOLUTION) + "m/"
+params = {'size': SIZE, 'res': BASE_RESOLUTION}
+subfolder = os.path.join(MFP_IMG_FOLDER, 'usgs_' + str(SIZE) + '_res' + str(BASE_RESOLUTION) + 'm')
 
 
 #%% Processing
 
 print("\nUSGS PIPELINE:\n")
 t0 = time.time()
-db = dbcon.connect("../credentials/mlab_db.txt", "mfp")
-images_usgs_col = db["images_lib_usgs"]
-ima.create_directory(subfolder_size)
-ima.create_directory(subfolder_base_res)
+ima.create_directory(subfolder)
 
 for category in CATEGORIES:
     # Process raw images and save
     if PROCESS_RAW_IMAGES:
         print("\nProcessing raw images of category", category.upper(), "...")
         t1 = time.time()
-        output_folder = subfolder_base_res + category + "/"
+        output_folder = os.path.join(subfolder, category)
         raw_images_fullnames = ima.list_path_of_images_by_category(RAW_IMAGE_FOLDER, category)
-        imd.process_raw_images_and_save_usgs(raw_images_fullnames, params, category, output_folder, images_usgs_col)
+        imd.process_raw_images_and_save_usgs(raw_images_fullnames, params, category, output_folder)
         if MOVE_PROCESSED_IMAGES:
             ima.move_folder_content(RAW_IMAGE_FOLDER + category, PROCESSED_IMAGE_FOLDER + category)
         t2 = time.time()
         print("[{:.2f} s]".format(t2 - t1))
 
-    # Degrade images and save
-    if DEGRADE_IMAGES:
-        print("\nDegrading images of category", category.upper(), "...")
-        t1 = time.time()
-        images_fullnames = ima.list_path_of_images_by_category(subfolder_base_res, category)
-        ima.degrade_images_and_save(images_fullnames, params, subfolder_size, category, images_usgs_col)
-        t2 = time.time()
-        print("[{:.2f} s]".format(t2 - t1))
-
+#%%
 print("\nDONE! [{:.2f} s]\n".format(t2 - t0))
+
+#%%

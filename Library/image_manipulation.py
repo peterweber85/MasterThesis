@@ -381,18 +381,16 @@ def load_image_as_rgb_array(file):
         return array
 
 
-def list_path_of_images_by_category(image_folder, category, extensions=IMG_EXTENSIONS):
+def list_path_of_images_by_category_and_label(image_folder, category, label = None, extensions=IMG_EXTENSIONS):
     paths = []
-    for filename in os.listdir(image_folder + category):
-        if os.path.splitext(filename)[1] in extensions:
-            paths.append(image_folder + category + '/' + filename)
-    return paths
-
-def list_path_of_images_by_category_and_label(image_folder, category, label, extensions=IMG_EXTENSIONS):
-    paths = []
-    for filename in os.listdir(image_folder + category + "/label_" + str(label)):
-        if os.path.splitext(filename)[1] in extensions:
-            paths.append(image_folder + category + '/' + filename)
+    if label is None:
+        for filename in os.listdir(os.path.join(image_folder, category)):
+            if os.path.splitext(filename)[1] in extensions:
+                paths.append(os.path.join(image_folder, category, filename))
+    else:
+        for filename in os.listdir(os.path.join(image_folder, category, "label_" + str(label))):
+            if os.path.splitext(filename)[1] in extensions:
+                paths.append(os.path.join(image_folder, category, "label_" + str(label), filename))
     return paths
 
 def create_csv_with_labels_by_category_usgs(folder_base_res, category, labels):
@@ -459,3 +457,94 @@ def move_folder_content(source_folder, target_folder, extensions=IMG_EXTENSIONS)
                 os.path.join(target_folder, filename)
             )
     return
+
+def degrade_image_and_keep_size(imarray, size_degraded):
+    """
+    Degrades image to size_degraded, but keeps the original size in pixels
+    :param img: np.array or PIL.Image
+    :param size_degraded: 2-tuple
+    :return: np.array
+    """
+    if isinstance(imarray, np.ndarray):
+        img = Image.fromarray(imarray)
+    else:
+        img = imarray
+
+    dim = np.array(img).shape
+    img = img.resize((size_degraded[0], size_degraded[1]), resample = Image.LANCZOS).resize((dim[0], dim[1]))
+    return np.array(img)
+
+
+def load_images_into_df(paths, label = None):
+    """
+    Returns dataframe with 2 columns: filename and image array
+    :param paths: list of strings
+        with full file path
+    :return:
+    """
+
+    filenames = [fname.split("/")[-1] for fname in paths]
+    images = [load_image_as_rgb_array(fname) for fname in paths]
+    df = pd.DataFrame({
+        'filename': filenames,
+        'image': images
+    })
+    if not label is None:
+        df.label = label
+
+    return df
+
+
+def load_degraded_images_into_df(df_images, sizes, label = False):
+    """
+    :param df_images: df
+        base resolution images, needs to have columns 'image' containing
+        numpy array or PIL.Image of images
+    :param sizes: dict
+        keys: resolution per pixel (as a string)
+        values: number of pixels of degraded image (as a tuple)
+    :return:
+    """
+    if df_images.shape[0] < 2:
+        print("DataFrame must have at least 2 rows")
+        return
+
+    if label:
+        df = pd.DataFrame(columns=['filename', 'image', 'resolution', 'label'])
+    else:
+        df = pd.DataFrame(columns=['filename', 'image', 'resolution'])
+
+    for resolution in sizes.keys():
+        df_res = pd.DataFrame({
+            'filename': df_images.filename,
+            'image': [degrade_image_and_keep_size(image, sizes[resolution])
+                      for image in df_images.image],
+            'resolution': resolution
+        })
+        if label:
+            df_res["label"] = df_images.label
+        df = df.append(df_res)
+    return df.reset_index(drop = True)
+
+
+def load_images_into_df_by_category_and_label(base_folder, category, label=None, base_res=0.3):
+    """
+    Preprocessing function that creates dataframe with 3 optional 4 columns
+    - filename
+    - image
+    - resolution
+    - label (optional)
+
+    :param base_folder: str
+    :param category: str
+    :param label: int
+    :param base_res: float
+    :return:
+    """
+    fnames = list_path_of_images_by_category_and_label(base_folder, category, label)
+    df_images = load_images_into_df(fnames, label)
+    df_images["resolution"] = base_res
+    if not label is None:
+        df_images["label"] = label
+
+    return df_images

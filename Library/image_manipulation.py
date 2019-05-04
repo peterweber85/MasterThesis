@@ -458,9 +458,9 @@ def move_folder_content(source_folder, target_folder, extensions=IMG_EXTENSIONS)
             )
     return
 
-def degrade_image_and_keep_size(imarray, size_degraded):
+def degrade_image(imarray, size_degraded, keep_size = False):
     """
-    Degrades image to size_degraded, but keeps the original size in pixels
+    Degrades image to size_degraded, and optionally keeps the original size in pixels
     :param img: np.array or PIL.Image
     :param size_degraded: 2-tuple
     :return: np.array
@@ -470,8 +470,10 @@ def degrade_image_and_keep_size(imarray, size_degraded):
     else:
         img = imarray
 
-    dim = np.array(img).shape
-    img = img.resize((size_degraded[0], size_degraded[1]), resample = Image.LANCZOS).resize((dim[0], dim[1]))
+    img = img.resize((size_degraded[0], size_degraded[1]), resample = Image.LANCZOS)
+    if keep_size:
+        dim = np.array(img).shape
+        img = img.resize((dim[0], dim[1]))
     return np.array(img)
 
 
@@ -510,19 +512,20 @@ def load_degraded_images_into_df(df_images, sizes, label = False):
         return
 
     if label:
-        df = pd.DataFrame(columns=['filename', 'image', 'resolution', 'label'])
+        df = pd.DataFrame(columns=['filename', 'image', 'resolution', 'label', 'category'])
     else:
-        df = pd.DataFrame(columns=['filename', 'image', 'resolution'])
+        df = pd.DataFrame(columns=['filename', 'image', 'resolution', 'category'])
 
     for resolution in sizes.keys():
         df_res = pd.DataFrame({
             'filename': df_images.filename,
-            'image': [degrade_image_and_keep_size(image, sizes[resolution])
+            'image': [degrade_image(image, sizes[resolution])
                       for image in df_images.image],
-            'resolution': resolution
+            'resolution': resolution,
+            'category': df_images.category
         })
         if label:
-            df_res["label"] = df_images.label
+            df_res['label'] = df_images.label
         df = df.append(df_res)
     return df.reset_index(drop = True)
 
@@ -534,6 +537,7 @@ def load_images_into_df_by_category_and_label(base_folder, category, label=None,
     - image
     - resolution
     - label (optional)
+    - category
 
     :param base_folder: str
     :param category: str
@@ -546,5 +550,6 @@ def load_images_into_df_by_category_and_label(base_folder, category, label=None,
     df_images["resolution"] = base_res
     if not label is None:
         df_images["label"] = label
+    df_images["category"] = category
 
     return df_images

@@ -5,6 +5,7 @@ import numpy as np
 from keras.applications.resnet50 import ResNet50, preprocess_input
 from keras.models import Model
 from keras.preprocessing import image
+from keras.models import model_from_json
 
 
 
@@ -42,3 +43,18 @@ def generate_X_y_from_df(df_images, resolution):
 
     print("Shape of image array is:", images_array.shape)
     return images_array, labels
+
+
+def load_keras_model(path, X, y):
+    # load json and create model
+    json_file = open(path + '.json', 'r')
+    loaded_model_json = json_file.read()
+    json_file.close()
+    loaded_model = model_from_json(loaded_model_json)
+    loaded_model.load_weights(path + ".h5")
+
+    loaded_model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
+    score = loaded_model.evaluate(X, y, verbose=0)
+    print("%s: %.2f%%" % (loaded_model.metrics_names[1], score[1] * 100))
+
+    return loaded_model, score[1]

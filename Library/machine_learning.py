@@ -27,3 +27,20 @@ def cross_validate_clf(X, y, clf, params):
     return prediction, scores, score_mean, score_std
 
 
+def zero_encoding(x):
+    if x == 0: return 0
+    if x == 1: return 0
+    if x == 2: return 1
+
+
+def two_encoding(x):
+    if x == 0: return 0
+    if x == 1: return 1
+    if x == 2: return 1
+
+
+def convert_encoding(y, encoding):
+    y = [encoding(el) for el in y]
+    return y
+
+

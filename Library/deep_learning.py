@@ -1,5 +1,6 @@
 
 import numpy as np
+import pandas as pd
 
 
 from keras.applications.resnet50 import ResNet50, preprocess_input
@@ -35,14 +36,18 @@ def get_activations(img, base_model, activation = 1):
     return activation
 
 
-def generate_X_y_from_df(df_images, resolution):
-    mask = df_images.resolution == resolution
+def generate_X_y_from_df(df_images, resolution = None):
 
-    images_array = np.stack(df_images[mask].image)
-    labels = df_images[mask].label
+    if not resolution is None:
+        mask = df_images.resolution == resolution
+        images_array = np.stack(df_images[mask].image)
+        labels = df_images[mask]["label"]
+    else:
+        images_array = np.stack(df_images.image)
+        labels = df_images["label"]
 
     print("Shape of image array is:", images_array.shape)
-    return images_array, labels
+    return images_array, np.array(labels, dtype=pd.Series)
 
 
 def load_keras_model(path, X, y):

@@ -44,3 +44,13 @@ def convert_encoding(y, encoding):
     return y
 
 
+# make an ensemble prediction for multi-class classification
+def ensemble_predictions(members, testX):
+    # make predictions
+    yhats = [model.predict(testX) for model in members]
+    yhats = np.array(yhats)
+    # sum across ensemble members
+    summed = np.sum(yhats, axis=0)
+    # argmax across classes
+    result = np.argmax(summed, axis=1)
+    return result

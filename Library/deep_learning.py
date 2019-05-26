@@ -10,7 +10,7 @@ from keras.models import model_from_json
 
 
 
-def get_activations(img, base_model, activation = 1):
+def get_activations(img, base_model, activation_name):
     """
     Returns ReLUs of layer specified by parameter activation
 
@@ -29,7 +29,7 @@ def get_activations(img, base_model, activation = 1):
     print("Shape of input:", img.shape)
 
     model = Model(inputs=base_model.input,
-                  outputs=base_model.get_layer('activation_' + str(activation)).output)
+                  outputs=base_model.get_layer(activation_name).output)
 
     activation = model.predict(img)
     print("Shape of output:", activation.shape)
@@ -50,16 +50,17 @@ def generate_X_y_from_df(df_images, resolution = None):
     return images_array, np.array(labels, dtype=pd.Series)
 
 
-def load_keras_model(path, X, y):
+def load_keras_model(path, X = None, y = None):
     # load json and create model
     json_file = open(path + '.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     loaded_model = model_from_json(loaded_model_json)
     loaded_model.load_weights(path + ".h5")
-
     loaded_model.compile(loss='binary_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
-    score = loaded_model.evaluate(X, y, verbose=0)
-    print("%s: %.2f%%" % (loaded_model.metrics_names[1], score[1] * 100))
 
-    return loaded_model, score[1]
+    if not X is None:
+        score = loaded_model.evaluate(X, y, verbose=0)
+        print("%s: %.2f%%" % (loaded_model.metrics_names[1], score[1] * 100))
+        return loaded_model, score[1]
+    return loaded_model

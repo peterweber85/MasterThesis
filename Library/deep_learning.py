@@ -8,6 +8,7 @@ from keras.models import Model
 from keras.preprocessing import image
 from keras.models import model_from_json
 
+import image_manipulation as ima
 
 
 def get_activations(img, base_model, activation_name):
@@ -34,6 +35,20 @@ def get_activations(img, base_model, activation_name):
     activation = model.predict(img)
     print("Shape of output:", activation.shape)
     return activation
+
+
+def preprocess_activations(X_base, degrade, model, activation_name='conv5_block3_out'):
+    print("--- degrading images ---")
+    X = np.array([ima.degrade_image(X_base[i], degrade) for i in range(X_base.shape[0])])
+
+    print("--- getting activations ---")
+    X_act = get_activations(X, model, activation_name)
+
+    dim = X_act.shape
+    X_act = preprocess_input(X_act)
+    X_act_flat = np.reshape(X_act, (dim[0], dim[1] * dim[2] * dim[3]))
+
+    return X_act_flat
 
 
 def generate_X_y_from_df(df_images, resolution = None):

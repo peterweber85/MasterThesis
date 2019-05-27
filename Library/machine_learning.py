@@ -1,11 +1,13 @@
 
 
 import numpy as np
-import pandas as pd
+import os
 
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split, cross_val_score, cross_val_predict
-from sklearn.metrics import accuracy_score
+import deep_learning as dl
+
+
+from sklearn.model_selection import cross_val_score, cross_val_predict
+
 
 def cross_validate_clf(X, y, clf, params):
     """
@@ -45,12 +47,27 @@ def convert_encoding(y, encoding):
 
 
 # make an ensemble prediction for multi-class classification
-def ensemble_predictions(members, testX):
+def ensemble_predictions(members, testX, binary = True):
     # make predictions
-    yhats = [model.predict(testX) for model in members]
+    yhats = [model.predict_classes(testX) for model in members]
     yhats = np.array(yhats)
-    # sum across ensemble members
-    summed = np.sum(yhats, axis=0)
-    # argmax across classes
-    result = np.argmax(summed, axis=1)
+    if len(yhats.shape) == 3:
+        yhats = yhats[:,:,0]
+    # average predictions of all models
+    average = np.mean(yhats, axis=0)
+    # return binary
+    if binary:
+        result = np.where(average >= 0.5, 1, 0)
+    else:
+        result = average
     return result
+
+
+def load_ensemble_models(path, res, num_folds):
+
+    folds = range(num_folds)
+    models = []
+    for fold in folds:
+        fullpath = os.path.join(path, "model_res" + str(res) + "_fold" + str(fold))
+        models.append(dl.load_keras_model(fullpath))
+    return models

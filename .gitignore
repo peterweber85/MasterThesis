@@ -1,6 +1,7 @@
 **/.idea/
 **/__pycache__/
 Notebooks/.ipynb_checkpoints/
+Notebooks/Deprecated/.ipynb_checkpoints/
 .env
 credentials/*
 images_test/*

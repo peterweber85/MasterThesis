@@ -7,3 +7,11 @@ credentials/*
 images_test/*
 data/*
 Models/*
+
+report/*.aux
+report/*.log
+report/*.out
+report/*.run.xml
+report/*.synctex.gz
+report/*.tex.bak
+

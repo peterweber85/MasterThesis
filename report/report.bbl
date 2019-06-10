@@ -1,0 +1,68 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.7 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\sortlist[entry]{nyt/global/}
+  \entry{sumbul2019}{article}{}
+    \name{author}{4}{}{%
+      {{hash=SG}{%
+         family={Sumbul},
+         family_i={S\bibinitperiod},
+         given={Gencer},
+         given_i={G\bibinitperiod},
+      }}%
+      {{hash=CM}{%
+         family={Charfuelan},
+         family_i={C\bibinitperiod},
+         given={Marcela},
+         given_i={M\bibinitperiod},
+      }}%
+      {{hash=DB}{%
+         family={Demir},
+         family_i={D\bibinitperiod},
+         given={Beg{\"{u}}m},
+         given_i={B\bibinitperiod},
+      }}%
+      {{hash=MV}{%
+         family={Markl},
+         family_i={M\bibinitperiod},
+         given={Volker},
+         given_i={V\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SG+1}
+    \strng{fullhash}{SGCMDBMV1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{labelyear}{2019}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \verb{eprint}
+    \verb 1902.06148
+    \endverb
+    \field{title}{BigEarthNet: {A} Large-Scale Benchmark Archive For Remote
+  Sensing Image Understanding}
+    \verb{url}
+    \verb http://arxiv.org/abs/1902.06148
+    \endverb
+    \field{volume}{abs/1902.06148}
+    \field{journaltitle}{CoRR}
+    \field{eprinttype}{arXiv}
+    \field{year}{2019}
+  \endentry
+\endsortlist
+\endinput

@@ -98,3 +98,25 @@ def plot_misclf_or_correctclf_images(X, y = None, n = None, columns=4, misclf=No
         ax.axes.xaxis.set_ticklabels([])
         ax.axes.yaxis.set_ticklabels([])
     fig.tight_layout()
+
+
+
+
+
+def plot_image_array(X, n = None, columns = 4, fname_save = None):
+
+    if n is None:
+        n = len(X)
+    last_line = n % columns
+
+    fig = plt.figure(figsize=(15, 4 * n / columns))
+    fig.subplots_adjust(hspace=0.4, wspace=0.4)
+    for i in range(n):
+        ax = fig.add_subplot(int(n / columns), columns, np.max([i + 1 - last_line, 1]))
+        ax.imshow(X[i])
+        ax.axes.xaxis.set_ticklabels([])
+        ax.axes.yaxis.set_ticklabels([])
+    fig.tight_layout()
+
+    if not fname_save is None:
+        plt.savefig(fname_save)

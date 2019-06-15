@@ -10,6 +10,6 @@
 \contentsline {section}{\numberline {1.4}USGS, Land Cover}{6}{section.15}
 \contentsline {subsection}{\numberline {1.4.1}Getting the Data}{6}{subsection.16}
 \contentsline {subsection}{\numberline {1.4.2}Data Processing and Labeling}{7}{subsection.17}
-\contentsline {chapter}{\numberline {A}Frequently Asked Questions}{9}{appendix.18}
-\contentsline {section}{\numberline {A.1}How do I change the colors of links?}{9}{section.19}
-\contentsline {chapter}{Bibliography}{11}{appendix*.20}
+\contentsline {chapter}{\numberline {A}Frequently Asked Questions}{11}{appendix.24}
+\contentsline {section}{\numberline {A.1}How do I change the colors of links?}{11}{section.25}
+\contentsline {chapter}{Bibliography}{13}{appendix*.26}

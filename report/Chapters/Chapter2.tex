@@ -84,15 +84,69 @@ Our data processing pipeline consists of the following steps:
 
 \textcolor{red}{TODO: mention all the scripts/notebooks for the respective parts}
 
-Let us discuss each of these steps in more detail. Every raw image was processed, whereas the processed images of size $512\times512$ were saved in a folder structure according to their category. Note that every raw image resulted in approximately $100 - 150$ processed images, so that we would end up with more than 10,000 images for each dataset.
+Let us discuss each of these steps in more detail. Every raw image was processed, whereas the processed images of size $512\times512$ were saved in a folder named by its category. Note that every raw image resulted in approximately $100 - 150$ processed images, so that we ended up with more than 10,000 images for each dataset.
 
-FIGURE
+\begin{figure}%[th]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/agriculture_sample.pdf}
+	\caption{\textbf{Example images of category Agricultue.} All images in this figure show clear signs of human impact. The images in this figure have a size of $512\times512$ pixels and a resolution of $0.3$m per pixel.}
+	\label{fig:agriculture_sample}
+\end{figure}
+
+\begin{figure}%[th]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/shrubland-grassland_sample.pdf}
+	\caption{\textbf{Example images of category Shrubland-grassland.} The images in the first row do not contain any human influence, while the images in the second row show influence by humans. The images in this figure have a size of $512\times512$ pixels and a resolution of $0.3$m per pixel.}
+	\label{fig:shrubland-sample}
+\end{figure}
+
+\begin{figure}%[th]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/forest-woodland_sample.pdf}
+	\caption{\textbf{Example images of category Forest-woodland.} The images in the first row do not contain any human influence, while the images in the second row show influence by humans. The images in this figure have a size of $512\times512$ pixels and a resolution of $0.3$m per pixel.}
+	\label{fig:forest-sample}
+\end{figure}
+
+\begin{figure}%[th]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/semi-desert_sample.pdf}
+	\caption{\textbf{Example images of category Semi-desert.} The images in the first row do not contain any human influence, while the images in the second row show influence by humans. The images in this figure have a size of $512\times512$ pixels and a resolution of $0.3$m per pixel.}
+	\label{fig:desert-sample}
+\end{figure}
+
+Within each category of the processed images we labelled a selected portion of the images, by moving them into the folder with the respective label name. \textcolor{red}{SHOW FOLDER STRUCTURE SCHEMATICALLY}. When labelling 
+we mainly followed two rules. First, we did not classify images that were ambigious, i.e. images that showed minimal human impact such as a small walking path. Second, we put a lot of effort in creating datasets that contain images of similar texture spread accross both classes. If we for example classified a set of images of a certain type of forest into the class with label 0 we classified another set of images with a similar type of forest, but containing a building or a street, into the class with label 1. We followed the latter rule for all categories except Agriculture. The Agriculture images all show human influence.
+By sticking to these rules, we are able to guarantee that the algorithm learns features that relate purely to the human impact. 
+
+In Figures \ref{fig:agriculture_sample} - \ref{fig:desert-sample} we display sample images for each of the four categories Agriculture, Shrubland-grassland, Forest-woodland and Semi-desert. These images belong to the dataset with 0.3m resolution per pixel. Note that in the Figs. \ref{fig:shrubland_sample} - \ref{fig:desert-sample} the first row represents images of label 0 and the second row shows images that belong to label 1. As mentioned above, the images in Fig.~\ref{fig:agriculture_sample} all contain human influence. Overall, we classified 
+
+\begin{figure}%[th]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/imstats.pdf}
+	\caption{\textbf{Image statistics.} }
+	\label{fig:imstats}
+\end{figure}
+
+\begin{figure}%[th]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/demo_degrade.pdf}
+	\caption{\textbf{Demo image resampling.} }
+	\label{fig:degrade}
+\end{figure}
 
 
-Within each category of the processed images we would label a selected portion of the images, by moving them into a folder with the respective label name.
+\begin{itemize}
+\item Image statistics 
+\item Image degradation
 
 
 
-
+\end{itemize}
 
 %----------------------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 
 import random
 import numpy as np
+import pandas as pd
 from matplotlib import pyplot as plt
 
 import image_manipulation as ima
@@ -103,7 +104,10 @@ def plot_misclf_or_correctclf_images(X, y = None, n = None, columns=4, misclf=No
 
 
 
-def plot_image_array(X, n = None, columns = 4, fname_save = None):
+def plot_image_array(X, n = None, columns = 4, fname_save = None, resolutions = None):
+
+    if isinstance(X, dict):
+        X = [X[round(res, 1)] for res in X.keys()]
 
     if n is None:
         n = len(X)
@@ -114,9 +118,32 @@ def plot_image_array(X, n = None, columns = 4, fname_save = None):
     for i in range(n):
         ax = fig.add_subplot(int(n / columns), columns, np.max([i + 1 - last_line, 1]))
         ax.imshow(X[i])
+        ax.grid()
         ax.axes.xaxis.set_ticklabels([])
         ax.axes.yaxis.set_ticklabels([])
+
+        if not resolutions is None:
+            ax.set_title("Resolution per pixel: " + str(resolutions[i]) + "m", fontsize=14)
     fig.tight_layout()
 
     if not fname_save is None:
         plt.savefig(fname_save)
+
+
+def get_image_statistics(base_folder, categories, labels):
+    df_images = pd.DataFrame(columns=['filename', 'image', 'resolution', 'label', 'category'])
+    for category in categories:
+        for label in labels:
+            df_images = df_images.append(ima.load_images_into_df_by_category_and_label(base_folder,
+                                                                                       category,
+                                                                                       label)
+                                         )
+    df_counts_by_category = df_images.groupby(['category', 'label']).size().reset_index(name='counts')
+
+    imstats = df_counts_by_category.pivot(index='category', columns='label', values='counts')
+    imstats.columns = ['label_' + str(x) for x in imstats.columns]
+    imstats = imstats.reset_index()
+
+    return imstats, df_images
+
+

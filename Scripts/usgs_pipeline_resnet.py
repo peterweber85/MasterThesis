@@ -2,21 +2,12 @@
 #%% IMPORTS
 
 import os
-import random
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-from matplotlib.pyplot import imshow
-from datetime import datetime
 import time
-import csv
-import pymongo
 
 import sys
 sys.path.append("../Library/")
 import image_download as imd
 import image_manipulation as ima
-import db_connection as dbcon
 
 from dotenv import load_dotenv
 load_dotenv("../.env")

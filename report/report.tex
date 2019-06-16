@@ -35,10 +35,11 @@ headsepline, % Uncomment to get a line under the header
 \usepackage[T1]{fontenc} % Output font encoding for international characters
 
 \usepackage{mathpazo} % Use the Palatino font by default
+\usepackage{xcolor
 
 \usepackage[backend=bibtex,style=authoryear,natbib=true]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
 
-\addbibresource{example.bib} % The filename of the bibliography
+\addbibresource{bibliography.bib} % The filename of the bibliography
 
 \usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
 
@@ -203,8 +204,8 @@ Report structure:
 	
 \end{enumerate}
 
-\include{Chapters/Chapter1}
-%\include{Chapters/Chapter2} 
+%\include{Chapters/Chapter1}
+\include{Chapters/Chapter2} 
 %\include{Chapters/Chapter3}
 %\include{Chapters/Chapter4} 
 %\include{Chapters/Chapter5} 
@@ -227,6 +228,7 @@ Report structure:
 %----------------------------------------------------------------------------------------
 
 \printbibliography[heading=bibintoc]
+
 
 %----------------------------------------------------------------------------------------
 

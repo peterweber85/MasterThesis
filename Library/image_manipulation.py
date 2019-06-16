@@ -553,3 +553,4 @@ def load_images_into_df_by_category_and_label(base_folder, category, label=None,
     df_images["category"] = category
 
     return df_images
+

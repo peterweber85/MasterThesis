@@ -75,6 +75,38 @@
     \field{year}{2015}
   \endentry
 
+  \entry{duchon1979}{article}{}
+    \name{author}{1}{}{%
+      {{hash=DCE}{%
+         family={Duchon},
+         family_i={D\bibinitperiod},
+         given={Claude\bibnamedelima E.},
+         given_i={C\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{DCE1}
+    \strng{fullhash}{DCE1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{D}
+    \field{sortinithash}{D}
+    \field{title}{Lanczos Filtering in One and Two Dimensions}
+    \verb{url}
+    \verb https://icess.eri.ucsb.edu/gem/Duchon_1979_JAM_Lanczos.pdf
+    \endverb
+    \field{volume}{18, 1016-1022}
+    \field{journaltitle}{Journal of Applied Meteorology}
+    \field{year}{1979}
+  \endentry
+
+  \entry{gmaps_res_per_m}{misc}{}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+  \field{howpublished}{https://groups.google.com/forum/#!topic/google-maps-js-api-v3/hDRO4oHVSeM}
+    \field{title}{Google Maps: Zoom to meters}
+  \endentry
+
   \entry{helber2017}{article}{}
     \name{author}{4}{}{%
       {{hash=HP}{%

@@ -57,12 +57,19 @@ def generate_X_y_from_df(df_images, resolution = None):
         mask = df_images.resolution == resolution
         images_array = np.stack(df_images[mask].image)
         labels = df_images[mask]["label"]
+        filenames = df_images[mask]["filename"]
+        categories = df_images[mask]["category"]
     else:
         images_array = np.stack(df_images.image)
         labels = df_images["label"]
+        filenames = df_images["filename"]
+        categories = df_images["category"]
 
     print("Shape of image array is:", images_array.shape)
-    return images_array, np.array(labels, dtype=pd.Series)
+    return images_array, \
+           np.array(labels, dtype=pd.Series), \
+           np.array(filenames, dtype=pd.Series), \
+           np.array(categories, dtype=pd.Series)
 
 
 def load_keras_model(path, X = None, y = None):

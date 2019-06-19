@@ -2,7 +2,9 @@ This is BibTeX, Version 0.99d (TeX Live 2016)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: report_pw.aux
 The style file: biblatex.bst
+A level-1 auxiliary file: Chapters/Chapter1.aux
 A level-1 auxiliary file: Chapters/Chapter2.aux
+A level-1 auxiliary file: Chapters/Chapter3.aux
 A level-1 auxiliary file: Appendices/AppendixA.aux
 Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
 Reallocated global_strs (elt_size=20001) to 20 items from 10.
@@ -23,44 +25,44 @@ Database file #2: bibliography.bib
 Biblatex version: 3.3
 Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
 Reallocated singl_function (elt_size=4) to 100 items from 50.
-You've used 9 entries,
+You've used 16 entries,
             6256 wiz_defined-function locations,
-            1231 strings with 10216 characters,
-and the built_in function-call counts, 49537 in all, are:
-= -- 3438
-> -- 800
-< -- 176
-+ -- 1387
-- -- 335
-* -- 3685
-:= -- 5480
+            1290 strings with 12489 characters,
+and the built_in function-call counts, 107436 in all, are:
+= -- 7831
+> -- 1653
+< -- 348
++ -- 3186
+- -- 709
+* -- 8242
+:= -- 12177
 add.period$ -- 0
-call.type$ -- 9
-change.case$ -- 73
-chr.to.int$ -- 36
-cite$ -- 16
-duplicate$ -- 5659
-empty$ -- 4574
-format.name$ -- 569
-if$ -- 9814
+call.type$ -- 16
+change.case$ -- 158
+chr.to.int$ -- 38
+cite$ -- 30
+duplicate$ -- 12293
+empty$ -- 9605
+format.name$ -- 1248
+if$ -- 20996
 int.to.chr$ -- 0
-int.to.str$ -- 15
+int.to.str$ -- 30
 missing$ -- 0
-newline$ -- 342
-num.names$ -- 287
-pop$ -- 2879
+newline$ -- 725
+num.names$ -- 591
+pop$ -- 5501
 preamble$ -- 1
-purify$ -- 129
+purify$ -- 290
 quote$ -- 0
-skip$ -- 1236
+skip$ -- 2407
 stack$ -- 0
-substring$ -- 5742
-swap$ -- 1273
-text.length$ -- 207
-text.prefix$ -- 8
+substring$ -- 13401
+swap$ -- 2679
+text.length$ -- 398
+text.prefix$ -- 18
 top$ -- 1
-type$ -- 294
+type$ -- 532
 warning$ -- 0
-while$ -- 738
+while$ -- 1622
 width$ -- 0
-write$ -- 334
+write$ -- 710

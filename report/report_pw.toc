@@ -3,13 +3,21 @@
 \select@language {english}
 \contentsline {chapter}{Abstract}{iii}{section*.1}
 \contentsline {chapter}{Acknowledgements}{v}{section*.2}
-\contentsline {chapter}{\numberline {1}Building Datasets}{5}{chapter.10}
-\contentsline {section}{\numberline {1.1}Requirements and Considerations}{5}{section.11}
-\contentsline {section}{\numberline {1.2}Existing Datasets}{5}{section.12}
-\contentsline {section}{\numberline {1.3}Google Maps}{6}{section.14}
-\contentsline {section}{\numberline {1.4}USGS, Land Cover}{6}{section.16}
-\contentsline {subsection}{\numberline {1.4.1}Getting the Data}{6}{subsection.17}
-\contentsline {subsection}{\numberline {1.4.2}Data Processing and Labeling}{9}{subsection.22}
-\contentsline {chapter}{\numberline {A}Frequently Asked Questions}{13}{appendix.25}
-\contentsline {section}{\numberline {A.1}How do I change the colors of links?}{13}{section.26}
-\contentsline {chapter}{Bibliography}{15}{appendix*.27}
+\contentsline {chapter}{\numberline {1}Introduction}{3}{chapter.4}
+\contentsline {section}{\numberline {1.1}Motivation}{3}{section.5}
+\contentsline {section}{\numberline {1.2}Satellogic}{3}{section.6}
+\contentsline {section}{\numberline {1.3}Thesis Outline}{3}{section.7}
+\contentsline {chapter}{\numberline {2}Deep Learning: Overview}{5}{chapter.8}
+\contentsline {section}{\numberline {2.1}Introduction to Deep Learning}{5}{section.9}
+\contentsline {section}{\numberline {2.2}Convolutional Neural Networks}{6}{section.10}
+\contentsline {section}{\numberline {2.3}CNN Architectures}{6}{section.11}
+\contentsline {chapter}{\numberline {3}Building Datasets}{7}{chapter.12}
+\contentsline {section}{\numberline {3.1}Requirements and Considerations}{7}{section.13}
+\contentsline {section}{\numberline {3.2}Existing Datasets}{7}{section.14}
+\contentsline {section}{\numberline {3.3}Google Maps}{9}{section.16}
+\contentsline {section}{\numberline {3.4}USGS, Land Cover}{9}{section.18}
+\contentsline {subsection}{\numberline {3.4.1}Getting the Data}{9}{subsection.19}
+\contentsline {subsection}{\numberline {3.4.2}Data Processing and Labeling}{12}{subsection.24}
+\contentsline {chapter}{\numberline {A}Frequently Asked Questions}{15}{appendix.27}
+\contentsline {section}{\numberline {A.1}How do I change the colors of links?}{15}{section.28}
+\contentsline {chapter}{Bibliography}{17}{appendix*.29}

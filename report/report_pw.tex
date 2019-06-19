@@ -19,7 +19,7 @@
 11pt, % The default document font size, options: 10pt, 11pt, 12pt
 %oneside, % Two side (alternating margins) for binding by default, uncomment to switch to one side
 english, % ngerman for German
-singlespacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
+onehalfspacing, % Single line spacing, alternatives: onehalfspacing or doublespacing
 %draft, % Uncomment to enable draft mode (no pictures, no links, overfull hboxes indicated)
 %nolistspacing, % If the document is onehalfspacing or doublespacing, uncomment this to set spacing in lists to single
 liststotoc, % Uncomment to add the list of figures/tables/etc to the table of contents
@@ -38,6 +38,7 @@ headsepline, % Uncomment to get a line under the header
 \usepackage{xcolor}
 
 \usepackage{hyperref}
+\usepackage{url}
 \usepackage{dirtree}
 \usepackage[font=small]{caption}
 \captionsetup{justification=raggedright,singlelinecheck=false}
@@ -167,53 +168,12 @@ The acknowledgments and the people to thank go here, don't forget to include you
 % Include the chapters of the thesis as separate files from the Chapters folder
 % Uncomment the lines as you write the chapters
 
-Report structure:
-
-\begin{enumerate}
-
-	\item Chapter 1: Introduction
-		\begin{itemize}
-			\item Problem introduction, satellites, Satellogic, motivation
-			\item Previous work, literature
-		\end{itemize}
-		
-	\item Chapter 2: Building datasets
-		\begin{itemize}
-			\item Existing datasets
-			\item Google Maps
-			\item USGS, land cover
-		\end{itemize}
-		
-	\item Chapter 3: Gist approach
-		\begin{itemize}
-			\item Features
-			\item Model
-			\item Results
-		\end{itemize}
-		
-	\item Chapter 4: DL approach
-		\begin{itemize}
-			\item Features
-			\item Model
-			\item Results
-		\end{itemize}
-	
-	\item Chapter 5: Final results
-		\begin{itemize}
-			\item Results
-			\item Cost
-			\item Environment impact
-		\end{itemize}
-		
-	\item Chapter 6: Conclusion
-	
-\end{enumerate}
 
 \tableofcontents
 
-%\include{Chapters/Chapter1}
+\include{Chapters/Chapter1}
 \include{Chapters/Chapter2} 
-%\include{Chapters/Chapter3}
+\include{Chapters/Chapter3}
 %\include{Chapters/Chapter4} 
 %\include{Chapters/Chapter5} 
 

@@ -75,6 +75,33 @@
     \field{year}{2015}
   \endentry
 
+  \entry{bottou2008}{article}{}
+    \name{author}{2}{}{%
+      {{hash=BL}{%
+         family={Bottou},
+         family_i={B\bibinitperiod},
+         given={Leon},
+         given_i={L\bibinitperiod},
+      }}%
+      {{hash=BO}{%
+         family={Bousquet},
+         family_i={B\bibinitperiod},
+         given={Olivier},
+         given_i={O\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BLBO1}
+    \strng{fullhash}{BLBO1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{B}
+    \field{sortinithash}{B}
+    \field{booktitle}{Advances in Neural Information Processing Systems 20}
+    \field{pages}{161\bibrangedash 168}
+    \field{title}{The Tradeoffs of Large Scale Learning}
+    \field{year}{2008}
+  \endentry
+
   \entry{ciodaroc2012}{article}{}
     \name{author}{4}{}{%
       {{hash=CT}{%
@@ -186,6 +213,36 @@
     \field{year}{2011}
   \endentry
 
+  \entry{cybenko1989}{article}{}
+    \name{author}{1}{}{%
+      {{hash=CG}{%
+         family={Cybenko},
+         family_i={C\bibinitperiod},
+         given={G.},
+         given_i={G\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{CG1}
+    \strng{fullhash}{CG1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \verb{doi}
+    \verb 10.1007/BF02551274
+    \endverb
+    \field{number}{4}
+    \field{pages}{303\bibrangedash 314}
+    \field{title}{Approximation by superpositions of a sigmoidal function}
+    \verb{url}
+    \verb https://doi.org/10.1007/BF02551274
+    \endverb
+    \field{volume}{2}
+    \field{journaltitle}{Mathematics of Control, Signals and Systems}
+    \field{year}{1989}
+    \warn{\item Invalid format of field 'month'}
+  \endentry
+
   \entry{duchon1979}{article}{}
     \name{author}{1}{}{%
       {{hash=DCE}{%
@@ -208,6 +265,42 @@
     \field{volume}{18, 1016-1022}
     \field{journaltitle}{Journal of Applied Meteorology}
     \field{year}{1979}
+  \endentry
+
+  \entry{glorot2011}{article}{}
+    \name{author}{3}{}{%
+      {{hash=GX}{%
+         family={Glorot},
+         family_i={G\bibinitperiod},
+         given={Xavier},
+         given_i={X\bibinitperiod},
+      }}%
+      {{hash=BA}{%
+         family={Bordes},
+         family_i={B\bibinitperiod},
+         given={Antoine},
+         given_i={A\bibinitperiod},
+      }}%
+      {{hash=BY}{%
+         family={Bengio},
+         family_i={B\bibinitperiod},
+         given={Y},
+         given_i={Y},
+      }}%
+    }
+    \strng{namehash}{GXBABY1}
+    \strng{fullhash}{GXBABY1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{pages}{315\bibrangedash 323}
+    \field{title}{Deep Sparse Rectifier Neural Networks}
+    \field{volume}{15}
+    \field{journaltitle}{Proceedings of the 14th International Conference on
+  Artificial Intelligence and Statisitics (AISTATS) 2011}
+    \field{month}{01}
+    \field{year}{2011}
   \endentry
 
   \entry{gmaps_res_per_m}{misc}{}
@@ -442,6 +535,41 @@
     \field{year}{2012}
   \endentry
 
+  \entry{lecun2015}{article}{}
+    \name{author}{3}{}{%
+      {{hash=LY}{%
+         family={LeCun},
+         family_i={L\bibinitperiod},
+         given={Yann},
+         given_i={Y\bibinitperiod},
+      }}%
+      {{hash=BY}{%
+         family={Bengio},
+         family_i={B\bibinitperiod},
+         given={Yoshua},
+         given_i={Y\bibinitperiod},
+      }}%
+      {{hash=HG}{%
+         family={Hinton},
+         family_i={H\bibinitperiod},
+         given={Geoffrey},
+         given_i={G\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{LYBYHG1}
+    \strng{fullhash}{LYBYHG1}
+    \field{labelnamesource}{author}
+    \field{sortinit}{L}
+    \field{sortinithash}{L}
+    \field{pages}{436 EP}
+    \verb{url}
+    \verb https://doi.org/10.1038/nature14539
+    \endverb
+    \field{volume}{521}
+    \field{journaltitle}{Nature}
+    \field{year}{2015}
+  \endentry
+
   \entry{junshui2015}{article}{}
     \name{author}{5}{}{%
       {{hash=MJ}{%
@@ -498,6 +626,48 @@
     \field{volume}{55}
     \field{journaltitle}{Journal of Chemical Information and Modeling}
     \field{year}{2015}
+  \endentry
+
+  \entry{rumelhart1986}{article}{}
+    \name{author}{3}{}{%
+      {{hash=RDE}{%
+         family={Rumelhart},
+         family_i={R\bibinitperiod},
+         given={David\bibnamedelima E.},
+         given_i={D\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+      {{hash=HGE}{%
+         family={Hinton},
+         family_i={H\bibinitperiod},
+         given={Geoffrey\bibnamedelima E.},
+         given_i={G\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+      {{hash=WRJ}{%
+         family={Williams},
+         family_i={W\bibinitperiod},
+         given={Ronald\bibnamedelima J.},
+         given_i={R\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{RDEHGEWRJ1}
+    \strng{fullhash}{RDEHGEWRJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{R}
+    \field{sortinithash}{R}
+    \verb{doi}
+    \verb 10.1038/323533a0
+    \endverb
+    \field{isbn}{1476-4687}
+    \field{number}{6088}
+    \field{pages}{533\bibrangedash 536}
+    \field{title}{Learning representations by back-propagating errors}
+    \verb{url}
+    \verb https://doi.org/10.1038/323533a0
+    \endverb
+    \field{volume}{323}
+    \field{journaltitle}{Nature}
+    \field{year}{1986}
   \endentry
 
   \entry{sumbul2019}{article}{}

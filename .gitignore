@@ -14,4 +14,12 @@ report/*.out
 report/*.run.xml
 report/*.synctex.gz
 report/*.tex.bak
-
+report/*.bak
+report/*.bbl
+report/*.blg
+report/*.toc
+report/*-blx.bib
+report/Appendices/*.aux
+report/Appendices/*.bak
+report/Chapters/*.aux
+report/Chapters/*.bak

@@ -47,7 +47,7 @@ Overall, the main issue with these datasets stems from the fact that non of them
 
 \section{Google Maps}
 
-Google has a public API that allows for querying images from their service Google Maps. In its most basic form, the API accepts as input parameters a lattitude (lat) and longitude (lon), a zoom, and the image size (in pixels) to return. Given this set of parameters one can calculate the resolution in meter per pixel \parencite{gmaps_res_per_m}, which is given by
+Google has a public API that allows foecitifir querying images from their service Google Maps. In its most basic form, the API accepts as input parameters a lattitude (lat) and longitude (lon), a zoom, and the image size (in pixels) to return. Given this set of parameters one can calculate the resolution in meter per pixel \parencite{gmaps_res_per_m}, which is given by
 \begin{equation}
 \frac{meter}{pixel} = \frac{156543.03392 \cdot cos(\frac{lattitude \cdot \pi}{180})}{2 ^ {zoom}}.
 \label{eq:gmaps_res_per_m}

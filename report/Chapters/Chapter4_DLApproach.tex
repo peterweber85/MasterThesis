@@ -56,7 +56,7 @@ These pre-trained architectures can be re-purposed by reusing the learned weight
 
 \subsection{ResNets}
 
-Experience with Neural Networks, and CNN in particular, show that deeper nets tend to perform better, as these are more capable to model higher complexity. Yet, at some depth point, training becomes too difficult, because the gradient values obtained from the loss function are lost after several layers. This is known as \textbf{vanishing gradient}. Res
+Experience with Neural Networks, and CNN in particular, show that deeper nets tend to perform better, as these are more capable to model higher complexity. Yet, at some depth point, training becomes too difficult, because the gradient values obtained from the loss function are lost after several layers. This is known as \textbf{vanishing gradient}. ResNet fixes this is issue with Residual...
 
 \textcolor{red}{architecture (image), training set, etc}
 
@@ -70,9 +70,38 @@ Experience with Neural Networks, and CNN in particular, show that deeper nets te
 
 \section{Proposed architecture}
 
-\subsection{resnet activations}
+\subsection{Resnet activations}
 
-\textcolor{red}{images of activations (at several layers?)}
+As described before, we can use for our problem a pre-trained ResNet with our own final classification layers.
+
+\begin{figure}[h!]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/activations/agriculture_l2_s1_activation_10.png}
+	\includegraphics[width=1\textwidth]{Figures/activations/agriculture_l2_s1_activation_49.png}
+	\caption{\textbf{ResNet activations of an agriculture sample}. Activations of the 10th layer (top) and final layer, 49th (bottom).}
+	\label{fig:degrade}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/activations/forest-woodland_l0_s1_activation_10.png}
+	\includegraphics[width=1\textwidth]{Figures/activations/forest-woodland_l0_s1_activation_49.png}
+	\caption{\textbf{ResNet activations of an forest-woodland sample}. Activations of the 10th layer (top) and final layer, 49th (bottom).}
+	\label{fig:degrade}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/activations/shrubland-grassland_l0_s1_activation_10.png}
+	\includegraphics[width=1\textwidth]{Figures/activations/shrubland-grassland_l0_s1_activation_49.png}
+	\caption{\textbf{ResNet activations of an shrubland-grassland sample}. Activations of the 10th layer (top) and final layer, 49th (bottom).}
+	\label{fig:degrade}
+\end{figure}
+
+\textcolor{red}{images of activations (at several layers?), sizes}
 
 \begin{itemize}
 	\item \url{}

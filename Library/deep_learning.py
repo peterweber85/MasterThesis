@@ -11,13 +11,13 @@ from keras.models import model_from_json
 import image_manipulation as ima
 
 
-def get_activations(img, base_model, activation_name):
+def get_activations(img, base_model, activation_name, print_ = False):
     """
     Returns ReLUs of layer specified by parameter activation
 
     :param img: np.array
     :param base_model: Keras Model
-    :param activation_: int
+    :param activation_name: str
     :return:
     """
     if not isinstance(img, np.ndarray):
@@ -27,13 +27,16 @@ def get_activations(img, base_model, activation_name):
         img = np.expand_dims(img, axis=0)
 
     img = preprocess_input(img)
-    print("Shape of input:", img.shape)
+    if print_:
+        print("Shape of input:", img.shape)
 
     model = Model(inputs=base_model.input,
                   outputs=base_model.get_layer(activation_name).output)
 
     activation = model.predict(img)
-    print("Shape of output:", activation.shape)
+    if print_:
+        print("Shape of output:", activation.shape)
+
     return activation
 
 

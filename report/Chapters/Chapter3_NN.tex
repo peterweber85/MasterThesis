@@ -78,7 +78,7 @@ Pooling layers introduce coarse-graining in order to create invariance to small 
 
 When stacking together mutliple combinations of convolutional layers followed by non-linearities and pooling layers, the filters learn a hierarchichal structure. The filters at earlier layers learn simple low-level features such as edges whereas the filters at later stages learn more complex high-level features, which are compositions of lower level features. In conclusion, the deeper a convolutional neural network is the more complex compositions of features it can learn.
 
-\section{CNN Architectures}\label{CNNArchitectures}
+\section{CNN Architectures}\label{sec:CNNArchitectures}
 The AlexNet was the first convolutional neural network that achieved remarkable results in the ImageNet classification task in 2012. It halfed the error in comparison to all competing non deep learning based approaches (see Fig.~\ref{fig:imagenet}). In this competition deep convolutional networks were applied to a dataset with roughly 1 million images and 1000 classes. AlexNet was specifically designed to be trained on two GPUs with each 3GB of memory, which was sufficient to fit all the 60 million parameters inside. AlexNet had 8 layers, and used dropout as regularization technique.
 
 \begin{figure}[h!]

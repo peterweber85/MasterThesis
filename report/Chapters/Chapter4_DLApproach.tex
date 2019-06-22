@@ -7,17 +7,40 @@
 
 In the previous chapters we have introduced the key components of the approach we followed in our study: on the one hand, we have described existing satellite image datasets and introduced the actual data we will consider, and on the other, we have discussed Deep Learning, how it works and how we can use it for our problem. Now, we are ready to describe our approach, the image feature extraction, the model architecture and the training scenario.
 
-\section{Image features and transfer learning}\label{transferLearning}
+\section{Image features and transfer learning}\label{sec:transferLearning}
 
-In order to train a model based on images, some sort of features need to be extracted. Traditionally, this image feature extraction was based on a set of hand-crafted detectors with the goal of analyzing edges, corners, blobs  and other feature descriptors. Some of these detectors are the Sobel filter, LoG and DoH, SIFT, SURF, HOG.
+In order to train a model based on images, some sort of features need to be extracted. Traditionally, this image feature extraction was based on a set of hand-crafted detectors aimed to detect edges, corners, blobs and other feature descriptors. Some of these detectors are the Sobel filter, Laplacian of Gaussian (LoG), Difference of Gaussians (DoG), Determinant of Hessian (DoH), SIFT \parencite{Lowe1999,Lowe2004}, SURF \parencite{Bay2006}, Histograms of Oriented Gradients (HOG) \parencite{Dalal2005} and Gabor filters.
 
-\textcolor{red}{IMAGES of the detectors}
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}{.5\textwidth}
+  		\centering
+  		\includegraphics[width=.9\linewidth]{sobel_valve_original.png}
+	\end{subfigure}%
+	\begin{subfigure}{.5\textwidth}
+  		\centering
+  		\includegraphics[width=.9\linewidth]{sobel_valve_processed.png}
+	\end{subfigure}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{Example of the Sobel filter}}
+	\label{fig:sobel}
+\end{figure}
 
-More recently, approaches to image classification using Neural Networks have benefited from the increasing computational power, and deep Convolutional Neural Networks have been able to achieve higher performances than traditional models. 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/hog_example.png}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{Examples of HOG detector \parencite{Dalal2005}}}
+	\label{fig:hog}
+\end{figure}
 
-Yet, training a deep CNN from scratch for a particular problem requires a big and exhaustive dataset along with a huge amount of computational power, but it has been shown that the architectures of pre-trained NN can be reused for other purposes and achieve an equally great performance. This is known as \textbf{Transfer Learning}.
+More recent approaches to image classification using Neural Networks have benefited from the existing and increasing computational power, and deep Convolutional Neural Networks have been able to achieve higher performances than traditional models. 
+
+Yet, training a deep CNN from scratch for a particular problem requires a big and exhaustive dataset along with a huge amount of computational power. However, it has been shown that the architectures of pre-trained NN can be reused for other purposes and achieve an equally great performance. This is known as \textbf{Transfer Learning}.
 
 These pre-trained architectures can be re-purposed by reusing the learned weights and either replacing the final layers of the net by some other classifier, or even fine-tuning all the layers for the specific problem. In any case, the initial layers of the Neural Network provide a great image feature extractor.
+
+\
 
 In the next section we describe our approach using transfer learning from a ResNet architecture.
 
@@ -36,17 +59,17 @@ In the next section we describe our approach using transfer learning from a ResN
 
 %Experience with Neural Networks, and CNN in particular, show that deeper nets tend to perform better, as these are more capable to model higher complexity. Yet, at some depth point, training becomes too difficult, because the gradient values obtained from the loss function are lost after several layers. This is known as \textbf{vanishing gradient}. ResNet fixes this is issue with Residual...
 
-\section{Proposed architecture}
+\section{Proposed architecture}\label{sec:dl_architecture}
 
 \subsection{ResNet activations}
 
-As described before (Sections \ref{CNNArchitectures} and \ref{transferLearning}), we can use for our problem a pre-trained ResNet with our own final classification layers. The ResNet we consider (ResNet50) has a total of $49$ activation layers, so the output at each of them is different. Initial layers are able to recognize edges, textures and patterns while keeping and image size similar to the input. On the other hand, deeper activation layers show more convoluted relations and provide much more channels (or filters) by shrinking the image size.
+As described before (Sections \ref{sec:CNNArchitectures} and \ref{sec:transferLearning}), we can use for our problem a pre-trained ResNet with our own final classification layers. The ResNet we consider (ResNet50) has a total of $49$ activation layers, so the output at each of them is different. Initial layers are able to recognize edges, textures and patterns while keeping and image size similar to the input. On the other hand, deeper activation layers show more convoluted relations and provide much more channels (or filters) by shrinking the image size.
 
 For instance, for an input image of (tensor) size $512 \times 512 \times 3$ (a $512x512$ image with $3$ RGB channels), the output of the first activation layer is of size $256 \times 256 \times 64$, the $10^{th}$ gives a $128 \times 128 \times 256$ tensor, and the last $49^{th}$ activation layer outputs $16 \times 16 \times 2048$. For our purpose, we will consider the final output of the ResNet ($49^{th}$ activation layer), although this could be further investigated and discussed.
 
 \
 
-Figures \ref{fig:act_agriculture}, \ref{fig:act_forest_woodland}, \ref{fig:act_shrubland_grassland} and \ref{fig:act_semi_desert} show some outputs of the $10^{th}$ and $49^{th}$ activation layers for samples of different categories in the dataset. Some of the $10^{th}$ activations are particularly sensitive to edges, shadows, or textures, which translate in different outputs of $49^{th}$ layer.
+Figures \ref{fig:act_agriculture}, \ref{fig:act_forest_woodland}, \ref{fig:act_shrubland_grassland} and \ref{fig:act_semi_desert} show some outputs of the $10^{th}$ and $49^{th}$ activation layers for samples of different categories in the dataset. Some of the $10^{th}$ activations are particularly sensitive to edges, shadows, or textures, which later translate into different outputs of $49^{th}$ layer.
 
 \begin{figure}[h!]
 	\centering
@@ -88,7 +111,9 @@ Figures \ref{fig:act_agriculture}, \ref{fig:act_forest_woodland}, \ref{fig:act_s
 
 As mentioned before, for our purpose we considered the last ($49^{th}$) activation layer of the ResNet as the features of our images. These features can be extracted and saved on disk in order to speed up the process (as we did), or computed each time, and then passed through a simple Neural Network.
 
-Then, our model consisted on a single Dense (Fully Connected) layer of $100$ or $512$ neurons \textcolor{red}{(CHECK)} with ReLU activation followed by a single Dense node with Sigmoid activation acting as the classifier. This model is then trained on the dataset with and RMSprop optimizer and a binary cross-entropy loss function. Figure \ref{model_keras} shows the model build with Keras. This same architecture is then used and trained separately for each of the resolutions considered.
+Then, our model consisted on a single Dense (Fully Connected) layer of $100$ or $512$ neurons \textcolor{red}{(CHECK)} with ReLU activation, followed by a single Dense node with a Sigmoid activation acting as the classifier. This model is then trained on the dataset with and RMSprop optimizer and a binary cross-entropy loss function. This same architecture is then used and trained separately for each of the resolutions considered.
+
+All this architecture has been implemented with Python and Keras. Figure \ref{fig:model_keras} shows the model build, and in the following section we describe the complete pipeline with more detail.
 
 \begin{figure}[h!]
 	\centering
@@ -98,29 +123,34 @@ Then, our model consisted on a single Dense (Fully Connected) layer of $100$ or 
 	\label{fig:model_keras}
 \end{figure}
 
-\textcolor{red}{DOWNGRADE PIPELINE}
+\textcolor{red}{ARCHITECTURE SCHEMA}
 
-- for each resolution, process activations
-- architecture: dense layes, schema
-- keras print output
-- same architecture for each downgraded resolution, different model size
-- fine-tuning of the parameters: could be further done
+\subsection{Training and experiments}
 
-\subsection{training}
+In order to perform the experiments, we consider the following pipeline for each of the datasets ($0.3m$ and $1m$ resolution):
 
-- processed activations
-- cross validation, several times
-- avg and std
+\begin{enumerate}
+	\item Load the original images (at the original resolution) from disk.
+	\item Downsample the images to the desired resolution.
+	\item Compute the ResNet activations (at the $49^{th}$ activation layer) of the resulting images (and save to disk for later use).
+	\item Consider a stratified KFold split of the dataset (with $8$ splits) for cross-validation. That means, the dataset is split into $8$ sets with labels $0-1$ equally distributed.  
+	\item Train the model separately for each combination of $7$ train sets, with the remaining one as validation. Then results of the $8$ experiments are averaged for more consistency.
+	\item Repeat for all downgraded resolutions needed.
+\end{enumerate}
+
+Further experiments in order to fine-tune the model complexity and the splitting parameters could be done, but it is not the goal of this project.
+
+\textcolor{red}{RE-DO PLOTS}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/convergence_plots_all_res.png}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{Convergence plots for all downgraded resolutions of the $0.3m$ dataset.}}
+	\label{fig:conv_plots}
+\end{figure}
 
 
-Image features:
-
-\begin{itemize}
-	\item \url{https://en.wikipedia.org/wiki/Feature_detection_(computer_vision)}
-	\item \url{https://en.wikipedia.org/wiki/Scale-invariant_feature_transf1orm}
-	\item \url{https://en.wikipedia.org/wiki/Speeded_up_robust_features}
-	\item \url{https://en.wikipedia.org/wiki/Histogram_of_oriented_gradients}
-\end{itemize}
 
 Transfer learning: 
 
@@ -131,17 +161,5 @@ Transfer learning:
 	\item \url{https://cs.nyu.edu/~fergus/papers/zeilerECCV2014.pdf}
 	\item \url{https://towardsdatascience.com/transfer-learning-from-pre-trained-models-f2393f124751}
 	\item \url{https://www.mitpressjournals.org/doi/pdf/10.1162/neco_a_00990}
-	\item \url{http://www.image-net.org/}
-	\item \url{https://en.wikipedia.org/wiki/ImageNet}
-	\item \url{https://keras.io/applications/}
-\end{itemize}
-
-ResNet:
-
-\begin{itemize}
-	\item \url{https://towardsdatascience.com/review-resnet-winner-of-ilsvrc-2015-image-classification-localization-detection-e39402bfa5d8}
-	\item \url{https://towardsdatascience.com/deep-convolutional-neural-networks-ccf96f830178}
-	\item \url{https://towardsdatascience.com/understanding-and-visualizing-resnets-442284831be8}
-	\item \url{https://en.wikipedia.org/wiki/Residual_neural_network}
-	\item \url{https://arxiv.org/abs/1512.03385}
+	\item \url{https://towardsdatascience.com/a-comprehensive-hands-on-guide-to-transfer-learning-with-real-world-applications-in-deep-learning-212bf3b2f27a}
 \end{itemize}

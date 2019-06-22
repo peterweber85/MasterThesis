@@ -1,0 +1,58 @@
+@techreport{Dalal2005,
+abstract = {We study the question of feature sets for robust visual object recognition, adopting linear SVM based human detection as a test case. After reviewing existing edge and gradient based descriptors, we show experimentally that grids of Histograms of Oriented Gradient (HOG) descriptors significantly outperform existing feature sets for human detection. We study the influence of each stage of the computation on performance, concluding that fine-scale gradients, fine orientation binning, relatively coarse spatial binning, and high-quality local contrast normalization in overlapping de-scriptor blocks are all important for good results. The new approach gives near-perfect separation on the original MIT pedestrian database, so we introduce a more challenging dataset containing over 1800 annotated human images with a large range of pose variations and backgrounds.},
+author = {Dalal, Navneet and Triggs, Bill},
+file = {:Users/edu/Library/Application Support/Mendeley Desktop/Downloaded/Dalal, Triggs - Unknown - Histograms of Oriented Gradients for Human Detection.pdf:pdf},
+title = {{Histograms of Oriented Gradients for Human Detection}},
+url = {http://lear.inrialpes.fr},
+year = {2005}
+}
+@techreport{Lowe2004,
+abstract = {This paper presents a method for extracting distinctive invariant features from images that can be used to perform reliable matching between different views of an object or scene. The features are invariant to image scale and rotation, and are shown to provide robust matching across a a substantial range of affine distortion , change in 3D viewpoint, addition of noise, and change in illumination. The features are highly distinctive, in the sense that a single feature can be correctly matched with high probability against a large database of features from many images. This paper also describes an approach to using these features for object recognition. The recognition proceeds by matching individual features to a database of features from known objects using a fast nearest-neighbor algorithm, followed by a Hough transform to identify clusters belonging to a single object, and finally performing verification through least-squares solution for consistent pose parameters. This approach to recognition can robustly identify objects among clutter and occlusion while achieving near real-time performance.},
+author = {Lowe, David G},
+booktitle = {International Journal of Computer Vision},
+file = {:Users/edu/Library/Application Support/Mendeley Desktop/Downloaded/Lowe - 2004 - Accepted for publication in the.pdf:pdf},
+title = {{Accepted for publication in the}},
+url = {https://www.cs.ubc.ca/{~}lowe/papers/ijcv04.pdf},
+year = {2004}
+}
+@article{Jouppi2017,
+abstract = {Many architects believe that major improvements in cost-energy-performance must now come from domain-specific hardware. This paper evaluates a custom ASIC---called a Tensor Processing Unit (TPU)---deployed in datacenters since 2015 that accelerates the inference phase of neural networks (NN). The heart of the TPU is a 65,536 8-bit MAC matrix multiply unit that offers a peak throughput of 92 TeraOps/second (TOPS) and a large (28 MiB) software-managed on-chip memory. The TPU's deterministic execution model is a better match to the 99th-percentile response-time requirement of our NN applications than are the time-varying optimizations of CPUs and GPUs (caches, out-of-order execution, multithreading, multiprocessing, prefetching, ...) that help average throughput more than guaranteed latency. The lack of such features helps explain why, despite having myriad MACs and a big memory, the TPU is relatively small and low power. We compare the TPU to a server-class Intel Haswell CPU and an Nvidia K80 GPU, which are contemporaries deployed in the same datacenters. Our workload, written in the high-level TensorFlow framework, uses production NN applications (MLPs, CNNs, and LSTMs) that represent 95{\%} of our datacenters' NN inference demand. Despite low utilization for some applications, the TPU is on average about 15X - 30X faster than its contemporary GPU or CPU, with TOPS/Watt about 30X - 80X higher. Moreover, using the GPU's GDDR5 memory in the TPU would triple achieved TOPS and raise TOPS/Watt to nearly 70X the GPU and 200X the CPU.},
+archivePrefix = {arXiv},
+arxivId = {1704.04760},
+author = {Jouppi, Norman P. and Young, Cliff and Patil, Nishant and Patterson, David and Agrawal, Gaurav and Bajwa, Raminder and Bates, Sarah and Bhatia, Suresh and Boden, Nan and Borchers, Al and Boyle, Rick and Cantin, Pierre-luc and Chao, Clifford and Clark, Chris and Coriell, Jeremy and Daley, Mike and Dau, Matt and Dean, Jeffrey and Gelb, Ben and Ghaemmaghami, Tara Vazir and Gottipati, Rajendra and Gulland, William and Hagmann, Robert and Ho, C. Richard and Hogberg, Doug and Hu, John and Hundt, Robert and Hurt, Dan and Ibarz, Julian and Jaffey, Aaron and Jaworski, Alek and Kaplan, Alexander and Khaitan, Harshit and Koch, Andy and Kumar, Naveen and Lacy, Steve and Laudon, James and Law, James and Le, Diemthu and Leary, Chris and Liu, Zhuyuan and Lucke, Kyle and Lundin, Alan and MacKean, Gordon and Maggiore, Adriana and Mahony, Maire and Miller, Kieran and Nagarajan, Rahul and Narayanaswami, Ravi and Ni, Ray and Nix, Kathy and Norrie, Thomas and Omernick, Mark and Penukonda, Narayana and Phelps, Andy and Ross, Jonathan and Ross, Matt and Salek, Amir and Samadiani, Emad and Severn, Chris and Sizikov, Gregory and Snelham, Matthew and Souter, Jed and Steinberg, Dan and Swing, Andy and Tan, Mercedes and Thorson, Gregory and Tian, Bo and Toma, Horia and Tuttle, Erick and Vasudevan, Vijay and Walter, Richard and Wang, Walter and Wilcox, Eric and Yoon, Doe Hyun},
+eprint = {1704.04760},
+file = {:Users/edu/Library/Application Support/Mendeley Desktop/Downloaded/Jouppi et al. - 2017 - In-Datacenter Performance Analysis of a Tensor Processing Unit.pdf:pdf},
+month = {apr},
+title = {{In-Datacenter Performance Analysis of a Tensor Processing Unit}},
+url = {http://arxiv.org/abs/1704.04760},
+year = {2017}
+}
+@techreport{Bay2006,
+abstract = {In this paper, we present a novel scale-and rotation-invariant interest point detector and descriptor, coined SURF (Speeded Up Robust Features). It approximates or even outperforms previously proposed schemes with respect to repeatability, distinctiveness, and robustness, yet can be computed and compared much faster. This is achieved by relying on integral images for image convolutions; by building on the strengths of the leading existing detectors and descriptors (in casu, using a Hessian matrix-based measure for the detector, and a distribution-based descriptor); and by simplifying these methods to the essential. This leads to a combination of novel detection, description, and matching steps. The paper presents experimental results on a standard evaluation set, as well as on imagery obtained in the context of a real-life object recognition application. Both show SURF's strong performance.},
+author = {Bay, Herbert and Tuytelaars, Tinne and Gool, Luc Van},
+file = {:Users/edu/Library/Application Support/Mendeley Desktop/Downloaded/Bay, Tuytelaars, Gool - Unknown - SURF Speeded Up Robust Features.pdf:pdf},
+keywords = {Bay2006},
+title = {{SURF: Speeded Up Robust Features}},
+url = {http://www.vision.ee.ethz.ch/{~}surf/eccv06.pdf},
+year = {2006}
+}
+@techreport{Lowe1999,
+abstract = {An object recognition system has been developed that uses a new class of local image features. The features are invariant to image scaling, translation, and rotation, and partially invariant to illumination changes and affine or 3D projection. These features share similar properties with neurons in inferior temporal cortex that are used for object recognition in primate vision. Features are efficiently detected through a staged filtering approach that identifies stable points in scale space. Image keys are created that allow for local geometric deformations by representing blurred image gradients in multiple orientation planes and at multiple scales. The keys are used as input to a nearest-neighbor indexing method that identifies candidate object matches. Final verification of each match is achieved by finding a low-residual least-squares solution for the unknown model parameters. Experimental results show that robust object recognition can be achieved in cluttered partially-occluded images with a computation time of under 2 seconds.},
+author = {Lowe, David G},
+file = {:Users/edu/Library/Application Support/Mendeley Desktop/Downloaded/Lowe - 1999 - Object Recognition from Local Scale-Invariant Features(2).pdf:pdf},
+title = {{Object Recognition from Local Scale-Invariant Features}},
+url = {https://www.cs.ubc.ca/{~}lowe/papers/iccv99.pdf},
+year = {1999}
+}
+@article{Strubell2019,
+abstract = {Recent progress in hardware and methodology for training neural networks has ushered in a new generation of large networks trained on abundant data. These models have obtained notable gains in accuracy across many NLP tasks. However, these accuracy improvements depend on the availability of exceptionally large computational resources that necessitate similarly substantial energy consumption. As a result these models are costly to train and develop, both financially, due to the cost of hardware and electricity or cloud compute time, and environmentally, due to the carbon footprint required to fuel modern tensor processing hardware. In this paper we bring this issue to the attention of NLP researchers by quantifying the approximate financial and environmental costs of training a variety of recently successful neural network models for NLP. Based on these findings, we propose actionable recommendations to reduce costs and improve equity in NLP research and practice.},
+archivePrefix = {arXiv},
+arxivId = {1906.02243},
+author = {Strubell, Emma and Ganesh, Ananya and McCallum, Andrew},
+eprint = {1906.02243},
+file = {:Users/edu/Library/Application Support/Mendeley Desktop/Downloaded/Strubell, Ganesh, McCallum - 2019 - Energy and Policy Considerations for Deep Learning in NLP.pdf:pdf},
+month = {jun},
+title = {{Energy and Policy Considerations for Deep Learning in NLP}},
+url = {http://arxiv.org/abs/1906.02243},
+year = {2019}
+}

@@ -449,8 +449,8 @@ def get_image_grid(imarray, size):
 
     # create dictionary of grid points
     grid = dict()
-    for ix in range(num_x):
-        for iy in range(num_y):
+    for ix in range(num_x + 1):
+        for iy in range(num_y + 1):
             grid[(iy, ix)] = (size * iy + y_move_by, size * ix + x_move_by)
     return grid
 

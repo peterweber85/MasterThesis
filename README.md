@@ -1,3 +1,8 @@
+# TODO:
+* Clean this repo
+* Clean dataset folder on google drive
+
+
 # Man-made Structures Detection from Space
 
 ## Master Thesis in Data Science

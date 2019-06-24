@@ -423,7 +423,7 @@ def download_save_images_in_random_rectangle(db_collection,
             print("Image and Metadata with filename '"+metadata["filename"]+"' saved!\n")
 
 
-def get_image_grid(imarray, size):
+def get_image_grid(imarray, size, include_last = False):
     """
     From large image obtain a grid to crop several smaller images.
     It also centers the grid.
@@ -447,10 +447,13 @@ def get_image_grid(imarray, size):
     x_move_by = int((dim[1] - num_x * size) / 2)
     y_move_by = int((dim[0] - num_y * size) / 2)
 
+    # include_last is only needed for presentation purposes when plotting the grid
+    if include_last: num_x, num_y = num_x + 1, num_y + 1
+
     # create dictionary of grid points
     grid = dict()
-    for ix in range(num_x + 1):
-        for iy in range(num_y + 1):
+    for ix in range(num_x):
+        for iy in range(num_y):
             grid[(iy, ix)] = (size * iy + y_move_by, size * ix + x_move_by)
     return grid
 

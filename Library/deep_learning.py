@@ -30,8 +30,12 @@ def get_activations(img, base_model, activation_name, print_ = False):
     if print_:
         print("Shape of input:", img.shape)
 
-    model = Model(inputs=base_model.input,
-                  outputs=base_model.get_layer(activation_name).output)
+    if isinstance(activation_name, int):
+        model = Model(inputs=base_model.input,
+                      outputs=base_model.get_layer('activation_' + str(activation_name)).output)
+    else:
+        model = Model(inputs=base_model.input,
+                      outputs=base_model.get_layer(activation_name).output)
 
     activation = model.predict(img)
     if print_:
@@ -40,9 +44,11 @@ def get_activations(img, base_model, activation_name, print_ = False):
     return activation
 
 
-def preprocess_activations(X_base, degrade, model, activation_name='conv5_block3_out'):
-    print("--- degrading images ---")
-    X = np.array([ima.degrade_image(X_base[i], degrade) for i in range(X_base.shape[0])])
+def preprocess_activations(X, model, degrade = None, activation_name='conv5_block3_out'):
+
+    if not degrade is None:
+        print("--- degrading images ---")
+        X = np.array([ima.degrade_image(X[i], degrade) for i in range(X.shape[0])])
 
     print("--- getting activations ---")
     X_act = get_activations(X, model, activation_name)

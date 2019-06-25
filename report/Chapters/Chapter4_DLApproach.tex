@@ -133,7 +133,7 @@ Then, our model consisted on a single dense layer of $100$ or $512$ neurons \tex
 
 \
 
-All this architecture (see Fig. \ref{fig:transfer_learning}) has been implemented with Python and Keras. Figure \ref{fig:model_keras} shows the model build, and in the following section we describe the complete pipeline with more detail.
+This architecture (see Fig. \ref{fig:transfer_learning}) has been implemented with Python and Keras. Figure \ref{fig:model_keras} shows the model build, and in the following section we describe the complete pipeline with more detail.
 
 \begin{figure}[h!]
 	\centering
@@ -158,27 +158,24 @@ In order to perform the experiments, we consider the following pipeline for each
 
 Further experiments in order to fine-tune the model complexity and the splitting parameters could be done, but it is not the goal of this project.
 
-\textcolor{red}{RE-DO PLOTS: accuracy-loss per epoch averaged with k-folds?}
-
-%Run models:
-%- for both datasets
-%- check number of neurons (100, 512?)
-%- change plot colors of categories to fixed
-%- 
-
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.9\textwidth]{Figures/convergence_plots_all_res.png}
+	\includegraphics[width=0.9\textwidth]{Figures/results/convergence_plots_all_res.png}
 	\captionsetup{width=1\linewidth}
 	\caption{\textbf{Convergence plots for all downgraded resolutions of the $0.3m$ dataset.}}
 	\label{fig:conv_plots}
 \end{figure}
 
+- discussion about resolutions considered
 
+
+\vspace{2cm}
 
 Transfer learning: 
 
 \begin{itemize}
+	\item https://www.youtube.com/playlist?list=PLC1qU-LWwrF64f4QKQT-Vg5Wr4qEE1Zxk
+	\item http://cs231n.github.io/transfer-learning/
 	\item VGG: \url{https://arxiv.org/abs/1409.1556}
 	\item \url{https://iopscience.iop.org/article/10.1088/1742-6596/1087/6/062032/pdf}
 	\item \url{https://arxiv.org/abs/1805.02294}

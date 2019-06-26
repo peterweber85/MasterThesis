@@ -5,7 +5,7 @@
 
 %----------------------------------------------------------------------------------------
 
-In the previous chapters we have introduced the key components of the approach we followed in our study: on the one hand, we have described existing satellite image datasets and introduced the actual data we will consider, and on the other, we have discussed Deep Learning, how it works and how we can use it for our problem. Now, we are ready to describe our approach, the image feature extraction, the model architecture and the training scenario.
+In the previous chapters we have introduced the key components of the approach we followed in our study: on the one hand, we have described existing satellite image datasets and introduced the actual data we will consider, and on the other, we have discussed Deep Learning, how it works and how we can use it for our problem. Now, we are ready to describe our approach: the image feature extraction, the model architecture and the training scenario.
 
 \section{Image features and transfer learning}\label{sec:transferLearning}
 
@@ -69,7 +69,7 @@ In the next section we describe our approach using transfer learning from a ResN
 
 \section{Proposed architecture}\label{sec:dl_architecture}
 
-As described before (Sections \ref{sec:CNNArchitectures} and \ref{sec:transferLearning}), we can use for our problem a pre-trained ResNet with our own final classification layers. Hence, the architecture we propose for our problem consists on the activation layers of the ResNet, which act as the feature extractors of our images, followed by a shallow classifier made of a single Dense (Fully Connected) layer. Figure \ref{fig:transfer_learning} gives a schema of this approach.
+As described before (Sections \ref{sec:CNNArchitectures} and \ref{sec:transferLearning}), we can use for our problem a pre-trained ResNet with our own final classification layers. Hence, the architecture we propose for our problem consists on the activation layers of a ResNet, which act as the feature extractors of our images, followed by a shallow classifier made of a single Dense (Fully Connected) layer. Figure \ref{fig:transfer_learning} gives a schema of this approach.
 
 \begin{figure}[h!]
 	\centering
@@ -87,7 +87,7 @@ For instance, for an input image of (tensor) size $512 \times 512 \times 3$ (a $
 
 \
 
-Figures \ref{fig:act_agriculture}, \ref{fig:act_forest_woodland}, \ref{fig:act_shrubland_grassland} and \ref{fig:act_semi_desert} show some outputs of the $10^{th}$ and $49^{th}$ activation layers for samples of different categories in the dataset. Some of the $10^{th}$ activations are particularly sensitive to edges, shadows, or textures, which later translate into different outputs of $49^{th}$ layer.
+Figures \ref{fig:act_agriculture}, \ref{fig:act_forest_woodland}, \ref{fig:act_semi_desert} and \ref{fig:act_shrubland_grassland} show some outputs of the $10^{th}$ and $49^{th}$ activation layers for samples of different categories in the dataset. Some of the $10^{th}$ activations are particularly sensitive to edges, shadows, or textures, which later translate into different outputs of $49^{th}$ layer.
 
 \begin{figure}[h!]
 	\centering
@@ -109,15 +109,6 @@ Figures \ref{fig:act_agriculture}, \ref{fig:act_forest_woodland}, \ref{fig:act_s
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.9\textwidth]{Figures/activations/shrubland-grassland_l0_s1_activation_10.png}
-	\includegraphics[width=0.9\textwidth]{Figures/activations/shrubland-grassland_l0_s1_activation_49.png}
-	\captionsetup{width=1\linewidth}
-	\caption{\textbf{ResNet activations of a Shrubland-grassland image: $10^{th}$ layer (top) and final layer, $49^{th}$ (bottom).}}
-	\label{fig:act_shrubland_grassland}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
 	\includegraphics[width=0.9\textwidth]{Figures/activations/semi-desert_l0_s1_activation_10.png}
 	\includegraphics[width=0.9\textwidth]{Figures/activations/semi-desert_l0_s1_activation_49.png}
 	\captionsetup{width=1\linewidth}
@@ -125,15 +116,25 @@ Figures \ref{fig:act_agriculture}, \ref{fig:act_forest_woodland}, \ref{fig:act_s
 	\label{fig:act_semi_desert}
 \end{figure}
 
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=0.9\textwidth]{Figures/activations/shrubland-grassland_l0_s1_activation_10.png}
+	\includegraphics[width=0.9\textwidth]{Figures/activations/shrubland-grassland_l0_s1_activation_49.png}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{ResNet activations of a Shrubland-grassland image: $10^{th}$ layer (top) and final layer, $49^{th}$ (bottom).}}
+	\label{fig:act_shrubland_grassland}
+\end{figure}
+
+
 \subsection{Complete architecture}
 
-As mentioned before, for our purpose we considered the last ($49^{th}$) activation layer of the ResNet as the features of our images. These features can be extracted and saved on disk in order to speed up the process (as we did), or computed each time, and then passed through a simple Neural Network.
+For our purpose we considered the last ($49^{th}$) activation layer of the ResNet as the features of our images. These features can be extracted and saved on disk in order to speed up the process (as we did), or computed each time, and then passed through a simple Neural Network.
 
-Then, our model consisted on a single dense layer of $100$ or $512$ neurons \textcolor{red}{(CHECK)} with ReLU activation, followed by a single Dense node with a Sigmoid activation acting as the classifier. This model is then trained on the dataset with and RMSprop optimizer and a binary cross-entropy loss function. This same architecture is then used and trained separately for each of the resolutions considered.
+Then, our model consisted on a single dense layer of $100$ neurons with ReLU activation, followed by a single Dense node with a Sigmoid activation acting as the classifier. This model is then trained on the dataset with and RMSprop optimizer and a binary cross-entropy loss function. This same architecture is then used and trained separately for each of the resolutions considered.
 
 \
 
-This architecture (see Fig. \ref{fig:transfer_learning}) has been implemented with Python and Keras. Figure \ref{fig:model_keras} shows the model build, and in the following section we describe the complete pipeline with more detail.
+This architecture (see Fig. \ref{fig:transfer_learning}) has been implemented with Python and Keras. Figure \ref{fig:model_keras} shows the model build, while in the following section we describe the complete training pipeline with more detail.
 
 \begin{figure}[h!]
 	\centering
@@ -143,7 +144,10 @@ This architecture (see Fig. \ref{fig:transfer_learning}) has been implemented wi
 	\label{fig:model_keras}
 \end{figure}
 
-\subsection{Training and experiments}
+
+\subsection{Training pipeline and experiments}
+
+As introduced in previous chapters, our goal with this model is to study how feasible it is (technically and costly speaking) to detect different kind of human impact on satellite images, and how this detection behaves for different image resolutions. To do so, we build two datasets of annotated images at base resolutions of $0.3m$ and $1m$ (see Chapter \ref{Chapter2}). We then use these two datasets
 
 In order to perform the experiments, we consider the following pipeline for each of the datasets ($0.3m$ and $1m$ resolution):
 

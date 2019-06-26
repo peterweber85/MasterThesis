@@ -9,11 +9,27 @@ In this chapter we discuss the results obtained with our model. First, we analyz
 
 \section{Transfer Learning on Aerial Imagery}
 
+Dataset 0.3m:
+
+- Examples of correctly classified images at base resolution
+
+- Examples of wrongly classified images at base resolution
+
+- Wrongly Classified Images at Resolution 4.8
+
+- Images that were classified correct at 0.6 and wrong at 4.8
+
+- Classify images of label 1
+
+The model is able to achieve a great accuracy, specially on the Agriculture category. It is able to generalize to label 1, and still be accurate for lower resolutions, were the amount of pixels per images is much smaller.
+
 \section{Man-made Structures Detection at Different Scale}
 
 The following tables show the results blablalba...
 
 Due to small and not quite extensive dataset, for some splits the model wasnt able to converge. Hence, Few of the K-folds outliers have been removed.
+
+\textcolor{red}{MOVE TABLES TO APPENDIX?}
 
 \begin{sidewaystable}
     \centering
@@ -63,6 +79,16 @@ Due to small and not quite extensive dataset, for some splits the model wasnt ab
 	\label{fig:acc_by_cat_1m}
 \end{figure}
 
+
+Finally we can see that the two datasets can actually be compared. At similar degraded resolutions, both achieve comparable accuracies.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\textwidth]{Figures/results/acc_res_03m_1m.png}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{$0.3m$ and $1m$ datasets}}
+	\label{fig:acc_res_03m_1m}
+\end{figure}
 
 
 \section{Cost and Environmental Impact}

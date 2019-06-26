@@ -11,6 +11,10 @@ In this chapter we discuss the results obtained with our model. First, we analyz
 
 \section{Man-made Structures Detection at Different Scale}
 
+The following tables show the results blablalba...
+
+Due to small and not quite extensive dataset, for some splits the model wasnt able to converge. Hence, Few of the K-folds outliers have been removed.
+
 \begin{sidewaystable}
     \centering
 	\input{Tables/Ch5_Results_03m}
@@ -28,18 +32,35 @@ In this chapter we discuss the results obtained with our model. First, we analyz
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=\textwidth]{Figures/results/results_1m_all_categories.png}
+	\includegraphics[width=\textwidth]{Figures/results/acc_res_all_categories_03m.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{$1m$ dataset}}
-	\label{fig:acc_1m_all_cat}
+	\caption{\textbf{$0.3m$ dataset}}
+	\label{fig:acc_all_cat_03m}
 \end{figure}
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=\textwidth]{Figures/results/results_1m_by_category.png}
+	\includegraphics[width=\textwidth]{Figures/results/acc_res_by_category_03m.png}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{$0.3m$ dataset}}
+	\label{fig:acc_by_cat_03m}
+\end{figure}
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\textwidth]{Figures/results/acc_res_all_categories_1m.png}
 	\captionsetup{width=1\linewidth}
 	\caption{\textbf{$1m$ dataset}}
-	\label{fig:acc_1m_byl_cat}
+	\label{fig:acc_all_cat_1m}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\textwidth]{Figures/results/acc_res_by_category_1m.png}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{$1m$ dataset}}
+	\label{fig:acc_by_cat_1m}
 \end{figure}
 
 

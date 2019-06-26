@@ -1,5 +1,5 @@
 
-\chapter{Deep Learning Approach}
+\chapter{Proposed Approach}
 
 \label{Chapter4}
 
@@ -147,20 +147,53 @@ This architecture (see Fig. \ref{fig:transfer_learning}) has been implemented wi
 
 \subsection{Training pipeline and experiments}
 
-As introduced in previous chapters, our goal with this model is to study how feasible it is (technically and costly speaking) to detect different kind of human impact on satellite images, and how this detection behaves for different image resolutions. To do so, we build two datasets of annotated images at base resolutions of $0.3m$ and $1m$ (see Chapter \ref{Chapter2}). We then use these two datasets
+As introduced in previous chapters, our goal with this model is to study how feasible it is (technically and costly speaking) to detect different kind of human impact on satellite images, and how this detection behaves for different image resolutions. To do so, we build two datasets of annotated images at base resolutions of $0.3m$ and $1m$ (see Chapter \ref{Chapter2}), which we later downgrade to a range of resolutions suitable for our study.
 
-In order to perform the experiments, we consider the following pipeline for each of the datasets ($0.3m$ and $1m$ resolution):
+Starting from an image at its base resolution and size ($512\times512$ pixels), the downgrade process consists on downsampling (removing) pixels, so the image becomes smaller. Therefore, this imposes a limit on how far a given dataset can be downgraded, as the CNN ResNet model requires a minimum input size of $32\times32$ pixels \parencite{ResNetKeras}. Tables \ref{tab:resolutions_03m} and \ref{tab:resolutions_1m} show the resolutions and sizes considered for the two datasets.
+
+\begin{figure}[h!]
+	\centering
+	\input{Tables/Ch4_Resolutions_03m}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{Relation between resolution and size for the $0.3m$ dataset}. Size is the width (height) of a square images.}
+	\label{tab:resolutions_03m}
+\end{figure}
+
+\begin{figure}[h!]
+	\centering
+	\input{Tables/Ch4_Resolutions_1m}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{Relation between resolution and size for the $1m$ dataset}. Size is the width (height) of a square images.}
+	\label{tab:resolutions_1m}
+\end{figure}
+
+Then, for each of the datasets and downgraded resolution, we want to train a separate model and assess its performance. To do so, we consider the following pipeline for each of the dataset:
 
 \begin{enumerate}
-	\item Load the original images (at the original resolution) from disk.
-	\item Downsample the images to the desired resolution.
-	\item Compute the ResNet activations (at the $49^{th}$ activation layer) of the resulting images (and save to disk for later use).
+	\item Load the original images (at the original resolution) from disk, along with the human impact labels and categories.
+	
+	\item Downsample the images to the desired resolution (from the lists in \ref{tab:resolutions_03m} and \ref{tab:resolutions_1m})
+	
+	\item Compute the ResNet activations (at the $49^{th}$ activation layer) of the resulting downgraded images. These activations can be saved to disk for later use if needed.
+	
 	\item Consider a stratified KFold split of the dataset (with $8$ splits) for cross-validation. That means, the dataset is split into $8$ sets with labels $0-1$ equally distributed.  
-	\item Train the model separately for each combination of $7$ train sets, with the remaining one as validation. Then results of the $8$ experiments are averaged for more consistency.
+	
+	\item Train the model (Fig. \ref{fig:model_keras}) separately for each combination of $7$ train sets, with the remaining one used as validation to assess the accuracy. $30$ training epochs are considered. Then results of the $8$ experiments are averaged in order to obtain more consistency.
+	
 	\item Repeat for all downgraded resolutions needed.
 \end{enumerate}
 
-Further experiments in order to fine-tune the model complexity and the splitting parameters could be done, but it is not the goal of this project.
+Note that the splitting parameters of the cross-validation, model complexity and the training epochs could be further analyzed in order to fit them better to each of the resolutions. 
+
+\
+
+The plots below show the convergence of the models for different resolutions and datasets (and for one of the cross-validation fold). In general, the NN is able to converge and achieve a good accuracy, although for some particular splits of the data it fails to converge. This is probably due to the fact of having a relative small dataset. Hence, these folds are not considered when computing the final averaged results.
+
+\textcolor{red}{COMPLETE PLOTS OF SOME RESOLUTIONS AND DATASETS}
+
+\textcolor{red}{BETTER EXPLAIN RELATING TO THE PLOTS}
+
+In the next chapter we discuss in detail the results obatined from all these experiments.
 
 \begin{figure}[h!]
 	\centering
@@ -170,20 +203,4 @@ Further experiments in order to fine-tune the model complexity and the splitting
 	\label{fig:conv_plots}
 \end{figure}
 
-- discussion about resolutions considered, table of resolutions
 
-\vspace{2cm}
-
-Transfer learning: 
-
-\begin{itemize}
-	\item https://www.youtube.com/playlist?list=PLC1qU-LWwrF64f4QKQT-Vg5Wr4qEE1Zxk
-	\item http://cs231n.github.io/transfer-learning/
-	\item VGG: \url{https://arxiv.org/abs/1409.1556}
-	\item \url{https://iopscience.iop.org/article/10.1088/1742-6596/1087/6/062032/pdf}
-	\item \url{https://arxiv.org/abs/1805.02294}
-	\item \url{https://cs.nyu.edu/~fergus/papers/zeilerECCV2014.pdf}
-	\item \url{https://towardsdatascience.com/transfer-learning-from-pre-trained-models-f2393f124751}
-	\item \url{https://www.mitpressjournals.org/doi/pdf/10.1162/neco_a_00990}
-	\item \url{https://towardsdatascience.com/a-comprehensive-hands-on-guide-to-transfer-learning-with-real-world-applications-in-deep-learning-212bf3b2f27a}
-\end{itemize}

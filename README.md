@@ -20,5 +20,5 @@ The datasets can be accessed via this link: https://drive.google.com/open?id=1Hj
 
 In subfolder Notebooks, one can find our work summarized as Jupyter Notebooks
 * [Data Processing](Notebooks/data_processing_thesis.ipynb)
-
+* [Cost Estimation](Notebooks/estimate_costs_thesis.ipynb)
 

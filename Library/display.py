@@ -91,14 +91,16 @@ def plot_misclf_or_correctclf_images(X, y = None, n = None, columns=4, misclf=No
 
         if not y is None:
             if misclf and show_real_label:
-                ax.axes.set_title('Real Label: ' + str(y[i]) + '\nClassified as ' + str(1 - y[i]))
+                ax.axes.set_title('Real Label: ' + str(y[i]) + ', Classified as ' + str(1 - y[i]))
             elif not misclf and show_real_label:
-                ax.axes.set_title('Real Label: ' + str(y[i]) + '\nClassified as ' + str(y[i]))
+                ax.axes.set_title('Real Label: ' + str(y[i]) + ', Classified as ' + str(y[i]))
             elif not show_real_label:
                 ax.axes.set_title('\nClassified as ' + str(y[i]))
         ax.axes.xaxis.set_ticklabels([])
         ax.axes.yaxis.set_ticklabels([])
     fig.tight_layout()
+    plt.show()
+    return fig
 
 
 

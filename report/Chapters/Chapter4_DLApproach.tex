@@ -138,7 +138,7 @@ This architecture (see Fig. \ref{fig:transfer_learning}) has been implemented wi
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.7\textwidth]{Figures/model_keras.png}
+	\includegraphics[width=0.8\textwidth]{Figures/model_keras.png}
 	\captionsetup{width=1\linewidth}
 	\caption{\textbf{Model build with Keras}}
 	\label{fig:model_keras}
@@ -150,6 +150,8 @@ This architecture (see Fig. \ref{fig:transfer_learning}) has been implemented wi
 As introduced in previous chapters, our goal with this model is to study how feasible it is (technically and costly speaking) to detect different kind of human impact on satellite images, and how this detection behaves for different image resolutions. To do so, we build two datasets of annotated images at base resolutions of $0.3m$ and $1m$ (see Chapter \ref{Chapter2}), which we later downgrade to a range of resolutions suitable for our study.
 
 Starting from an image at its base resolution and size ($512\times512$ pixels), the downgrade process consists on downsampling (removing) pixels, so the image becomes smaller. Therefore, this imposes a limit on how far a given dataset can be downgraded, as the CNN ResNet model requires a minimum input size of $32\times32$ pixels \parencite{ResNetKeras}. Tables \ref{tab:resolutions_03m} and \ref{tab:resolutions_1m} show the resolutions and sizes considered for the two datasets.
+
+\
 
 \begin{figure}[h!]
 	\centering
@@ -167,6 +169,8 @@ Starting from an image at its base resolution and size ($512\times512$ pixels), 
 	\label{tab:resolutions_1m}
 \end{figure}
 
+\
+
 Then, for each of the datasets and downgraded resolution, we want to train a separate model and assess its performance. To do so, we consider the following pipeline for each of the dataset:
 
 \begin{enumerate}
@@ -176,9 +180,9 @@ Then, for each of the datasets and downgraded resolution, we want to train a sep
 	
 	\item Compute the ResNet activations (at the $49^{th}$ activation layer) of the resulting downgraded images. These activations can be saved to disk for later use if needed.
 	
-	\item Consider a stratified KFold split of the dataset (with $8$ splits) for cross-validation. That means, the dataset is split into $8$ sets with labels $0-1$ equally distributed.  
+	\item Consider a stratified KFold split of the dataset (with $8$ splits) for cross-validation. That means, the dataset is split into $8$ sets with labels $0-1$ equally distributed.  These sets consist of around $300$ images for the $0.3m$ dataset, and around $200$ samples for the $1m$ dataset.
 	
-	\item Train the model (Fig. \ref{fig:model_keras}) separately for each combination of $7$ train sets, with the remaining one used as validation to assess the accuracy. $30$ training epochs are considered. Then results of the $8$ experiments are averaged in order to obtain more consistency.
+	\item Train the model (Fig. \ref{fig:model_keras}) separately for each combination of $7$ train sets, with the remaining one used as validation to assess the accuracy. $30$ training epochs are considered. Then, the results of the $8$ experiments are averaged in order to obtain more consistent measures.
 	
 	\item Repeat for all downgraded resolutions needed.
 \end{enumerate}
@@ -199,9 +203,9 @@ In the next chapter we discuss much more in detail the results obtained from all
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=0.9\textwidth]{Figures/results/convergence_plots_all_res.png}
+	\includegraphics[width=\textwidth]{Figures/results/convergence_plots_all_res.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Convergence plots for all downgraded resolutions of the $0.3m$ dataset.}}
+	\caption{\textbf{Convergence plots some experiments on different datasets, resolutions and architectures.}}
 	\label{fig:conv_plots}
 \end{figure}
 

@@ -16,11 +16,9 @@ First, we need to have imagery data with labels that can be used to clearly dist
 
 \section{Existing Datasets}
 
-In table \ref{table:datasets} we have summarized the most relevant remote sensing datasets with ground truth labels that can be found in literature. The table  lists the name of the dataset together with the bibliographic reference. It also details the data source of the images, it contains a description about the number of images, the resolution of the images, the size of the square images in pixel, and the number of categories.
+In table \ref{table:datasets} we have summarized the most relevant remote sensing datasets with ground truth labels that can be found in literature. The datasets were collected using different publicly available data sources. These range from pure low-resolution satellite imagery (Sentinel-2) to high-resolution images taken with an aircraft (USGS) to a mix of different image sources (Google Earth). 
 
-The datasets were collected using different publicly available data sources. These range from pure low resolution satellite imagery (Sentinel-2) to high-resolution images taken with an aircraft (USGS) to a mix of different image sources (Google Earth). 
-
-The satellite images have a resolution of equal or larger than 10~m and they are collected with the Sentinel-2 satellites of the European Earth observation program Copernicus. Although the datasets from this source (BigEarthNet and EuroSat) are comparatively large, they do not suffice for our purpose, because the resolution is not good enough and the images are too small.
+The satellite images have a resolution of equal or larger than 10~m and they are collected with the Sentinel-2 satellites of the European earth observation program Copernicus. Although the datasets from this source (BigEarthNet and EuroSat) are comparatively large, they do not suffice for our purpose, because the resolution is not good enough and the images are too small.
 
 \begin{table}[h!]
 	\begin{tabular}{l | l | l | l | l | l }
@@ -33,16 +31,17 @@ The satellite images have a resolution of equal or larger than 10~m and they are
 	AID \parencite{xia2016} & Google Earth & 10,000  & 0.5 - 8  & 600 & 30 \\
 	PatternNet \parencite{zhou2017} & Google Earth & 30,400 & 0.06 - 4.69 & 256 & 38 \\
 	\end{tabular}
-	\caption{\textbf{Publicly available remote sensing datasets with labels.}}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{Publicly available remote sensing datasets with labels.} The table  lists the name of the dataset together with the bibliographic reference. It also details the data source of the images. It contains a description about the number of images, the resolution of the images, the size of the square images in pixel, and the number of categories.}
 	\label{table:datasets}	
 \end{table}
 
-The USGS National Map Urban Area Imagery collection \parencite{usgs} was utilized to collect remote sensing datasets in the two works UCMerced and DeepSat, where the former is the dataset that comes closest to our requirements. It features an image resolution of 0.3m per pixel, and the images have a height and width of 256 pixel. However, out of the 21 categories only 2 belong to images without human impact, while the other 19 show man-made structures. The DeepSat dataset unfortunately consists of image patches which are only $28 \times 28$ large, so that we aren't able to study these images as function of resolution.
+The USGS National Map Urban Area Imagery collection \parencite{usgs} was utilized to collect remote sensing datasets in the two works UCMerced and DeepSat, where the former is the dataset that comes closest to our requirements. It features an image resolution of 0.3m per pixel, and the images have a height and width of 256 pixels. However, out of the 21 categories only 2 belong to images without human impact, while the other 19 show man-made structures. The DeepSat dataset unfortunately consists of image patches which are only $28 \times 28$ large, so that we aren't able to study these images as function of resolution.
 
 The datasets using Google Earth as data source are collected using either the Google Earth or the Google Maps application programming interface (API). These images vary in resolution as well as in their original data provider since Google accesses several data sources. 
 Both datasets, the AID and the PatternNet dataset, have about 30 categories with several hundred images in each category. Here, different categories have different pixel resolutions, and again most of the categories relate to urban areas so that we do not have sufficient images without human impact. Even the categories that in principle should not show human influence contain images that break this rule.
 
-Overall, the main issue with these datasets stems from the fact that non of them was collected with the purpose to analyze the human footprint and therefore they are very unbalanced, and do not contain sufficient variety of images for the classes without human influence. Therefore, we decided to collect and label images by ourselfes. In our first approach we used the Google Maps API, and in our final approach we used datasets from the USGS aerial imagery collection.
+Overall, the main issue with these datasets stems from the fact that non of them was collected with the purpose to analyze the human footprint. Therefore they are very unbalanced, and do not contain sufficient variety of images for the classes without human influence. We hence decided to collect and label images by ourselves. In our first approach we used the Google Maps API, and in our final approach we used datasets from the USGS aerial imagery collection.
 
 \section{Google Maps}
 
@@ -68,7 +67,7 @@ because of the wealth of available high resolution aerial imagery data from USGS
 	\centering
 	\captionsetup{width=1\linewidth}
 	\includegraphics[width=1\textwidth]{Figures/example_unproc.pdf}
-	\caption{\textbf{Example of unprocessed image.} This image has a size of $5000\times5000$ pixel. The continuous white lines are guidelines for the eye to demonstrate how we crop smaller images where we only return a cropped image from the white squares with size $512\times512$.}
+	\caption{\textbf{Example of unprocessed image.} This image has a size of $5000\times5000$ pixels. The continuous white lines are guidelines for the eye to demonstrate how we crop smaller images where we only return a cropped image from the white squares with size $512\times512$ pixels.}
 	\label{fig:example-unproc}
 \end{figure}
 
@@ -106,7 +105,7 @@ For the determination of relevant geographic locations we excluded cities and hi
 	\label{fig:desert-sample}
 \end{figure}
 
-Once an area was pointed out as a region of interest, we located it on USGS Earthexplorer and downloaded images from that area. In particular, we constructed two datasets with 0.3m and 1m resolution, respectively. The former was taken from the category High Resolution Orthoimagery and the latter from the category National Agriculture Imagery Program (NAIP). Note that the images in these categories usually have a height and a width of several thousand pixels, and hence oocupy a few hundreds of Megabytes of disk space. We cropped smaller images out of the raw images, which will be discussed in more detail in the following section. Overall, we downloaded about 100 raw images for each dataset. An example is shown in Fig.~\ref{fig:example-unproc}.
+Once an area was pointed out as a region of interest using the USGS Land Cove Viewer, we located it on USGS Earthexplorer and downloaded images from that area. In particular, we constructed two datasets with 0.3m and 1m resolution, respectively. The former was taken from the category High Resolution Orthoimagery and the latter from the category National Agriculture Imagery Program (NAIP). Note that the images in these categories usually have a height and a width of several thousand pixels, and hence occupy a few hundreds of Megabytes of disk space. We cropped smaller images out of the raw images, which will be discussed in more detail in the following section. Overall, we downloaded about 100 raw images for each dataset. An example is shown in Fig.~\ref{fig:example-unproc}.
 
 
 \subsection{Data Processing and Labeling}
@@ -115,10 +114,10 @@ Our data processing pipeline consists of the following steps:
 	\item Download large raw images.
 	\item Crop images of size $512\times512$ pixel.
 	\item Label images with either zero (no human impact), one (minimal human impact), two (clear human impact).
-	\item Degrade images, i.e. reduce number of pixels and thereby resolution per pixel.
+	\item Degrade images i.e. reduce number of pixels and thereby resolution per pixel.
 \end{enumerate}
 
-Let us discuss each of these steps in more detail. An illustration of the first and second step of the image processing pipeline is given in Fig.~\ref{fig:example-unproc}. The white lines demonstrate the way we crop smaller images ($512\times512$) from the large raw image ($5000\times5000$). We process all raw images in this manner, which yields approximately 80-150 processed images per raw image. We hence obtain about 10,000 processed images for each dataset. Within each category (USGS Land Cover categories) of the processed images we labeled a selected portion of the images by moving them into the folder with the respective label name. 
+Let us discuss each of these steps in more detail. An illustration of the first and second step of the image processing pipeline is given in Fig.~\ref{fig:example-unproc}. The white lines demonstrate the way we crop smaller images ($512\times512$ pixels) from the large raw image (in this case $5000\times5000$ pixels). We process all raw images in this manner, which yields approximately 80-150 processed images per raw image. We hence obtain about 10,000 processed images for each dataset. Within each category (USGS Land Cover categories) of the processed images we labeled a selected portion of the images by moving them into the folder with the respective label name. 
 
 We have published our datasets via a Google Drive link \parencite{datasets}. The image folder of the published datasets contains the raw images, the processed images, and the labeled images. In this folder we follow a specific folder structure, which is shown below. Here pointy brackets (<parameter>) indicate a parameter and the content in the optional curly braces determines whether it is a folder pertaining to raw images. The first parameter is $pixels = 512$ and the second parameter represents the resolution of the dataset. Note that the label folders only exist in the case of processed images.
 \vspace{10px}
@@ -140,7 +139,7 @@ We have published our datasets via a Google Drive link \parencite{datasets}. The
 	.3 label-2.
 }
 \vspace{10px}
-Annotating the images with labels was performed following certain rules. First, we classified images with no human impact at all into the class with label zero,  while we classified images with very clear human influence into the class with label two. Ambigious images i.e. images with minimal human traces, such as a small walking path, were classified into class one. Second, we've put major effort into creating datasets that contain images of similar texture spread across all classes. If we for example classified a set of images of a certain forest type into class zero we classified another set of images with a similar forest type, but containing a building or a street, into the class two. We followed the latter rule for all categories except agriculture. The agriculture images all show human influence, and were therefore all classified with label two. By sticking to these rules, we are able to guarantee that the algorithm learns features that relate to the appearance of man-made structures, and not to image artefacts such as color or texture.
+Annotating the images with labels was performed following certain rules. First, we classified images with no human impact at all into the class with label zero,  while we classified images with clear human influence into the class with label two. Ambigious images i.e. images with minimal human traces, such as a small walking path, were classified into class one. Second, we've put major effort into creating datasets that contain images of similar texture spread across all classes. If we for example classified a set of images of a certain forest type into class zero we classified another set of images with a similar forest type, but containing a building or a street, into the class two. We followed the latter rule for all categories except agriculture. The agriculture images all show human influence. We therefore classified them all with label two. By sticking to these rules, we are able to guarantee that the algorithm learns features that relate to the appearance of man-made structures, and not to image artefacts such as color or texture.
 
 \begin{figure}[h!]
 	\centering
@@ -152,7 +151,7 @@ Annotating the images with labels was performed following certain rules. First, 
 
 In Figures \ref{fig:agriculture_sample} - \ref{fig:desert-sample} we display sample images for each of the four categories, repsectively. These images belong to the dataset that has a pixel resolution of 0.3m. The images from the 1m dataset have similar characteristics, but are not shown due to redundancy. Note that in Figs. \ref{fig:shrubland-sample} - \ref{fig:desert-sample} the first row represents images of label zero and the second row shows images that belong to label two. As mentioned above, the images in Fig.~\ref{fig:agriculture_sample} (agriculture) all contain human influence, and therefore belong to class two. 
 
-The distribution of categories and labels is shown in Fig.~\ref{fig:imstats}. Overall, for the 0.3m dataset we classified about 2200 images, and for the 1m dataset we classified about 1450 images. Our main goal consisted in creating a balanced dataset between label zero and label two as can be seen from the distributions. A minority of images, roughly $10\%$ of all annotated images were assigned to label one. These images were used at random to investigate the behaviour of the Machine Learning classifier, which is discussed in chapter~\ref{Chapter4}.
+The distribution of categories and labels is shown in Fig.~\ref{fig:imstats}. Overall, for the 0.3m dataset we classified about 2200 images, and for the 1m dataset we classified about 1450 images. Our main goal consisted in creating a balanced dataset between label zero and label two as can be seen from the distributions. A minority of images, roughly $10\%$ of all annotated images were assigned to label one. These images were used at random to investigate the behaviour of the Machine Learning classifier, which is discussed in chapter~\ref{Chapter5}.
 
 \begin{figure}[h!]
 	\centering

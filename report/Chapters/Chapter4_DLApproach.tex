@@ -130,7 +130,7 @@ Figures \ref{fig:act_agriculture}, \ref{fig:act_forest_woodland}, \ref{fig:act_s
 
 For our purpose we considered the last ($49^{th}$) activation layer of the ResNet as the features of our images. These features can be extracted and saved on disk in order to speed up the process (as we did), or computed each time, and then passed through a simple Neural Network.
 
-Then, our model consisted on a single dense layer of $100$ neurons with ReLU activation, followed by a single Dense node with a Sigmoid activation acting as the classifier. This model is then trained on the dataset with and RMSprop optimizer and a binary cross-entropy loss function. This same architecture is then used and trained separately for each of the resolutions considered.
+Then, our model consisted on a single dense layer of $100$ or $200$ neurons with ReLU activation, followed by a single Dense node with a Sigmoid activation acting as the classifier. This model is then trained on the dataset with and RMSprop optimizer and a binary cross-entropy loss function. This same architecture is then used and trained separately for each of the resolutions considered.
 
 \
 
@@ -183,17 +183,19 @@ Then, for each of the datasets and downgraded resolution, we want to train a sep
 	\item Repeat for all downgraded resolutions needed.
 \end{enumerate}
 
-Note that the splitting parameters of the cross-validation, model complexity and the training epochs could be further analyzed in order to fit them better to each of the resolutions. 
+Note that the splitting parameters of the cross-validation, the model complexity and the training epochs could be further analyzed in order to find the best combination for each of the resolutions tested. Actually, all the experiments consist on training NN models for two datasets, each with $16$ resolutions and $8$ folds per resolution, so every fine-tuning (like changing the size of the NN) implies several executions with some variability on each stage.
+
+Nonetheless, as already mentioned in the introduction, the final goal of the experiments is to have an statistical reference of how well the models can be trained, and not to achieve the highest accuracy for each scenario. In order to do so, a larger dataset would be needed, with more well defined categories and objects, and clear goal of what needs to be modeled.
 
 \
 
-The plots below show the convergence of the models for different resolutions and datasets (and for one of the cross-validation fold). In general, the NN is able to converge and achieve a good accuracy, although for some particular splits of the data it fails to converge. This is probably due to the fact of having a relative small dataset. Hence, these folds are not considered when computing the final averaged results.
+The plots in Figure \ref{fig:conv_plots} show the convergence of some of the models trained, for the different datasets and resolutions (and considering one of the cross-validation folds only). Also, two architectures for the dense layer have been tested: $100$ neurons and $200$ neurons. 
 
-\textcolor{red}{COMPLETE PLOTS OF SOME RESOLUTIONS AND DATASETS}
+In general, the NN is able to converge and achieve a good accuracy (as shown in the plots), although for some particular splits of the data, it fails to converge and stays in a low accuracy point. This is probably due to the fact of having a relative small dataset. Hence, these particular folds are not going to be considered when computing the final averaged results.
 
-\textcolor{red}{BETTER EXPLAIN RELATING TO THE PLOTS}
+\
 
-In the next chapter we discuss in detail the results obatined from all these experiments.
+In the next chapter we discuss much more in detail the results obtained from all these experiments.
 
 \begin{figure}[h!]
 	\centering

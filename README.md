@@ -1,8 +1,3 @@
-# TODO:
-* Clean this repo
-* Clean dataset folder on google drive
-
-
 # Man-made Structures Detection from Space
 
 ## Master Thesis in Data Science
@@ -11,14 +6,16 @@
 
 ### Advisor: Jordi Vitrià (Universidad de Barcelona), Marco Bressan (Satellogic)
 
-High-level bla and blub
+A high-level summary of this work can be found in this notebook [provide link to notebook]
 
 # Data
 The datasets can be accessed via this link: https://drive.google.com/open?id=1Hjod1ZTuSIW3VNO2IuGoq_iagI3imnJQ
 
 # Notebooks
 
-In subfolder Notebooks, one can find our work summarized as Jupyter Notebooks
+These notebooks provide a more detailed view on the steps performed in the individual chapters of this master thesis. 
 * [Data Processing](Notebooks/data_processing_thesis.ipynb)
+* provide link to notebook related to chapter4
+* provide link to notebook related to chapter5.1 and 5.2
 * [Cost Estimation](Notebooks/estimate_costs_thesis.ipynb)
 

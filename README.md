@@ -6,7 +6,7 @@
 
 ### Advisor: Jordi Vitrià (Universidad de Barcelona), Marco Bressan (Satellogic)
 
-A high-level summary of this work can be found in this notebook <provide link to notebook>
+A high-level summary of this work can be found in this notebook [provide link to notebook]
 
 # Data
 The datasets can be accessed via this link: https://drive.google.com/open?id=1Hjod1ZTuSIW3VNO2IuGoq_iagI3imnJQ

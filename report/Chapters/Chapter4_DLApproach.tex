@@ -153,7 +153,7 @@ Starting from an image at its base resolution and size ($512\times512$ pixels), 
 
 \
 
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\input{Tables/Ch4_Resolutions_03m}
 	\captionsetup{width=1\linewidth}
@@ -161,7 +161,9 @@ Starting from an image at its base resolution and size ($512\times512$ pixels), 
 	\label{tab:resolutions_03m}
 \end{figure}
 
-\begin{figure}[h!]
+\
+
+\begin{figure}[H]
 	\centering
 	\input{Tables/Ch4_Resolutions_1m}
 	\captionsetup{width=1\linewidth}
@@ -191,7 +193,7 @@ Note that the splitting parameters of the cross-validation, the model complexity
 
 Nonetheless, as already mentioned in the introduction, the final goal of the experiments is to have an statistical reference of how well the models can be trained, and not to achieve the highest accuracy for each scenario. In order to do so, a larger dataset would be needed, with more well defined categories and objects, and a clear goal of what needs to be modeled.
 
-The plots in Figure \ref{fig:conv_plots} show the convergence of some of the models trained, for the different datasets and resolutions (and considering one of the cross-validation folds only). Also, two architectures for the dense layer have been tested: $100$ neurons and $200$ neurons. 
+The plots in Figure \ref{fig:conv_plots} (in the next page) show the convergence of some of the models trained, for the different datasets and resolutions (and considering one of the cross-validation folds only). Also, two architectures for the dense layer have been tested: $100$ neurons and $200$ neurons. 
 
 In general, the NN is able to converge and achieve a good accuracy (as shown in the plots), although for some particular splits of the data, it fails to converge and stays in a low accuracy point. This is probably due to the fact of having a relative small dataset. Hence, these particular folds are not going to be considered when computing the final averaged results.
 

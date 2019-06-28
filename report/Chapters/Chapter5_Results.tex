@@ -72,15 +72,11 @@ Finally, we can investigate how the model behaves with images where human impact
 	\label{fig:dataset03m_res03_l1}
 \end{figure}
 
-All in all, we can conclude that the model is able to achieve a great accuracy. It is able to generalize to unseen, subtle images, and still be accurate for lower resolutions, were the amount of pixels and information per images become much smaller. 
-
-\textcolor{red}{Why did you do it in this order? Why didn't you switch this subsection with the next?}
+All in all, we can conclude that the model is able to achieve a great accuracy, specially on the Agriculture category. It is able to generalize to unseen, subtle images, and still be accurate for lower resolutions, were the amount of pixels and information per images become much smaller. 
 
 \section{Man-made structures detection at different scale}
 
 Now that we know that the trained models are able to detect, with high accuracy, human impact from our datasets, we are ready to analyze the results for different resolutions. From all the experiments (datasets, architectures, resolutions and cross-validations), the results have been stored and aggregated. As mentioned in the previous chapter, the models were not able to converge for some particular splits of the datasets. Hence, these few folds have been ignored when aggregating the results. Tables \ref{tab:Results_03m_100n} - \ref{tab:Results_1m_200n} in Appendix \ref{Tables} summarize the accuracies obtained for each of the datasets ($0.3m$ and $1m$) and downgraded resolutions, both the overall accuracy and by category. 
-
-\textcolor{red}{Here I would also switch the order. First the plots together with the information that some of the data was excluded, and then mention the tables in the appendix.}
 
 Similarly, Figure \ref{fig:acc_res_03m_1m} shows the overall accuracies obtained for all resolutions. From this we can see that similar accuracies are achieved for both datasets on the same degraded resolution, which means that both datasets are comparable and can be considered together. Also, we realize that increasing the size of the model from $100$ neurons to $200$ does not have a big impact on the accuracy, but tends to perform slightly better. Hence, for other results later we will focus on this architecture only.
 
@@ -94,7 +90,7 @@ Similarly, Figure \ref{fig:acc_res_03m_1m} shows the overall accuracies obtained
 
 On closer inspection, we also detect that the accuracy on the base resolution ($0.3m$ and $1m$) is always slightly worse than the next resolution. This is probably because the input image size at the base resolution is quite large ($512\times512$), which makes the dense layer much more complex to train. More sample images would be required in order to compensate for the complexity and achieve a greater accuracy. Finally, the overall conclusion from this plot is that, as expected, better resolutions (less than $2m$) allow for greater accuracies, of over $90\%$, which means a great success considering that the images in the datasets are balanced between having or not human impact. Furthermore, accuracy is still good for resolutions between $2m$ and $8m$, staying between $85\%$ and $90\%$. From $8m$ onwards, accuracy drops to $80\%$ and the model is not able to detect more subtle elements of man-made structures.
 
-Now let us consider how these accuracies behave for each of the land use categories in the datasets. As discussed in section \ref{usgs_data}, these categories are rough approximations of the kind of terrain and human impact, with images that could be exchanged between categories, but overall these can give and idea of the accuracies when analyzing different kind of terrains. Indeed, Figures \ref{fig:acc_all_cat_03m} and \ref{fig:acc_by_cat_03m} show that, for the $0.3m$ dataset (and $200$ neurons model), accuracy differs substantially between categories. Fig. \ref{fig:acc_all_cat_03m} shows the global comparison between categories, while Fig. \ref{fig:acc_by_cat_03m} allows for a better comparison of each category with respect to the overall accuracy. \textcolor{red}{I don't think it is necessary to show the figure with the 5 lines. Should be fine to show only the 4 separate figures comparing each category with overll.}
+Now let us consider how these accuracies behave for each of the land use categories in the datasets. As discussed in section \ref{usgs_data}, these categories are rough approximations of the kind of terrain and human impact, with images that could be exchanged between categories, but overall these can give and idea of the accuracies when analyzing different kind of terrains. Indeed, Figures \ref{fig:acc_all_cat_03m} and \ref{fig:acc_by_cat_03m} show that, for the $0.3m$ dataset (and $200$ neurons model), accuracy differs substantially between categories. Fig. \ref{fig:acc_all_cat_03m} shows the global comparison between categories, while Fig. \ref{fig:acc_by_cat_03m} allows for a better comparison of each category with respect to the overall accuracy. 
 
 \begin{figure}[h!]
 	\centering
@@ -116,7 +112,7 @@ These plots have been obtained once the model was trained for all the categories
 
 Although the category is not taken into account when training, we can see that the models are capable of detecting agriculture-related human impact with high accuracy (over $95\%$), without really being affected by the drop in accuracy. Shrubland-grassland category also has a good accuracy, while the model performs worse in semi-desert and forest-woodland images. That means that the models are able to capture textures and patterns related to agriculture quite easily, while the other categories have more variable features.
 
-Similar results are obtained for the $1m$ dataset, which are shown in Figures \ref{fig:acc_all_cat_1m} and \ref{fig:acc_by_cat_1m}. The models are able to achieve a great accuracy when detecting agriculture-related human impact (over $95\%$), independently of the resolution considered, but the performance drops for the other 3 categories. The biggest drop is observed at $8m$ consistently over the three non-agriculture categories. \textcolor{red}{I think here it is also enough to show the 4 images instead of the one with 5 lines.}
+Similar results are obtained for the $1m$ dataset, which are shown in Figures \ref{fig:acc_all_cat_1m} and \ref{fig:acc_by_cat_1m}. The models are able to achieve a great accuracy when detecting agriculture-related human impact (over $95\%$), independently of the resolution considered, but the performance drops for the other 3 categories. The biggest drop is observed at $8m$ consistently over the three non-agriculture categories. 
 
 \begin{figure}[H]
 	\centering

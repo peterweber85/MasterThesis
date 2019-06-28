@@ -44,15 +44,23 @@ headsepline, % Uncomment to get a line under the header
 \captionsetup{justification=raggedright,singlelinecheck=false}
 \usepackage{subcaption}
 \usepackage{rotating}
+\usepackage{float}
 
 \usepackage[backend=bibtex,
 					 style=numeric,
 					 natbib=true,
 					 sorting=none]{biblatex} % Use the bibtex backend with the authoryear citation style (which resembles APA)
 
-\addbibresource{bibliography.bib} % The filename of the bibliography
+\addbibresource{bibliography_pw.bib} % The filename of the bibliography
 
 \usepackage[autostyle=true]{csquotes} % Required to generate language-dependent quotes in the bibliography
+
+% Word-splitting tolerance to avoid it
+%\pretolerance=2000
+%\tolerance=3000
+\pretolerance=10000
+\tolerance=2000 
+\emergencystretch=10pt
 
 %----------------------------------------------------------------------------------------
 %	MARGIN SETTINGS
@@ -74,9 +82,11 @@ headsepline, % Uncomment to get a line under the header
 
 \thesistitle{Man-made Structures Detection from Space} % Your thesis title, this is used in the title and abstract, print it elsewhere with \ttitle
 \supervisor{Dr. Jordi \textsc{Vitria}} % Your supervisor's name, this is used in the title page, print it elsewhere with \supname
+\supervisoremail{ }
 \examiner{} % Your examiner's name, this is not currently used anywhere in the template, print it elsewhere with \examname
 \degree{} % Your degree name, this is used in the title page and abstract, print it elsewhere with \degreename
 \author{Peter \textsc{Weber}} % Your name, this is used in the title page and abstract, print it elsewhere with \authorname
+\authoremail{ }
 \addresses{} % Your address, this is not currently used anywhere in the template, print it elsewhere with \addressname
 
 \subject{Data Science} % Your subject area, this is not currently used anywhere in the template, print it elsewhere with \subjectname
@@ -116,13 +126,13 @@ headsepline, % Uncomment to get a line under the header
 \begin{minipage}[t]{0.4\textwidth}
 \begin{flushleft} \large
 \emph{Author:}\\
-\href{http://www.johnsmith.com}{\authorname} % Author name - remove the \href bracket to remove the link
+\href{mailto:\authemail}{\authorname} % Author name - remove the \href bracket to remove the link
 \end{flushleft}
 \end{minipage}
 \begin{minipage}[t]{0.4\textwidth}
 \begin{flushright} \large
 \emph{Supervisor:} \\
-\href{http://www.jamessmith.com}{\supname} % Supervisor name - remove the \href bracket to remove the link  
+\href{mailto:\supemail}{\supname} % Supervisor name - remove the \href bracket to remove the link  
 \end{flushright}
 \end{minipage}\\[3cm]
  
@@ -141,6 +151,7 @@ headsepline, % Uncomment to get a line under the header
 \end{center}
 \end{titlepage}
 
+\include{Chapters/Commands}
 
 %----------------------------------------------------------------------------------------
 %	ABSTRACT PAGE
@@ -148,11 +159,13 @@ headsepline, % Uncomment to get a line under the header
 
 \begin{abstract}
 \addchaptertocentry{\abstractname} % Add the abstract to the table of contents
- 
- Satellite and aerial imagery have become abundant....
- 
- 
- 
+With the development of affordable and recurrent remote sensing technology, we can now access frequent geospatial information in different levels of detail, ranging from 100m to 0.01m. The task of detecting various types of man-made structure and man-induced change has become a key problem in remote sensing image analysis. 
+
+In this work we focus on providing an answer to the question: what is the optimal tradeoff between resolution and cost when aiming at determining the existence of man-made structures in remote sensing images? Obtaining this value is important not only for designing optimal satellite sensors but also to use optimal data sources when developing data-based remote sensing products. At a global level, this knowledge contributes to understand the impact of our species on the planet.
+
+Our approach is based on developing a deep learning detector to classify human impact on aerial images. In particular, we exploit recent advances of Convolutional Neural Networks (CNN) that were successfully used for object detection and scene classification. We apply transfer learning by integrating a ResNet pre-trained on ImageNet to perform image classification on datasets of few thousand aerial images that we have manually collected and annotated. Using this classification pipeline we are able to determine the existence of man-made structure with an accuracy of 95\% at the best resolution.
+
+We study the performance of our detector for resolutions ranging from 0.3m to 16m. We observe a linear decrease of the classification accuracy down to about 81\% at the lowest resolution. Furthermore, we estimate the cost associated to capturing and processing satellite images. This includes the entire pipeline from building and launching a satellite to predicting human impact on images. We estimate that monitoring the entire land surface of the earth at 1m resolution amounts for about \$15 million. This cost increases by about two orders of magnitude at the best resolution studied here, and decreases by about one order of magnitude at a resolution of 10m per pixel. These results could be further improved by training a CNN on a labeled large scale remote sensing dataset. Nevertheless, our results suffice for studying the expansion of human kind using satellite imagery and provide valuable information for designing optimal satellite sensors.
 \end{abstract}
 
 %----------------------------------------------------------------------------------------
@@ -163,7 +176,7 @@ headsepline, % Uncomment to get a line under the header
 \addchaptertocentry{\acknowledgementname} % Add the acknowledgements to the table of contents
 
 First, we want to thank \textbf{Santi Seguí}, \textbf{Lluis Garido}, and \textbf{Eloi Puertas} to serve as experts in our thesis committee.
-We are very grateful to our thesis advisor \textbf{Jordi Vitrià} for close guidance and exceptionally valuable and creative ideas on how to afront the problems we encountered. His scientific instinct was indispensable in critical moments of the project.
+We are very grateful to our thesis advisor \textbf{Jordi Vitrià} for close guidance and exceptionally constructive and creative ideas on how to afront the problems we encountered. His scientific instinct was indispensable in critical moments of the project.
 We also want to thank \textbf{Marco Bressan} from Satellogic for fruitful discussions, support with material, and advice about tools and data sources. Further, we want to thank \textbf{Javier Marin} and \textbf{Aitor Lucas} (both from Satellogic) for help with the datasets.
 
 \end{acknowledgements}
@@ -187,10 +200,9 @@ We also want to thank \textbf{Marco Bressan} from Satellogic for fruitful discus
 \include{Chapters/Chapter1_Introduction}
 \include{Chapters/Chapter2_Datasets}
 \include{Chapters/Chapter3_NN} 
-\include{Chapters/Chapter4_DLApproach} 
-\include{Chapters/Chapter5_Results}
+\include{Chapters/Chapter4_DLApproach_pw} 
+\include{Chapters/Chapter5_Results_pw}
 \include{Chapters/Chapter6_Conclusions}
-\include{Chapters/Chapter7_AuthorContributions}
 
 
 %----------------------------------------------------------------------------------------
@@ -202,6 +214,9 @@ We also want to thank \textbf{Marco Bressan} from Satellogic for fruitful discus
 % Include the appendices of the thesis as separate files from the Appendices folder
 % Uncomment the lines as you write the Appendices
 
+\include{Appendices/Tables}
+\include{Appendices/FilesCode}
+\include{Appendices/AuthorContributions}
 %\include{Appendices/AppendixA}
 %\include{Appendices/AppendixB}
 %\include{Appendices/AppendixC}

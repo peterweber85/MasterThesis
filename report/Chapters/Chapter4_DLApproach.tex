@@ -1,5 +1,5 @@
 
-\chapter{Proposed Approach}
+\chapter{Proposed approach}
 
 \label{Chapter4}
 
@@ -81,13 +81,13 @@ As described before (Sections \ref{sec:CNNArchitectures} and \ref{sec:transferLe
 
 \subsection{ResNet activations}
 
-The ResNet we consider (ResNet50) has a total of $49$ activation layers, so the output at each of them is different. Initial layers are able to recognize edges, textures and patterns while keeping and image size similar to the input. On the other hand, deeper activation layers show more convoluted relations and provide much more channels (or filters) by shrinking the image size.
+The ResNet we consider (ResNet50) has a total of $49$ activation layers, so the output at each of them is different. Initial layers are able to recognize edges, textures and patterns while keeping an image size similar to the input. On the other hand, deeper activation layers show more convoluted relations and provide much more channels (or filters) by shrinking the image size.
 
 For instance, for an input image of (tensor) size $512 \times 512 \times 3$ (a $512x512$ image with $3$ RGB channels), the output of the first activation layer is of size $256 \times 256 \times 64$, the $10^{th}$ gives a $128 \times 128 \times 256$ tensor, and the last $49^{th}$ activation layer outputs $16 \times 16 \times 2048$. For our purpose, we will consider the final output of the ResNet ($49^{th}$ activation layer), although this could be further investigated and discussed.
 
 \
 
-Figures \ref{fig:act_agriculture}, \ref{fig:act_forest_woodland}, \ref{fig:act_semi_desert} and \ref{fig:act_shrubland_grassland} show some outputs of the $10^{th}$ and $49^{th}$ activation layers for samples of different categories in the dataset. Some of the $10^{th}$ activations are particularly sensitive to edges, shadows, or textures, which later translate into different outputs of $49^{th}$ layer.
+Figures \ref{fig:act_agriculture} - \ref{fig:act_shrubland_grassland} show some outputs of the $10^{th}$ and $49^{th}$ activation layers for samples of different categories in the dataset. Some of the $10^{th}$ activations are particularly sensitive to edges, shadows, or textures, which later translate into different outputs at the $49^{th}$ layer.
 
 \begin{figure}[H]
 	\centering
@@ -130,7 +130,7 @@ Figures \ref{fig:act_agriculture}, \ref{fig:act_forest_woodland}, \ref{fig:act_s
 
 For our purpose we considered the last ($49^{th}$) activation layer of the ResNet as the features of our images. These features can be extracted and saved on disk in order to speed up the process (as we did), or computed each time, and then passed through a simple Neural Network.
 
-Then, our model consisted on a single dense layer of $100$ or $200$ neurons with ReLU activation, followed by a single Dense node with a Sigmoid activation acting as the classifier. This model is then trained on the dataset with and RMSprop optimizer and a binary cross-entropy loss function. This same architecture is then used and trained separately for each of the resolutions considered.
+Then, our model consisted on a single dense layer of $100$ or $200$ neurons with ReLU activation, followed by a single Dense node with a Sigmoid activation acting as the classifier. This model is trained on the dataset with RMSprop optimizer \parencite{ruder2016} and a binary cross-entropy loss function. The same architecture is used and trained separately for each of the resolutions considered. 
 
 \
 
@@ -149,7 +149,7 @@ This architecture (see Fig. \ref{fig:transfer_learning}) has been implemented wi
 
 As introduced in previous chapters, our goal with this model is to study how feasible it is (technically and costly speaking) to detect different kind of human impact on satellite images, and how this detection behaves for different image resolutions. To do so, we build two datasets of annotated images at base resolutions of $0.3m$ and $1m$ (see Chapter \ref{Chapter2}), which we later downgrade to a range of resolutions suitable for our study.
 
-Starting from an image at its base resolution and size ($512\times512$ pixels), the downgrade process consists on downsampling (removing) pixels, so the image becomes smaller. Therefore, this imposes a limit on how far a given dataset can be downgraded, as the CNN ResNet model requires a minimum input size of $32\times32$ pixels \parencite{ResNetKeras}. Tables \ref{tab:resolutions_03m} and \ref{tab:resolutions_1m} show the resolutions and sizes considered for the two datasets.
+Starting from an image at its base resolution and size ($512\times512$ pixels), the downgrade process consists of downsampling (removing) pixels, so the image becomes smaller. Therefore, this imposes a limit on how far a given dataset can be downgraded, as the CNN ResNet model requires a minimum input size of $32\times32$ pixels \parencite{ResNetKeras}. Note that during the downsampling process the physical area displayed by the image is not changed. Tables \ref{tab:resolutions_03m} and \ref{tab:resolutions_1m} show the resolutions and sizes considered for the two datasets.
 
 \
 
@@ -157,7 +157,7 @@ Starting from an image at its base resolution and size ($512\times512$ pixels), 
 	\centering
 	\input{Tables/Ch4_Resolutions_03m}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Relation between resolution and size for the $0.3m$ dataset}. Size is the width (height) of a square images.}
+	\caption{\textbf{Relation between resolution and size for the $0.3m$ dataset}. Size is the width (and height) of a square image.}
 	\label{tab:resolutions_03m}
 \end{figure}
 
@@ -165,13 +165,13 @@ Starting from an image at its base resolution and size ($512\times512$ pixels), 
 	\centering
 	\input{Tables/Ch4_Resolutions_1m}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Relation between resolution and size for the $1m$ dataset}. Size is the width (height) of a square images.}
+	\caption{\textbf{Relation between resolution and size for the $1m$ dataset}. Size is the width (and height) of a square image.}
 	\label{tab:resolutions_1m}
 \end{figure}
 
 \
 
-Then, for each of the datasets and downgraded resolution, we want to train a separate model and assess its performance. To do so, we consider the following pipeline for each of the dataset:
+Next, for each of the datasets and downgraded resolutions we want to train a separate model and assess its performance. To this end, we consider the following pipeline for each of the datasets:
 
 \begin{enumerate}
 	\item Load the original images (at the original resolution) from disk, along with the human impact labels and categories.
@@ -180,18 +180,16 @@ Then, for each of the datasets and downgraded resolution, we want to train a sep
 	
 	\item Compute the ResNet activations (at the $49^{th}$ activation layer) of the resulting downgraded images. These activations can be saved to disk for later use if needed.
 	
-	\item Consider a stratified KFold split of the dataset (with $8$ splits) for cross-validation. That means, the dataset is split into $8$ sets with labels $0-1$ equally distributed.  These sets consist of around $300$ images for the $0.3m$ dataset, and around $200$ samples for the $1m$ dataset.
+	\item Consider a stratified KFold split of the dataset (with $8$ splits) for cross-validation. That means, the dataset is split into $8$ sets with labels 0-1 equally distributed. Note that label 1 here represents the class with clear human impact, in contrast to the convention in chapter \ref{Chapter2} (where it was label 2).  Each cross-validation fold consists of around $300$ images for the $0.3m$ dataset, and around $200$ samples for the $1m$ dataset.
 	
-	\item Train the model (Fig. \ref{fig:model_keras}) separately for each combination of $7$ train sets, with the remaining one used as validation to assess the accuracy. $30$ training epochs are considered. Then, the results of the $8$ experiments are averaged in order to obtain more consistent measures.
+	\item Train the model (Fig. \ref{fig:model_keras}) separately for each combination of the $7$ training sets considering 30 epochs. The remaining set is used as a validation set to assess the accuracy. After training on all folds, the results of the $8$ experiments are averaged in order to obtain more consistent measures.
 	
-	\item Repeat for all downgraded resolutions needed.
+	\item Repeat the process for all downgraded resolutions.
 \end{enumerate}
 
-Note that the splitting parameters of the cross-validation, the model complexity and the training epochs could be further analyzed in order to find the best combination for each of the resolutions tested. Actually, all the experiments consist on training NN models for two datasets, each with $16$ resolutions and $8$ folds per resolution, so every fine-tuning (like changing the size of the NN) implies several executions with some variability on each stage.
+Note that the splitting parameters of the cross-validation, the model complexity and the training epochs could be further analyzed in order to find the best combination for each of the resolutions tested. Actually, all the experiments consist of training NN models for two datasets, each with $16$ resolutions and $8$ folds per resolution, so every fine-tuning (like changing the size of the NN) implies several executions with some variability on each stage.
 
-Nonetheless, as already mentioned in the introduction, the final goal of the experiments is to have an statistical reference of how well the models can be trained, and not to achieve the highest accuracy for each scenario. In order to do so, a larger dataset would be needed, with more well defined categories and objects, and clear goal of what needs to be modeled.
-
-\
+Nonetheless, as already mentioned in the introduction, the final goal of the experiments is to have an statistical reference of how well the models can be trained, and not to achieve the highest accuracy for each scenario. In order to do so, a larger dataset would be needed, with more well defined categories and objects, and a clear goal of what needs to be modeled.
 
 The plots in Figure \ref{fig:conv_plots} show the convergence of some of the models trained, for the different datasets and resolutions (and considering one of the cross-validation folds only). Also, two architectures for the dense layer have been tested: $100$ neurons and $200$ neurons. 
 
@@ -199,7 +197,7 @@ In general, the NN is able to converge and achieve a good accuracy (as shown in 
 
 \
 
-In the next chapter we discuss much more in detail the results obtained from all these experiments.
+In the next chapter we discuss in much more detail the results obtained from all these experiments.
 
 \begin{figure}[h!]
 	\centering

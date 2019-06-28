@@ -27,13 +27,13 @@ The hyperspectral technology i.e. image aquisition capability in more than 30 sp
 At 1m pixel resolution, 10 satellites can remap 1 million square kilometers every 6 weeks. Note that the surface of the earth is roughly 500 million square kilometers of which about 30\% is land and 70\% is water, which brings us to the goals of this thesis.
 
 
-\section{Thesis Goals and Outline}
+\section{Thesis goals and outline}
 The motivation for this Master's thesis is to provide an answer to the question: What is the optimal resolution to detect human impact in satellite imagery, having in mind the economical cost of acquiring and processing the information? 
 Determining this value is important not only for designing optimal satellite sensors but also to use optimal data sources when developing data-based remote sensing products. The goal here is not to build the top performance, state-of-the-art model to detect all sorts of human impact in satellite images, but rather to analyze the feasibility and cost of doing so at different resolutions. Of course, better algorithms could be trained on larger datasets to accurately identify certain types of human impact, but we consider a more general problem.
 
 To address this problem, we divide the work into three parts. First, we develop a detector that is capable of identifying man-made structures on two aerial imagery datasets that we collect and annotate. Next, we study the performance of the detector in terms of classification accuracy as a function of image resolution i.e. the resolution per pixel. In the last part, we provide an approximate estimation of the costs of the entire pipeline. These also include metrics related to building, launching and maintaining a satellite. The estimation is performed for the entire spectrum of resolutions ranging from 0.03m to 16m.
 
-The detailed outline of the thesis is the following:
+The detailed outline of the thesis is listed below, and the Jupyter notebooks demonstrating the experimental work can be found on our Github repository (see \href{https://github.com/peterweber85/MasterThesis}{link} or reference \parencite{github}).
 \begin{itemize}
 	\item Chapter~\ref{Chapter2} provides an overview of existing datasets and a detailed description of the construction of our own datasets. We further discuss the data manipulation pipeline.
 	

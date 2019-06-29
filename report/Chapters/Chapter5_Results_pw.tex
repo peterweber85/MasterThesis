@@ -5,7 +5,7 @@
 
 %----------------------------------------------------------------------------------------
 
-
+\textcolor{red}{TODO: Check cost estimation}
 In this chapter we discuss the results obtained in this thesis. We first evaluate for different resolutions the performance of the Deep Learning pipeline that was described in the previous chapter. Subsequently we discuss several examples of correctly and wrongly classified images. In the last part of the chapter, we estimate the cost associated with providing earth observation data involving satellites.
 
 \section{Man-made structures detection at different scale}
@@ -20,7 +20,7 @@ We further note that the accuracy on the base resolution (0.3m and 1m) is always
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/results/acc_res_03m_1m.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Accuracy at each resolution for all datasets and architectures.} Similar results are obtained at the same degraded resolutions. The vertical lines represent the variability (standard deviation) for the different folds of the cross-validations.}
+	\caption{\textbf{Accuracy at each resolution for all datasets and architectures.} The blue (purple) lines correspond to the 0.3m (1m) dataset and lighter (darker) color belongs to a 100 (200) neuron architecture. The vertical lines represent the variability (standard deviation) for the different folds of the 8-fold cross-validation.}
 	\label{fig:acc_res_03m_1m}
 \end{figure}
 
@@ -35,7 +35,7 @@ Let us consider how the accuracies behave for each of the USGS land use categori
 	\centering
 	\includegraphics[width=0.9\textwidth]{Figures/results/acc_res_by_category_03m.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Comparsion of accuracies between each category and overall, with the model trained over all categories, on the $0.3m$ dataset.}}
+	\caption{\textbf{Comparison of accuracies between each category and all categories aggregated.} Here the model is trained over all categories, on the 0.3m dataset, and tested on each category separately (in the case of a single category).}
 	\label{fig:acc_by_cat_03m}
 \end{figure}
 
@@ -50,25 +50,20 @@ Similar results are obtained for the $1m$ dataset, which are shown in Fig.~\ref{
 	\centering
 	\includegraphics[width=0.9\textwidth]{Figures/results/acc_res_by_category_1m.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Comparsion of accuracies between each category and overall, with the model trained over all categories, on the $1m$ dataset.}}
+	\caption{\textbf{Comparison of accuracies between each category and all categories aggregated.} Here the model is trained over all categories, on the 1m dataset, and tested on each category separately (in the case of a single category).}
 	\label{fig:acc_by_cat_1m}
 \end{figure}
 
 
 \subsection{Performance on selected images}
-The first thing we might want to investigate from our experiments is whether the approach followed is able to achieve good results. That is, we want to evaluate if using a pre-trained ResNet as a feature extractor for aerial images allows the trained model to properly discriminate the existence of human impact. 
-
-Tables \ref{tab:Results_03m_100n} - \ref{tab:Results_1m_200n} in Appendix \ref{Tables} show that the accuracies obtained with all the experiments are indeed remarkable. All these results are discussed in more detail in the next section, but let us begin by focusing on few cases of the $0.3m$ dataset in order to understand how the models are behaving. In table \ref{tab:Results_03m_100n} we can see that an accuracy of around $0.9226$ is achieved on the base resolution ($0.3m$), while it drops to $0.8690$ of the last downgraded resolution of the dataset ($4.8m$).
-
-Let us consider first some examples of correctly and wrongly classified images at the base resolution (for one of the cross-validation folds), which are shown in Figures \ref{fig:dataset03m_res03_correct} and \ref{fig:dataset03m_res03_wrong} respectively. The first set of samples shows that the model accurately detects clear human impact related to agriculture (2nd picture in the second row) and paths. On the other hand, the second set shows that it might fail to detect it when the impact is subtle, covering a small region of the image, or when it can even be confused with natural structures (or vice versa).
-
-Note that, from this point, \textit{label 1} refers to images with clear human impact, which were defined as \textit{label 2} when building the datasets in Chapter \ref{Chapter2}.
+In this subsection we will illustrate the algorithm behaviour by considering concrete examples of correctly and wrongly classified images. In Figs.~\ref{fig:dataset03m_res03_correct} and \ref{fig:dataset03m_res03_wrong} we show examples for the 0.3m dataset at base resolution (for one of the cross-validation folds), respectively.
+The first set of samples (Fig.~\ref{fig:dataset03m_res03_correct}) shows that the model accurately detects clear human impact related to agriculture (2nd picture in the second row) and paths. On the other hand, the second set (Fig.~\ref{fig:dataset03m_res03_wrong}) indicates that it might fail to detect it when the impact is subtle, covering a small region of the image, or when it can even be confused with natural structures (or vice versa). Note that in this subsection we refere to images with clear human impact as images with label 1 (in contract to chapter~\ref{Chapter2} where they were defined as label 2).
 
 \begin{figure}[H]
 	\centering
 	\captionsetup{width=1\linewidth}
 	\includegraphics[width=1\textwidth]{Figures/results/class_dataset03m_res03_correct.png}
-	\caption{\textbf{Examples of correctly classified images at the base resolution, $0.3m$.}}
+	\caption{\textbf{Examples of correctly classified images at base resolution of 0.3m dataset.} The title of each image marks whether an image shows man-made structures, and indicates the output of the classifier.}
 	\label{fig:dataset03m_res03_correct}
 \end{figure}
 
@@ -76,17 +71,17 @@ Note that, from this point, \textit{label 1} refers to images with clear human i
 	\centering
 	\captionsetup{width=1\linewidth}
 	\includegraphics[width=1\textwidth]{Figures/results/class_dataset03m_res03_wrong.png}
-	\caption{\textbf{Examples of wrongly classified images at the base resolution,  $0.3m$.}}
+	\caption{\textbf{Examples of wrongly classified images at base resolution of the 0.3m dataset.}}
 	\label{fig:dataset03m_res03_wrong}
 \end{figure}
 
-The same kind of analysis can be done for the last resolution, $4.8m$. Figures \ref{fig:dataset03m_res48_correct} and \ref{fig:dataset03m_res48_wrong} show correctly and wrongly classified images at this resolution. The first set shows that the model detects human impact when it is still evident, even with the low resolution, but the second set indicates that it commits mistakes when the human impact evidences are lost with the downgrade process. Similarly, it might classify as man-made structures patterns that are indeed natural.
+A similar analysis can be done for the last resolution, $4.8m$, which is shown in Figs.~\ref{fig:dataset03m_res48_correct} and \ref{fig:dataset03m_res48_wrong}. The first set of images (Fig.~\ref{fig:dataset03m_res48_correct}) indicates that the model detects human impact when it is still evident, even with the low resolution. However, the second set of images (Fig.~\ref{fig:dataset03m_res48_wrong}) implies that it commits errors when the evidence associated to man-made structures is lost with the downgrade process. Similarly, it might classify as man-made structures patterns that are indeed natural.
 
 \begin{figure}[H]
 	\centering
 	\captionsetup{width=1\linewidth}
 	\includegraphics[width=1\textwidth]{Figures/results/class_dataset03m_res48_correct.png}
-	\caption{\textbf{Examples of correctly classified images at the last resolution, $4.8m$.}}
+	\caption{\textbf{Examples of correctly classified images at last resolution, 4.8m, of 0.3m dataset.}}
 	\label{fig:dataset03m_res48_correct}
 \end{figure}
 
@@ -94,11 +89,11 @@ The same kind of analysis can be done for the last resolution, $4.8m$. Figures \
 	\centering
 	\captionsetup{width=1\linewidth}
 	\includegraphics[width=1\textwidth]{Figures/results/class_dataset03m_res48_wrong.png}
-	\caption{\textbf{Examples of wrongly classified images at the last resolution, $4.8m$.}}
+	\caption{\textbf{Examples of wrongly classified images at the last resolution, 4.8m, of 0.3m dataset.}}
 	\label{fig:dataset03m_res48_wrong}
 \end{figure}
 
-This can also be seen with Figure \ref{fig:dataset03m_res03_res48_comp}, which shows images that are correctly classified at $0.3m$ resolution (top row) but wrongly classified at $4.8m$. The first and third pair of images demonstrate that, when the human impact is subtle, the model missed it in the downgraded resolution. Conversely, non human activity can also be misclassified at lower resolutions (second and fourth images).
+These observations are demonstrated in Fig.~\ref{fig:dataset03m_res03_res48_comp}, in which we show images that are correctly classified at $0.3m$ resolution (top row) but wrongly classified at $4.8m$. The first and third pair of images demonstrate that, when the human impact is subtle, the model missed it in the downgraded resolution. Conversely, non human activity can also be misclassified at lower resolutions (second and fourth images).
 
 \begin{figure}[H]
 	\centering
@@ -109,7 +104,7 @@ This can also be seen with Figure \ref{fig:dataset03m_res03_res48_comp}, which s
 	\label{fig:dataset03m_res03_res48_comp}
 \end{figure}
 
-Finally, we can investigate how the model behaves with images where human impact is very subtle. For this purpose, we consider the images with the intermediate label (\textit{label 1} in Chapter \ref{Chapter2}, Figure \ref{fig:imstats}). The model has never been faced with these images, so this can give a good perception of whether the models have been able to learn relevant features of human impact. Figure \ref{fig:dataset03m_res03_l1} shows some of these images with the label predicted by the model in the title. Even if man-made structures in these pictures are small, the model is able to detect straight lines and shapes as human activity. 
+Finally, we investigate how the model behaves with images where human impact is very minimal. For this purpose, we consider the images with the intermediate label (label 1 in Chapter \ref{Chapter2}, Figure \ref{fig:imstats}). The model has never been faced with these images, so this can give a good perception of whether the model has been able to learn relevant features of human impact. Figure \ref{fig:dataset03m_res03_l1} shows several images with the label predicted by the model in the title. Even if man-made structures in these pictures are small, the model is able to detect straight lines and shapes as human activity. 
 
 \begin{figure}[H]
 	\centering
@@ -118,9 +113,6 @@ Finally, we can investigate how the model behaves with images where human impact
 	\caption{\textbf{Examples of predictions made for images with subtle human impact}. Images showing minimal human impact were referred to as label 1 images in Chapter \ref{Chapter2}. Note that these images were not used when training the model.}
 	\label{fig:dataset03m_res03_l1}
 \end{figure}
-
-All in all, we can conclude that the model is able to achieve a great accuracy. It is able to generalize to unseen, subtle images, and still be accurate for lower resolutions, were the amount of pixels and information per images become much smaller. 
-
 
 \section{Cost estimation}
 

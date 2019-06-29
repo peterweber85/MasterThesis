@@ -5,29 +5,36 @@
 
 %----------------------------------------------------------------------------------------
 
+In this final Chapter we discuss and close the different aspects of the project, from the problem definition itself, to the datasets build and models developed, and we conclude our thesis with some further work ideas to continue and enhance our approach.
+
 \section{The Problem}
 
-The intial phase of the project consisted on clearly defining the problem to study. The goal was to investigate which satellite imagery resolutions allowed for an accurate detection of man-made structures (or human activity), and which would be the cost associated. Hence, we needed to define the scope of human impact to consider, look for datasets suitable for this need (and eventually build our own datasets), and define the technical problem to be modeled, in order to evaluate the accuracy at each resolution. Both for the datasets and the problem, we needed them to be feasible enough to not require high technical and computational efforts, which for instance would be the case of detecting every single human activity in the images, providing their position and shape, and classifying into several categories. On the other hand, it should be a realistic enough situation, so the results obtained could be extrapolated to other, more complex scenarios.
+The intial phase during the development of the project consisted on clearly defining the problem to study. The goal was to investigate which satellite imagery resolutions allowed for an accurate detection of man-made structures, and which would be the cost associated. For that, we needed to define the scope of human activity to consider, look for datasets suitable for this study (which eventually lead to building our own datasets), and define the actual technical problem to be modeled, in order to evaluate the accuracy by resolution. 
+
+Both for the datasets and the problem, we needed them to be feasible enough to not require high technical and computational efforts (which would be, for instance, trying to detect every type of human activity in the images, providing their position and shape, and classifying them into several categories). On the other hand, we needed it to be a realistic situation, so the results obtained could be extrapolated to other, more complex scenarios.
+
+All in all, having a well-defined problem scope and a good approach to tackle it allowed us to achieve remarkable and realistic results.
 
 \section{The Datasets}
 
-As we could not find a dataset suitable for our purpose, we decided to build our own dataset. It had to be representative enough to be a challenge for our models, yet feasible to be build. Of course, having annotated images with high degree of detail, like position, shapes and types of man-made or natural structures, would be great to build high performance models.
+After investigating existing datasets of labeled satellite images, we could not find the one suitable for our purpose, so we decided to build it ourselves. It had to be representative enough to pose a challenge for our models, yet feasible to be build with our available time and resources. The four categories considered (agriculture, shrubland-grassland, semi-desert, and forest-woodland) and the balance between nonexistent and existent human impact images allowed us to build a good representative dataset, which makes reasonable to generalize the results obtained.
 
-All in all, ...
+Of course, we acknowledge that having a larger dataset of images, annotated with higher degree of detail, like position, shapes and types of man-made or natural structures, would be great to build high performance models, capable of detecting human impact with great accuracy. Nevertheless, this high-precision goal could not be fitted in our general purpose.
 
-\section{The Models}
+\section{The Models and Results}
 
-- Classification problem considered
+Using a pre-trained CNN like the ResNet helped us to speed up the training process and achieve good results without requiring a very large dataset and computational power. The binary classification problem considered turned out to be feasible and representative of how accuracy is affected with a decrease in the image resolution. 
 
-- Feasability
-
-- Great accuracy, decreasing for lower resolutions
+From the results we observe that, as expected, the higher resolution the better, but also that there seems to be sweet spot between $1$-$2m$ and $8m$ where, except for the more subtle forms of human activity, most of the man-made structures studied are detectable with great accuracy. These trade-off with the resolution allows to consider more cost-economic satellite solutions without dramatically compromising accuracy and utility.
 
 \section{Further work}
 
-\begin{itemize}
-	\item Dataset: improve it, enlarge with more and more variate images, better classify them, even anotate with more categories of actual objects appearing, consider annotating areas, and train a model to detect this particular patterns. Yet, all this would diverge from the original scope of the project,
-	\item Model: CNN feature extraction, other architectures and number of activations, layers, neurons, training epochs. Make a more robust pipeline, load images on batches, so a larger dataset can be considered. Implement some sort of data augmentation if needed
-	\item Results: further study on which images the models fail, what kind of information is learning (patters, colors, shapes, etc)
-	\item Conclusions: further analysis costs of such implementations, environment impact, etc
-\end{itemize}
+With all that said, we realize that there is still plenty of space for further work and investigations, so let us now indicate some of these ideas.
+
+First of all, having a better dataset could help improving the investigations and opening new lines to explore. It could be improved and enlarged with more variate images, with a better and more consistent classification, and including more detailed annotations of the position and type of objects or structures appearing. This would allow to train more accurate models capable of detecting all these kind of human impact.
+
+Regarding the model, other techniques for feature extraction could be studied, like other pre-trained Neural Networks, and the parameters itself could be further fine-tunned, like the number of activations to consider, the architecture of the model and the training phase. Additionally, the pipeline could me made more robust so that it could ingest a larger amount of data, as suggested in the previous point.
+
+A more in depth study of the results could help to understand more precisely on which images the algorithms fail, what kind of information are learning (patterns, colors, shapes, etc) and how to enhance them.
+
+Finally, it could be interesting to have a more detailed analysis of the costs associated to all this solution, from data gathering, processing and modeling to the implementation itself. Also, taking into account other related factors, like infrastructure needed, legal aspects and ecological footprint \parencite{Strubell2019} would give a more complete idea of the viability of global satellite image analysis.

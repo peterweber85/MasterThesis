@@ -1,19 +1,20 @@
 
-\chapter{Man-made structures detection} 
+\chapter{Detection of man-made structures with satellites} 
 
 \label{Chapter5}
 
 %----------------------------------------------------------------------------------------
 
-In this chapter we discuss the results obtained in this thesis. We first evaluate the performance of the Deep Learning pipeline, described in the previous chapter, for different resolution. Subsequently we discuss several examples of correctly and wrongly classified images. In the last part of this chapter, we estimate the cost associated with providing earth observation data involving satellites.
+
+In this chapter we discuss the results obtained in this thesis. We first evaluate for different resolutions the performance of the Deep Learning pipeline that was described in the previous chapter. Subsequently we discuss several examples of correctly and wrongly classified images. In the last part of the chapter, we estimate the cost associated with providing earth observation data involving satellites.
 
 \section{Man-made structures detection at different scale}
 
-Having indicated in the last chapter that the developed transfer learning approach achieves remarkable accuracies, we now turn to a more detailed study. We evaluate how using a pre-trained ResNet as a feature extractor for aerial images allows the trained model to properly discriminate the existence of human impact for different resolutions and different datasets. 
+Having indicated in the last chapter that the developed transfer learning approach achieves remarkable accuracies, we now turn to a more detailed and explicit study. We evaluate how the trained model, that is based on a pre-trained ResNet as feature extractor for aerial images, allows to properly discriminate the existence of human impact for different resolutions, different datasets, different categories, different ResNet terminations, and different cross-validation folds. The results for all these experiments have been aggregated and are shown in Fig.~\ref{fig:acc_res_03m_1m} as well as summarized in tables \ref{tab:Results_03m_100n}-\ref{tab:Results_1m_200n} in the appendix. 
 
-Now that we know that the trained models are able to detect, with high accuracy, human impact from our datasets, we are ready to analyze the results for different resolutions. From all the experiments (datasets, architectures, resolutions and cross-validations), the results have been stored and aggregated. As mentioned in the previous chapter, the models were not able to converge for some particular splits of the datasets. Hence, these few folds have been ignored when aggregating the results. Tables \ref{tab:Results_03m_100n} - \ref{tab:Results_1m_200n} in Appendix \ref{Tables} summarize the accuracies obtained for each of the datasets ($0.3m$ and $1m$) and downgraded resolutions, both the overall accuracy and by category. 
+The highest accuracy, about 95\%, is achieved at a resolution of 0.6m for the dataset with 0.3m base resolution and a fully connected layer with 200 neurons. The lowest accuracy, around 80\%, is obtained between 14m and 16m resolution consistently for both the fully connected layer with 100 neurons and 200 neurons. As expected, the accuracy decreases roughly linearly as the resolution becomes worse. However, between 0.3m and 8m the accuracies are consistently above 88\%, and only drop below 85\% at resolution values higher than 8m. At these high values for the resolution the model is not able anymore to detect subtle elements of man-made structures, which will be discussed in more detail in the next subsection.
 
-Similarly, Figure \ref{fig:acc_res_03m_1m} shows the overall accuracies obtained for all resolutions. From this we can see that similar accuracies are achieved for both datasets on the same degraded resolution, which means that both datasets are comparable and can be considered together. Also, we realize that increasing the size of the model from $100$ neurons to $200$ does not have a big impact on the accuracy, but tends to perform slightly better. Hence, for other results later we will focus on this architecture only.
+We further note that the accuracy on the base resolution (0.3m and 1m) is always slightly worse than the accuracy at the next resolution. We suspect that this anomaly is related to the fact that the input image size is quite large ($512\times512$), which makes the dense layer more complex to train. Indeed, Figs.~\ref{fig:conv_plots_03m} and \ref{fig:conv_plots_1m} in chapter \ref{Chapter4} suggest that the models struggle to be optimized. More sample images would be required in order to compensate for the complexity and hence to achieve a higher accuracy.
 
 \begin{figure}[h!]
 	\centering
@@ -23,9 +24,12 @@ Similarly, Figure \ref{fig:acc_res_03m_1m} shows the overall accuracies obtained
 	\label{fig:acc_res_03m_1m}
 \end{figure}
 
-On closer inspection, we also detect that the accuracy on the base resolution ($0.3m$ and $1m$) is always slightly worse than the next resolution. This is probably because the input image size at the base resolution is quite large ($512\times512$), which makes the dense layer much more complex to train. More sample images would be required in order to compensate for the complexity and achieve a greater accuracy. Finally, the overall conclusion from this plot is that, as expected, better resolutions (less than $2m$) allow for greater accuracies, of over $90\%$, which means a great success considering that the images in the datasets are balanced between having or not human impact. Furthermore, accuracy is still good for resolutions between $2m$ and $8m$, staying between $85\%$ and $90\%$. From $8m$ onwards, accuracy drops to $80\%$ and the model is not able to detect more subtle elements of man-made structures.
+The architecture with the fully connected layer with 200 neurons performs slightly better, but accuracy improvements are generally in the range of 1\% - 2\%. Hence, we will focus on the 200 neurons architecture from now on. Another important observation is that at the region where the resolutions overlap between the two datasets also the accuracies agree i.e. they are within the error bars. This indicates that both datasets are comparable and can be considered together.
+Note that the error bars of the 1m dataset ($\sim$2000 images) are about twice as large as the error bars for the 0.3m dataset ($\sim$1300 images). The larger variation for the 1m dataset is attributed to the different sizes of the datasets, and hence significantly smaller out-of-fold datasets.
 
-Now let us consider how these accuracies behave for each of the land use categories in the datasets. As discussed in section \ref{usgs_data}, these categories are rough approximations of the kind of terrain and human impact, with images that could be exchanged between categories, but overall these can give and idea of the accuracies when analyzing different kind of terrains. Indeed, Figures \ref{fig:acc_all_cat_03m} and \ref{fig:acc_by_cat_03m} show that, for the $0.3m$ dataset (and $200$ neurons model), accuracy differs substantially between categories. Fig. \ref{fig:acc_all_cat_03m} shows the global comparison between categories, while Fig. \ref{fig:acc_by_cat_03m} allows for a better comparison of each category with respect to the overall accuracy. 
+\section{Man-made structures detection for different categories}
+
+Let us consider how the accuracies behave for each of the USGS land use categories. As discussed in section \ref{usgs_data}, these categories are rough approximations of the kind of terrain and human impact, but we can not assure with absolute certainty that every image is assigned to the correct category. Fig.~\ref{fig:acc_by_cat_03m} shows a comparison of the accuracy of each category with respect to the aggregated accuracy. For the 0.3m dataset (and 200 neurons model) we observe that there are substantial differences between categories. 
 
 \begin{figure}[h!]
 	\centering
@@ -35,11 +39,12 @@ Now let us consider how these accuracies behave for each of the land use categor
 	\label{fig:acc_by_cat_03m}
 \end{figure}
 
-These plots have been obtained once the model was trained for all the categories. Then, the accuracy on the validation set was computed for each individual category and over all images in the set. The validation set in each iteration of the cross-validation was small, consisting of few hundred images, and a homogeneous representation of the categories was not imposed (validation samples were picked randomly, only preserving proportion between having or not human impact), which explains the large variability for each experiment (vertical lines in the plots).
+These plots have been obtained once the model was trained for all the categories. Then, the accuracy on the validation set was computed for each individual category and over all images in the set. The validation set in each iteration of the cross-validation was small, consisting of few hundred images, and a homogeneous representation of the categories was not imposed (validation samples were picked randomly, only preserving proportion between man-made vs. natural structures), which explains the large variability for each experiment (large error bars).
 
-Although the category is not taken into account when training, we can see that the models are capable of detecting agriculture-related human impact with high accuracy (over $95\%$), without really being affected by the drop in accuracy. Shrubland-grassland category also has a good accuracy, while the model performs worse in semi-desert and forest-woodland images. That means that the models are able to capture textures and patterns related to agriculture quite easily, while the other categories have more variable features.
+Although the category is not taken into account when training, we can see that the models are capable of detecting agriculture-related human impact with an accuracy consistently above 95\%, without being affected by the drop in resolution. This is not surprising since this category contains only images with man-made structures, and therefore the algorithm might indeed have learned image textures instead of features related to human impact.
+The shrubland-grassland category has about 2\% higher accuracy than the overall, while the resolution dependence is similar to all categories. The forest-woodland category is  about 4\% worse than the overall also showing a similar resolution dependence. Finally, the semi-desert category starts off at the same accuracy as all categories at high resolutions but drops siginificantly faster down to about 82\% (overall ~88\%). Overall we conclude, that each of the three non-agriculture categories encode slightly different image features, and therefore the algorithm behaves slightly different.
 
-Similar results are obtained for the $1m$ dataset, which are shown in Figures \ref{fig:acc_all_cat_1m} and \ref{fig:acc_by_cat_1m}. The models are able to achieve a great accuracy when detecting agriculture-related human impact (over $95\%$), independently of the resolution considered, but the performance drops for the other 3 categories. The biggest drop is observed at $8m$ consistently over the three non-agriculture categories. 
+Similar results are obtained for the $1m$ dataset, which are shown in Fig.~\ref{fig:acc_by_cat_1m}. The models are able to achieve a remarkable accuracy when detecting agriculture-related human impact (consistently above $95\%$), and the three non-agriculture categories behave similar to the aggregated view. However, we note a drop of accuracy at 8m resolution by about 5\% across all non-agriculture categories, which is an indicator that many man-made structures in the dataset have a characteristic size of  about 8m.
 
 \begin{figure}[H]
 	\centering
@@ -50,7 +55,7 @@ Similar results are obtained for the $1m$ dataset, which are shown in Figures \r
 \end{figure}
 
 
-\subsection{Remove this heading}
+\subsection{Performance on selected images}
 The first thing we might want to investigate from our experiments is whether the approach followed is able to achieve good results. That is, we want to evaluate if using a pre-trained ResNet as a feature extractor for aerial images allows the trained model to properly discriminate the existence of human impact. 
 
 Tables \ref{tab:Results_03m_100n} - \ref{tab:Results_1m_200n} in Appendix \ref{Tables} show that the accuracies obtained with all the experiments are indeed remarkable. All these results are discussed in more detail in the next section, but let us begin by focusing on few cases of the $0.3m$ dataset in order to understand how the models are behaving. In table \ref{tab:Results_03m_100n} we can see that an accuracy of around $0.9226$ is achieved on the base resolution ($0.3m$), while it drops to $0.8690$ of the last downgraded resolution of the dataset ($4.8m$).

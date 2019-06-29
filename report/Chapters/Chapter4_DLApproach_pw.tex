@@ -11,29 +11,6 @@ In the previous chapters we have introduced the key components of the approach w
 
 In order to train a model based on images, some sort of features need to be extracted. Traditionally, this image feature extraction was based on a set of hand-crafted detectors aimed to detect edges, corners, blobs and other feature descriptors. Some of these detectors are the Sobel filter, Laplacian of Gaussian (LoG), Difference of Gaussians (DoG), Determinant of Hessian (DoH), SIFT \parencite{Lowe1999,Lowe2004}, SURF \parencite{Bay2006}, Histograms of Oriented Gradients (HOG) \parencite{Dalal2005} and Gabor filters.
 
-\begin{figure}[h!]
-	\centering
-	\begin{subfigure}{.5\textwidth}
-  		\centering
-  		\includegraphics[width=.9\linewidth]{sobel_valve_original.png}
-	\end{subfigure}%
-	\begin{subfigure}{.5\textwidth}
-  		\centering
-  		\includegraphics[width=.9\linewidth]{sobel_valve_processed.png}
-	\end{subfigure}
-	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Example of the Sobel filter}}
-	\label{fig:sobel}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.9\textwidth]{Figures/hog_example.png}
-	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Examples of HOG detector \parencite{Dalal2005}}}
-	\label{fig:hog}
-\end{figure}
-
 More recent approaches to image classification using Neural Networks have benefited from the existing and increasing computational power, and deep Convolutional Neural Networks have been able to achieve higher performance than traditional models. 
 
 Yet, training a deep CNN from scratch for a particular problem requires a large and exhaustive dataset along with a huge amount of computational power. However, it has been shown that the architectures of pre-trained NN can be reused for other purposes and achieve equally great performance. This is known as \textbf{Transfer Learning}. Figure \ref{fig:transfer_learning_idea} schematizes this idea. These pre-trained architectures can be re-purposed by reusing the learned weights and either replacing the final layers of the net by some other classifier, or even fine-tuning all the layers for the specific problem. In any case, the initial layers of the Neural Network provide a great image feature extractor.
@@ -42,26 +19,12 @@ Yet, training a deep CNN from scratch for a particular problem requires a large 
 	\centering
 	\captionsetup{width=1\linewidth}
 	\includegraphics[width=1\textwidth]{Figures/transfer_learning_idea.png}
-	\caption{\textbf{Transfer Learning}: a model learned from a large dataset can be transferred and reused for another purpose.}
+	\caption{\textbf{Transfer Learning}: a model learned from a large dataset can be transferred and reused for another purpose. \parencite{McGuinness2017}}
 	\label{fig:transfer_learning_idea}
 \end{figure}
 
 In the next section we describe our approach using transfer learning from a ResNet architecture.
 
-%Consequently, there is an increasing library of available pre-trained models and weights: Xception, VGG, InceptionV3, ResNet.
-%Most of these models have weights pre-trained on ImageNet, a large dataset containing more than 14 million hand-annotated images and over 20.000 categories.
-
-%\begin{figure}[h!]
-%	\centering
-%	\captionsetup{width=1\linewidth}
-%	\includegraphics[width=1\textwidth]{Figures/imagenet_vgg16.png}
-%	\caption{\textbf{VGG16 architecture}. Stack of $3\times 3$ convolutional and max pooling layers.}
-%	\label{fig:degrade}
-%\end{figure}
-
-%\subsection{ResNets}
-
-%Experience with Neural Networks, and CNN in particular, show that deeper nets tend to perform better, as these are more capable to model higher complexity. Yet, at some depth point, training becomes too difficult, because the gradient values obtained from the loss function are lost after several layers. This is known as \textbf{vanishing gradient}. ResNet fixes this is issue with Residual...
 
 \section{Proposed architecture}\label{sec:dl_architecture}
 
@@ -185,7 +148,7 @@ Note that the splitting parameters of the cross-validation, the model complexity
 
 Nonetheless, as already mentioned in the introduction, the final goal of the experiments is to have a statistical reference of how well the models can be trained, and not to achieve the highest accuracy for each scenario. In order to do so, a larger dataset would be needed, with more well defined categories and objects, and a clear goal of what needs to be modeled.
 
-The plots in Figure \ref{fig:conv_plots} (on the next page) show the convergence of some of the models trained, for the different datasets and resolutions (and considering one of the cross-validation folds only). Also, two architectures for the dense layer have been tested: $100$ neurons and $200$ neurons. \textcolor{red}{Why are you changing two parameters from one figure to the next? Wouldn't it be more logical to vary only one parameter in order to show a progression? I think it would be important to show e.g. for base resolution 0.3, lowest resolt and highest resolution for 100 neurons. And then show the same for 200 neurons. Here we could double the number of figures since anyways the next page is blank. On the second page you could do the same for base resolution 1m.}
+The plots in Figures \ref{fig:conv_plots_03m} and \ref{fig:conv_plots_1m} (on the next pages) show the convergence of some of the models trained, for the different datasets and resolutions (base and lowest resolutions), and considering one of the cross-validation folds only. Also, two architectures for the dense layer have been tested: $100$ neurons and $200$ neurons. 
 
 In general, the NN is able to converge and achieve a good accuracy (as shown in the plots), although for some particular splits of the data, it fails to converge and stays in a low accuracy point. This is probably due to the fact of having a relative small dataset. Hence, these particular folds are not going to be considered when computing the final averaged results.
 
@@ -193,10 +156,16 @@ In the next chapter we discuss in much more detail the results obtained from all
 
 \begin{figure}[h!]
 	\centering
-	\includegraphics[width=\textwidth]{Figures/results/convergence_plots_all_res.png}
+	\includegraphics[width=\textwidth]{Figures/results/convergence_plots_03m.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Convergence plots some experiments on different datasets, resolutions and architectures.}}
-	\label{fig:conv_plots}
+	\caption{\textbf{Convergence plots of some experiments on the $0.3m$ dataset, for base ($0.3m$) and lowest ($4.8m$) resolutions, and considering $100$ and $200$ neurons.} The models converge more smoothly for lower resolutions, were there are fewer parameters to be fitted.}
+	\label{fig:conv_plots_03m}
 \end{figure}
 
-
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\textwidth]{Figures/results/convergence_plots_1m.png}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{Convergence plots of some experiments on the $1m$ dataset, for base ($1m$) and lowest ($16m$) resolutions, and considering $100$ and $200$ neurons.} The models converge more smoothly for lower resolutions, were there are fewer parameters to be fitted.}
+	\label{fig:conv_plots_1m}
+\end{figure}

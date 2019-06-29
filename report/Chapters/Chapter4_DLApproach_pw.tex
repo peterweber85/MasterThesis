@@ -1,5 +1,5 @@
 
-\chapter{Proposed approach}
+\chapter{Machine learning pipeline}
 
 \label{Chapter4}
 
@@ -10,29 +10,6 @@ In the previous chapters we have introduced the key components of the approach w
 \section{Image features and transfer learning}\label{sec:transferLearning}
 
 In order to train a model based on images, some sort of features need to be extracted. Traditionally, this image feature extraction was based on a set of hand-crafted detectors aimed to detect edges, corners, blobs and other feature descriptors. Some of these detectors are the Sobel filter, Laplacian of Gaussian (LoG), Difference of Gaussians (DoG), Determinant of Hessian (DoH), SIFT \parencite{Lowe1999,Lowe2004}, SURF \parencite{Bay2006}, Histograms of Oriented Gradients (HOG) \parencite{Dalal2005} and Gabor filters.
-
-\begin{figure}[h!]
-	\centering
-	\begin{subfigure}{.5\textwidth}
-  		\centering
-  		\includegraphics[width=.9\linewidth]{sobel_valve_original.png}
-	\end{subfigure}%
-	\begin{subfigure}{.5\textwidth}
-  		\centering
-  		\includegraphics[width=.9\linewidth]{sobel_valve_processed.png}
-	\end{subfigure}
-	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Example of the Sobel filter}}
-	\label{fig:sobel}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\includegraphics[width=0.9\textwidth]{Figures/hog_example.png}
-	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Examples of HOG detector \parencite{Dalal2005}}}
-	\label{fig:hog}
-\end{figure}
 
 More recent approaches to image classification using Neural Networks have benefited from the existing and increasing computational power, and deep Convolutional Neural Networks have been able to achieve higher performance than traditional models. 
 

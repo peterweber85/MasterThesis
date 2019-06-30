@@ -65,7 +65,7 @@ In the next section we describe our approach using transfer learning from a ResN
 
 \section{Proposed architecture}\label{sec:dl_architecture}
 
-As described before (Sections \ref{sec:CNNArchitectures} and \ref{sec:transferLearning}), we can use for our problem a pre-trained ResNet with our own final classification layers. Hence, the architecture we propose for our problem consists of the activation layers of a ResNet, which act as the feature extractors of our images, followed by a shallow classifier made of a single dense (fully connected) layer. Figure \ref{fig:transfer_learning} gives a schema of this approach.
+As described before (Sections \ref{sec:CNNArchitectures} and \ref{sec:transferLearning}), we can use for our problem a pre-trained ResNet with our own final classification layers. Hence, the architecture we propose for our problem consists on the activation layers of a ResNet, which act as the feature extractors of our images, followed by a shallow classifier made of a single dense (fully connected) layer. Figure \ref{fig:transfer_learning} gives a schema of this approach.
 
 \begin{figure}[h!]
 	\centering
@@ -77,7 +77,7 @@ As described before (Sections \ref{sec:CNNArchitectures} and \ref{sec:transferLe
 
 \subsection{ResNet activations}
 
-The ResNet we consider (ResNet50) has a total of $49$ activation layers, so the output at each of them is different. Initial layers are able to recognize edges, textures and patterns while keeping an image size similar to the input. On the other hand, deeper activation layers show convolutions of higher order hierarchical structures. These structures are more complex and therefore the ResNet authors use much more channels in deeper layers. At the same time they decrease the spatial image size by applying stride 2 whenever they increase the number of filters. The purpose of the latter is to keep the number of parameters manageable.  
+The ResNet we consider (ResNet50) has a total of $49$ activation layers, so the output at each of them is different in size. Initial layers are able to recognize edges, textures and patterns while keeping an image size similar to the input. On the other hand, deeper activation layers show convolutions of higher order hierarchical structures. These structures are more complex and therefore the ResNet authors use much more channels in deeper layers. At the same time they decrease the spatial image size by applying stride 2 whenever they increase the number of filters. The purpose of the latter is to keep the number of parameters manageable.  
 
 For instance, for an input image of (tensor) size $512 \times 512 \times 3$ (a $512x512$ image with $3$ RGB channels), the output of the first activation layer is of size $256 \times 256 \times 64$, the $10^{th}$ gives a $128 \times 128 \times 256$ tensor, and the last $49^{th}$ activation layer outputs $16 \times 16 \times 2048$. For our purpose, we will consider the final output of the ResNet ($49^{th}$ activation layer), although this could be further investigated and discussed.
 

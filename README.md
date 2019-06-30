@@ -9,7 +9,8 @@
 A high-level summary of this work can be found in this [notebook](Notebooks/thesis_article.ipynb).
 
 # Data
-The datasets can be accessed via this link: https://drive.google.com/open?id=1Hjod1ZTuSIW3VNO2IuGoq_iagI3imnJQ
+
+The datasets can be accessed in this [Google Drive folder](https://drive.google.com/open?id=1Hjod1ZTuSIW3VNO2IuGoq_iagI3imnJQ)
 
 # Notebooks
 

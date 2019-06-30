@@ -14,8 +14,8 @@ The datasets can be accessed via this link: https://drive.google.com/open?id=1Hj
 # Notebooks
 
 These notebooks provide a more detailed view on the steps performed in the individual chapters of this master thesis. 
-* [Data Processing](Notebooks/data_processing_thesis.ipynb)
+* [Data Processing](Notebooks/thesis_data_processing.ipynb)
 * provide link to notebook related to chapter4
 * provide link to notebook related to chapter5.1 and 5.2
-* [Cost Estimation](Notebooks/estimate_costs_thesis.ipynb)
+* [Cost Estimation](Notebooks/thesis_estimate_costs.ipynb)
 

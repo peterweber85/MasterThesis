@@ -6,16 +6,23 @@
 
 ### Advisor: Jordi Vitrià (Universidad de Barcelona), Marco Bressan (Satellogic)
 
-A high-level summary of this work can be found in this notebook [provide link to notebook]
+A high-level summary of this work can be found in this [notebook](Notebooks/thesis_article.ipynb).
 
 # Data
-The datasets can be accessed via this link: https://drive.google.com/open?id=1Hjod1ZTuSIW3VNO2IuGoq_iagI3imnJQ
+
+The datasets can be accessed in this [Google Drive folder](https://drive.google.com/open?id=1Hjod1ZTuSIW3VNO2IuGoq_iagI3imnJQ).
 
 # Notebooks
 
-These notebooks provide a more detailed view on the steps performed in the individual chapters of this master thesis. 
-* [Data Processing](Notebooks/data_processing_thesis.ipynb)
-* provide link to notebook related to chapter4
-* provide link to notebook related to chapter5.1 and 5.2
-* [Cost Estimation](Notebooks/estimate_costs_thesis.ipynb)
+These notebooks provide a more detailed view on the steps performed in the individual chapters of this master thesis:
+
+* Datasets:
+  * [Data Processing](Notebooks/thesis_data_processing.ipynb)
+* Approach:
+  * [ResNet activations](Notebooks/thesis_activations.ipynb)
+  * [Model 0.3m dataset](Notebooks/ResNetActivations_FullyConnected_0.3m.ipynb)
+  * [Model 1m dataset](Notebooks/ResNetActivations_FullyConnected_1m.ipynb)
+* Results:
+  * [Results and plots](Notebooks/thesis_results.ipynb)
+  * [Cost Estimation](Notebooks/thesis_estimate_costs.ipynb)
 

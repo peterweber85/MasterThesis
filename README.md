@@ -6,14 +6,15 @@
 
 ### Advisor: Jordi Vitrià (Universidad de Barcelona), Marco Bressan (Satellogic)
 
-A high-level summary of this work can be found in this notebook [provide link to notebook]
+A high-level summary of this work can be found in this [notebook](Notebooks/thesis_article.ipynb).
 
 # Data
 The datasets can be accessed via this link: https://drive.google.com/open?id=1Hjod1ZTuSIW3VNO2IuGoq_iagI3imnJQ
 
 # Notebooks
 
-These notebooks provide a more detailed view on the steps performed in the individual chapters of this master thesis. 
+These notebooks provide a more detailed view on the steps performed in the individual chapters of this master thesis:
+
 * Datasets:
   * [Data Processing](Notebooks/thesis_data_processing.ipynb)
 * Approach:

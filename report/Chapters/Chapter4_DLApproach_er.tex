@@ -22,7 +22,7 @@ In order to train a model based on images, some sort of features need to be extr
   		\includegraphics[width=.9\linewidth]{sobel_valve_processed.png}
 	\end{subfigure}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Example of the Sobel filter}}
+	\caption{\textbf{Example of the Sobel filter.} The Sobel operator uses an approximation of the gradient of the image intensity at each point to detect and emphasize edges.}
 	\label{fig:sobel}
 \end{figure}
 
@@ -30,7 +30,7 @@ In order to train a model based on images, some sort of features need to be extr
 	\centering
 	\includegraphics[width=0.9\textwidth]{Figures/hog_example.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Examples of HOG detector \parencite{Dalal2005}}}
+	\caption{\textbf{Examples of HOG detector \parencite{Dalal2005}.} A histogram of intensity gradient orientations is computed in a dense grid of cells, which gives a measure of the shapes in the image.}
 	\label{fig:hog}
 \end{figure}
 
@@ -185,11 +185,23 @@ Note that the splitting parameters of the cross-validation, the model complexity
 
 Nonetheless, as already mentioned in the introduction, the final goal of the experiments is to have a statistical reference of how well the models can be trained, and not to achieve the highest accuracy for each scenario. In order to do so, a larger dataset would be needed, with more well defined categories and objects, and a clear goal of what needs to be modeled.
 
-The plots in Figures \ref{fig:conv_plots_03m} and \ref{fig:conv_plots_1m} (next pages) show the convergence of some of the models trained, for the different datasets and resolutions (base and lowest resolutions), and considering one of the cross-validation folds only. Also, two architectures for the dense layer have been tested: $100$ neurons and $200$ neurons. 
+The plots in Figures \ref{fig:conv_plots_03m} and \ref{fig:conv_plots_1m} (next pages) display the convergence of some of the models trained, for the different datasets and resolutions (base and lowest resolutions), and showing one of the cross-validation folds only. Also, two architectures for the dense layer have been tested: $100$ neurons and $200$ neurons. 
 
-In general, the NN is able to converge and achieve a good accuracy (as shown in the plots), although for some particular splits of the data, it fails to converge and stays in a low accuracy point. This is probably due to the fact of having a relative small dataset. Hence, these particular folds are not going to be considered when computing the final averaged results.
+In general, the NN is able to converge and achieve a good accuracy (as shown in the plots), although for some particular splits of the data, it fails to converge and stays in a low accuracy point (see Figure \ref{fig:bad_convergence_plot}). This is probably due to the fact of having a relative small dataset, makes it difficult to train a complex network. Hence, we apply a threshold of $0.6$ on the accuracy obtained, so these particular folds are not going to be considered when computing the final averaged results.
+
+\
 
 In the next chapter we discuss in much more detail the results obtained from all these experiments.
+
+\
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\textwidth]{Figures/results/bad_convergence_plot.png}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{Example of a cross-validation fold for which the model is not able to converge.} The NN weights stay at their initial value during training, without minimizing the loss and resulting in a smaller accuracy.}
+	\label{fig:bad_convergence_plot}
+\end{figure}
 
 \begin{figure}[h!]
 	\centering

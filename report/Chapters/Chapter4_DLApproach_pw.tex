@@ -5,8 +5,6 @@
 
 %----------------------------------------------------------------------------------------
 
-\textcolor{red}{TODO: Figure captions, citations, last two paragraphs.}
-
 In the previous chapters we have introduced the key components of the approach we followed in our study: on the one hand, we have described existing satellite image datasets and introduced the actual data we will consider, and on the other, we have discussed Deep Learning, how it works and how we can use it for our problem. Now, we are ready to describe our approach: the image feature extraction, the model architecture and the training scenario.
 
 \section{Image features and transfer learning}\label{sec:transferLearning}
@@ -21,7 +19,7 @@ Yet, training a deep CNN from scratch for a particular problem requires a large 
 	\centering
 	\captionsetup{width=1\linewidth}
 	\includegraphics[width=1\textwidth]{Figures/transfer_learning_idea.png}
-	\caption{\textbf{Transfer Learning}: a model learned from a large dataset can be transferred and reused for another purpose. \parencite{McGuinness2017}}
+	\caption{\textbf{Transfer Learning}: a model learned from a large dataset can be transferred and reused for another purpose.}
 	\label{fig:transfer_learning_idea}
 \end{figure}
 
@@ -36,7 +34,7 @@ As described before (Sections \ref{sec:CNNArchitectures} and \ref{sec:transferLe
 	\centering
 	\captionsetup{width=1\linewidth}
 	\includegraphics[width=1\textwidth]{Figures/transfer_learning.png}
-	\caption{\textbf{Transfer Learning from a ResNet} (figure adapted from \parencite{McGuinness2017})}
+	\caption{\textbf{Transfer Learning from a ResNet}. The figure is adapted from \parencite{mcguiness2017}}
 	\label{fig:transfer_learning}
 \end{figure}
 
@@ -53,7 +51,9 @@ Figures \ref{fig:act_agriculture} - \ref{fig:act_shrubland_grassland} shows 8 ac
 	\includegraphics[width=0.9\textwidth]{Figures/activations/agriculture_l2_s1_activation_10.png}
 	\includegraphics[width=0.9\textwidth]{Figures/activations/agriculture_l2_s1_activation_49.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{ResNet activations of an Agriculture image: $10^{th}$ layer (top) and final layer, $49^{th}$ (bottom).}}
+	\caption{\textbf{Selected ResNet activations of an Agriculture image: $10^{th}$ layer (top) and final layer, $49^{th}$ (bottom).}
+	Some of the $10^{th}$ layer activations are particularly sensitive to edges, shadows, or textures, which later translate into more abstract outputs at the $49^{th}$ layer.	
+}
 	\label{fig:act_agriculture}
 \end{figure}
 
@@ -62,7 +62,7 @@ Figures \ref{fig:act_agriculture} - \ref{fig:act_shrubland_grassland} shows 8 ac
 	\includegraphics[width=0.9\textwidth]{Figures/activations/forest-woodland_l0_s1_activation_10.png}
 	\includegraphics[width=0.9\textwidth]{Figures/activations/forest-woodland_l0_s1_activation_49.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{ResNet activations of a Forest-woodland image: $10^{th}$ layer (top) and final layer, $49^{th}$ (bottom).}}
+	\caption{\textbf{Selected ResNet activations of a Forest-woodland image: $10^{th}$ layer (top) and final layer, $49^{th}$ (bottom).}}
 	\label{fig:act_forest_woodland}
 \end{figure}
 
@@ -71,7 +71,7 @@ Figures \ref{fig:act_agriculture} - \ref{fig:act_shrubland_grassland} shows 8 ac
 	\includegraphics[width=0.9\textwidth]{Figures/activations/semi-desert_l0_s1_activation_10.png}
 	\includegraphics[width=0.9\textwidth]{Figures/activations/semi-desert_l0_s1_activation_49.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{ResNet activations of a Semi-desert image: $10^{th}$ layer (top) and final layer, $49^{th}$ (bottom).}}
+	\caption{\textbf{Selected ResNet activations of a Semi-desert image: $10^{th}$ layer (top) and final layer, $49^{th}$ (bottom).}}
 	\label{fig:act_semi_desert}
 \end{figure}
 
@@ -80,7 +80,7 @@ Figures \ref{fig:act_agriculture} - \ref{fig:act_shrubland_grassland} shows 8 ac
 	\includegraphics[width=0.9\textwidth]{Figures/activations/shrubland-grassland_l0_s1_activation_10.png}
 	\includegraphics[width=0.9\textwidth]{Figures/activations/shrubland-grassland_l0_s1_activation_49.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{ResNet activations of a Shrubland-grassland image: $10^{th}$ layer (top) and final layer, $49^{th}$ (bottom).}}
+	\caption{\textbf{Selected ResNet activations of a Shrubland-grassland image: $10^{th}$ layer (top) and final layer, $49^{th}$ (bottom).}}
 	\label{fig:act_shrubland_grassland}
 \end{figure}
 
@@ -97,7 +97,7 @@ This architecture (see Fig. \ref{fig:transfer_learning}) has been implemented wi
 	\centering
 	\includegraphics[width=0.8\textwidth]{Figures/model_keras.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Model build with Keras}}
+	\caption{\textbf{Model build with Keras.} This model is used to terminate the ResNet architecture. We use a fully connected NN that consists of a single dense layer of $100$ (or $200$, not shown) neurons with ReLU activation, followed by a single dense node with a Sigmoid activation acting as the classifier. This model is trained on the dataset with RMSprop optimizer \parencite{ruder2016} and a binary cross-entropy loss function.}
 	\label{fig:model_keras}
 \end{figure}
 
@@ -150,10 +150,9 @@ Note that the splitting parameters of the cross-validation, the model complexity
 
 Nonetheless, as already mentioned in the introduction, the final goal of the experiments is to have a statistical reference of how well the models can be trained, and not to achieve the highest accuracy for each scenario. In order to do so, a larger dataset would be needed, with more well defined categories and objects, and a clear goal of what needs to be modeled.
 
-\textcolor{red}{Modify these two paragraphs a bit!}
 The plots in Figures \ref{fig:conv_plots_03m} and \ref{fig:conv_plots_1m} (on the next pages) show the convergence of some of the models trained, for the different datasets and resolutions (base and lowest resolutions), and considering one of the cross-validation folds only. Also, two architectures for the dense layer have been tested: $100$ neurons and $200$ neurons. 
 
-In general, the NN is able to converge and achieve a good accuracy (as shown in the plots), although for some particular splits of the data, it fails to converge and stays in a low accuracy point. This is probably due to the fact of having a relative small dataset. Hence, these particular folds are not going to be considered when computing the final averaged results.
+In general, the NN is able to converge and achieve a high accuracy (above 90\% as shown in the plots), although for some particular splits of the data, it fails to converge and stays in a low accuracy point. This is probably due to the fact of having a relatively small dataset. Hence, these particular folds are not going to be considered when computing the final averaged results.
 
 In the next chapter we discuss in much more detail the results obtained from all these experiments.
 
@@ -161,7 +160,7 @@ In the next chapter we discuss in much more detail the results obtained from all
 	\centering
 	\includegraphics[width=\textwidth]{Figures/results/convergence_plots_03m.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Convergence plots of some experiments on the $0.3m$ dataset, for base ($0.3m$) and lowest ($4.8m$) resolutions, and considering $100$ and $200$ neurons.} The models converge more smoothly for lower resolutions, were there are fewer parameters to be fitted.}
+	\caption{\textbf{Convergence plots of selected experiments on the $0.3m$ dataset, for base ($0.3m$) and lowest ($4.8m$) resolutions, and considering $100$ and $200$ neurons.} The models converge more smoothly for lower resolutions.}
 	\label{fig:conv_plots_03m}
 \end{figure}
 
@@ -169,6 +168,6 @@ In the next chapter we discuss in much more detail the results obtained from all
 	\centering
 	\includegraphics[width=\textwidth]{Figures/results/convergence_plots_1m.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Convergence plots of some experiments on the $1m$ dataset, for base ($1m$) and lowest ($16m$) resolutions, and considering $100$ and $200$ neurons.} The models converge more smoothly for lower resolutions, were there are fewer parameters to be fitted.}
+	\caption{\textbf{Convergence plots of selected experiments on the $1m$ dataset, for base ($1m$) and lowest ($16m$) resolutions, and considering $100$ and $200$ neurons.} The models converge more smoothly for lower resolutions.}
 	\label{fig:conv_plots_1m}
 \end{figure}

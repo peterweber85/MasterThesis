@@ -18,8 +18,8 @@ These notebooks provide a more detailed view on the steps performed in the indiv
   * [Data Processing](Notebooks/thesis_data_processing.ipynb)
 * Approach:
   * [ResNet activations](Notebooks/thesis_activations.ipynb)
-  * [Model $0.3m$ dataset](Notebooks/ResNetActivations_FullyConnected_0.3m.ipynb)
-  * [Model $1m$ dataset](Notebooks/ResNetActivations_FullyConnected_1m.ipynb)
+  * [Model 0.3m dataset](Notebooks/ResNetActivations_FullyConnected_0.3m.ipynb)
+  * [Model 1m dataset](Notebooks/ResNetActivations_FullyConnected_1m.ipynb)
 * Results:
   * [Results and plots](Notebooks/thesis_results.ipynb)
   * [Cost Estimation](Notebooks/thesis_estimate_costs.ipynb)

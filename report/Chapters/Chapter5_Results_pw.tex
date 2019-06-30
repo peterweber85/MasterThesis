@@ -24,7 +24,7 @@ We further note that the accuracy on the base resolution (0.3m and 1m) is always
 \end{figure}
 
 The architecture with the fully connected layer with 200 neurons performs slightly better than the one with 100 neurons, but accuracy improvements are generally in the range of 1\% - 2\%. Hence, we will focus on the 200 neurons architecture from now on. Another important observation is that at the region where the resolutions overlap between the two datasets also the accuracies agree i.e. they are within the error bars. This indicates that both datasets are comparable and can be considered together.
-Note that the error bars of the 1m dataset ($\sim$1300 images) are about twice as large as the error bars for the 0.3m dataset ($\sim$2000 images). The larger variation for the 1m dataset is attributed to the different sizes of the datasets, and hence significantly smaller out-of-fold datasets.
+Note that the error bars of the 1m dataset ($\sim$1300 images) are about twice as large as the error bars for the 0.3m dataset ($\sim$2000 images). The larger variation for the 1m dataset is attributed to the different sizes of the datasets, and hence significantly different number of out-of-fold samples.
 
 \section{Man-made structures detection for different categories}
 
@@ -34,7 +34,7 @@ Let us consider how the accuracies behave for each of the USGS land use categori
 	\centering
 	\includegraphics[width=0.9\textwidth]{Figures/results/acc_res_by_category_03m.png}
 	\captionsetup{width=1\linewidth}
-	\caption{\textbf{Comparison of accuracies between each category and all categories aggregated.} Here the model is trained over all categories, on the 0.3m dataset, and tested on each category separately (in the case of a single category).}
+	\caption{\textbf{Comparison of accuracies between each category and all categories aggregated.} Here the model is trained over all categories, on the 0.3m dataset, and tested on each category separately.}
 	\label{fig:acc_by_cat_03m}
 \end{figure}
 
@@ -93,14 +93,14 @@ A similar analysis can be done for the last resolution, 4.8m, of the 0.3m datase
 	\label{fig:dataset03m_res48_wrong}
 \end{figure}
 
-These observations are demonstrated in Fig.~\ref{fig:dataset03m_res03_res48_comp}, in which we show images that are correctly classified at 0.3m resolution (top row) but wrongly classified at 4.8m. The first and third pair of images demonstrate that, when the human impact is subtle, the model missed it in the downgraded resolution. Conversely, non human activity can also be misclassified at lower resolutions (second and fourth images).
+These observations are highlighted in Fig.~\ref{fig:dataset03m_res03_res48_comp}, in which we show images that are correctly classified at 0.3m resolution (top row) but wrongly classified at 4.8m. The first and third pair of images demonstrate that, when the human impact is subtle, the model missed it in the downgraded resolution. Conversely, non human activity can also be misclassified at lower resolutions (second and fourth images).
 
 \begin{figure}[H]
 	\centering
 	\captionsetup{width=1\linewidth}
 	\includegraphics[width=1\textwidth]{Figures/results/class_dataset03m_res03_comp_correct.png}
 	\includegraphics[width=1\textwidth]{Figures/results/class_dataset03m_res48_comp_wrong.png}
-	\caption{\textbf{Correctly and wrongly classified images at different resolutions.} Here the first row displays images in their base resolution, $0.3m$. These images were correctly classified by the model. The same images at a resolution of $4.8m$ (second row) were wrongly classified by the model.}
+	\caption{\textbf{Correctly and wrongly classified images at different resolutions.} Here the first row displays images in their base resolution, 0.3m. These images were correctly classified by the model. The same images at a resolution of 4.8m (second row) were wrongly classified by the model.}
 	\label{fig:dataset03m_res03_res48_comp}
 \end{figure}
 
@@ -110,7 +110,7 @@ Finally, we investigate how the model behaves with images where human impact is 
 	\centering
 	\captionsetup{width=1\linewidth}
 	\includegraphics[width=1\textwidth]{Figures/results/class_dataset03m_res03_l1.png}
-	\caption{\textbf{Examples of predictions made for images with subtle human impact}. Images showing minimal human impact were referred to as label 1 images in Chapter \ref{Chapter2}. Note that these images were not used when training the model.}
+	\caption{\textbf{Examples of predictions made for images with subtle human impact}. These images were not used when training the model.}
 	\label{fig:dataset03m_res03_l1}
 \end{figure}
 

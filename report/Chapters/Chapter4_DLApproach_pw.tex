@@ -172,7 +172,15 @@ Nonetheless, as already mentioned in the introduction, the final goal of the exp
 
 The plots in Figures \ref{fig:conv_plots_03m} and \ref{fig:conv_plots_1m} show the convergence of some of the trained models, for the different datasets and resolutions (base and lowest resolutions), and considering one of the cross-validation folds only. Also, two architectures for the dense layer have been tested: $100$ neurons and $200$ neurons. 
 
-In general, the NN is able to converge and achieve a high accuracy (above 90\% as shown in the plots), although for some particular splits of the data, it fails to converge and stays in a low accuracy point. This is probably due to the fact of having a relatively small dataset. Hence, these particular folds are not going to be considered when computing the final averaged results.
+In general, the NN is able to converge and achieve a high accuracy (above 90\% as shown in the plots), although for some particular splits of the data, it fails to converge and stays in a low accuracy point (see Figure \ref{fig:bad_convergence_plot}). This is probably due to the fact of having a relatively small dataset. Hence, we apply a threshold of $0.6$ on the obtained accuracy, so these particular folds are not going to be considered when computing the final averaged results.
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics[width=\textwidth]{Figures/results/bad_convergence_plot.png}
+	\captionsetup{width=1\linewidth}
+	\caption{\textbf{Example of a cross-validation fold for which the model is not able to converge.} The NN weights stay at their initial value during training, without minimizing the loss and resulting in a smaller accuracy.}
+	\label{fig:bad_convergence_plot}
+\end{figure}
 
 \begin{figure}[h!]
 	\centering

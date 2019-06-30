@@ -23,3 +23,4 @@ report/Appendices/*.aux
 report/Appendices/*.bak
 report/Chapters/*.aux
 report/Chapters/*.bak
+report/Chapters/*.log

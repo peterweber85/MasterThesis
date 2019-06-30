@@ -2,17 +2,17 @@
 
 ## Master Thesis in Data Science
 
-### Authors: Eduard Ribas Fernández, Peter Weber
+**Authors**: *Eduard Ribas Fernández*, *Peter Weber*
 
-### Advisor: Jordi Vitrià (Universidad de Barcelona), Marco Bressan (Satellogic)
+**Advisor**: *Jordi Vitrià* (Universidad de Barcelona), *Marco Bressan* (Satellogic)
 
 A high-level summary of this work can be found in this [notebook](Notebooks/thesis_article.ipynb).
 
-# Data
+## Data
 
 The datasets can be accessed in this [Google Drive folder](https://drive.google.com/open?id=1Hjod1ZTuSIW3VNO2IuGoq_iagI3imnJQ).
 
-# Notebooks
+## Notebooks
 
 These notebooks provide a more detailed view on the steps performed in the individual chapters of this master thesis:
 

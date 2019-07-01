@@ -6,7 +6,7 @@
 
 **Advisor**: *Jordi Vitrià* (Universidad de Barcelona), *Marco Bressan* (Satellogic)
 
-A high-level summary of this work can be found in this [notebook](Notebooks/thesis_article.ipynb).
+A high-level summary of this work can be found in this [notebook](article/thesis_article.ipynb) [pdf](article/thesis_article.pdf).
 
 ## Data
 

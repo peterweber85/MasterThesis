@@ -8,6 +8,8 @@ images_test/*
 data/*
 Models/*
 
+article/.ipynb_checkpoints/
+
 report/*.aux
 report/*.log
 report/*.out

@@ -1,24 +1,25 @@
-% Chapter 1
 
-\chapter{Building datasets} % Main chapter title
+\chapter{The datasets} % Main chapter title
 
 \label{Chapter2} % For referencing the chapter elsewhere, use \ref{Chapter1} 
 
 %----------------------------------------------------------------------------------------
 
-In this chapter, we will give an overview of existing annotated aerial imagery datasets and outline the reasons why none of them is suitable for our investigation. Following this discussion, we will describe two approaches for obtaining our own labelled dataset.
+In this chapter we will give an overview of existing annotated aerial imagery datasets and outline the reasons why none of them is suitable for our investigation. Following this discussion, we will describe two approaches for obtaining our own labeled dataset.
 
 \section{Requirements and considerations}
 
-Before we go into the presentation of labeled datasets we discuss the requirements that the dataset needs to fulfill in order to serve for the investigation in this thesis project. As a refresher, we want to detect human impact on aerial images and determine the dependency on resolution per pixel of a chosen evaluation metric. Ideally, the range for the resolutions should scale from a few tens of centimeters to a few tens of meters, whereas the images with low resolution can be generated from the high resolution images by downsampling. Having in mind previous arguments, we mainly need to consider three aspects. 
+Before we go into the presentation of labeled datasets we discuss the requirements that the dataset needs to fulfill in order to serve for the investigation in this thesis project. As already introduced, we want to detect human impact on aerial images and determine the dependency on resolution per pixel of a chosen evaluation metric. Ideally, the range for the resolutions should scale from a few tens of centimeters to a few tens of meters, whereas the images with low resolution can be generated from the high resolution images by downsampling. With this in mind, we mainly need to consider three aspects for the dataset.
 
-First, we need to have imagery data with labels that can be used to clearly distinguish between existing and non-existing human impact, respectively. This impact might be classified pixel wise, or as binary classification for the entire image, or as multi-class classification that can be translated into binary labelling. Second, we need a balanced dataset of approximately the same number of images for both classes, and a large variety of different terrains within each class. Third, the images need to have a resolution per pixel which is equal or better than 1m. Also, the height and width of the images should measure at least $500\times500$ pixels, so that one has enough room for downsampling. 
+First, we need to have imagery data with labels that can be used to clearly distinguish between existing and non-existing human impact, respectively. This impact might be classified pixel wise, or as binary classification for the entire image, or as multi-class classification that can be translated into binary labeling. 
+
+Second, we need a balanced dataset of approximately the same number of images for both classes, and a large variety of different terrains within each class. 
+
+Finally, the images need to have a resolution per pixel which is equal or better than 1m. Also, the height and width of the images should measure at least $500\times500$ pixels, so that one has enough room for downsampling. 
 
 \section{Existing datasets}
 
-In table \ref{table:datasets} we have summarized the most relevant remote sensing datasets with ground truth labels that can be found in literature. The datasets were collected using different publicly available data sources. These range from pure low-resolution satellite imagery (Sentinel-2) to high-resolution images taken with an aircraft (USGS) to a mix of different image sources (Google Earth). 
-
-The satellite images have a resolution of equal or larger than 10m and they are collected with the Sentinel-2 satellites of the European earth observation program Copernicus. Although the datasets from this source (BigEarthNet and EuroSat) are comparatively large, they do not suffice for our purpose, because the resolution is not good enough and the images are too small.
+In table \ref{table:datasets} we summarize the most relevant remote sensing datasets with ground truth labels that can be found in literature. The datasets were collected using different publicly available data sources. These range from pure low-resolution satellite imagery (Sentinel-2) to high-resolution images taken with an aircraft (USGS\footnote{United States Geological Survey}) to a mix of different image sources (Google Earth). 
 
 \begin{table}[h!]
 	\begin{tabular}{l | l | l | l | l | l }
@@ -36,79 +37,48 @@ The satellite images have a resolution of equal or larger than 10m and they are 
 	\label{table:datasets}	
 \end{table}
 
+The satellite images have a resolution of equal or larger than 10m and they are collected with the Sentinel-2 satellites of the European earth observation program Copernicus. Although the datasets from this source (BigEarthNet and EuroSat) are comparatively large, they do not suffice for our purpose, because the resolution is not good enough and the images are too small.
+
 The USGS National Map Urban Area Imagery collection \parencite{usgs} was utilized to collect remote sensing datasets in the two works UCMerced and DeepSat, where the former is the dataset that comes closest to our requirements. It features an image resolution of 0.3m per pixel, and the images have a height and width of 256 pixels. However, out of the 21 categories only 2 belong to images without human impact, while the other 19 show man-made structures. The DeepSat dataset unfortunately consists of image patches which are only $28 \times 28$ large, so that we aren't able to study these images as function of resolution.
 
-The datasets using Google Earth as data source are collected using either the Google Earth or the Google Maps application programming interface (API). These images vary in resolution as well as in their original data provider since Google accesses several data sources. 
-Both datasets, the AID and the PatternNet dataset, have about 30 categories with several hundred images in each category. Here, different categories have different pixel resolutions, and again most of the categories relate to urban areas so that we do not have sufficient images without human impact. Even the categories that in principle should not show human influence contain images that break this rule.
+The datasets using Google Earth as data source are collected using either the Google Earth or the Google Maps application programming interface (API). These images vary in resolution as well as in their original data provider since Google accesses several data sources. Both datasets (AID and PatternNet) have about 30 categories with several hundred images in each category. Here, different categories have different pixel resolutions, and again most of the categories relate to urban areas so that we do not have sufficient images without human impact. Even the categories that in principle should not show human influence contain images that break this rule.
 
-Overall, the main issue with these datasets stems from the fact that non of them was collected with the purpose to analyze the human footprint. Therefore they are very unbalanced, and do not contain sufficient variety of images for the classes without human influence. We hence decided to collect and label images by ourselves. In our first approach we used the Google Maps API, and in our final approach we used datasets from the USGS aerial imagery collection.
+Overall, the main issue with these datasets stems from the fact that non of them was collected with the purpose to analyze the human footprint. Therefore they are very unbalanced, and do not contain sufficient variety of images for the classes without human influence. We hence decided to collect and label images by ourselves. In our first attempt we used the Google Maps API, but we finally decided to use datasets from the USGS aerial imagery collection.
 
-\section{Google Maps}
+\section{Google Maps datasource}
 
-Google has a public API that allows for querying images from their service Google Maps \parencite{google_maps_api}. In its most basic form, the API accepts as input parameters a lattitude (lat) and longitude (lon), a zoom, and the image size (in pixels). Given this set of parameters one can calculate the resolution in meter per pixel \parencite{gmaps_res_per_m}, which is given by
+Google has a public API that allows for querying images from their service Google Maps \parencite{google_maps_api}. In its most basic form, the API accepts as input parameters a latitude (lat) and longitude (lon), a zoom, and the image size (in pixels). Given this set of parameters one can calculate the resolution in meter per pixel \parencite{gmaps_res_per_m}, which is given by
 \begin{equation}
 resolution \Big[\frac{meter}{pixel}\Big] = \frac{156543.03392 \cdot cos(\frac{lattitude \cdot \pi}{180})}{2 ^ {zoom}}.
 \label{eq:gmaps_res_per_m}
 \end{equation}
 
-Equipped with this toolkit, we developed an automated image download pipeline that was based on one of several approaches of selecting and downloading images in a given area. In our first approach we selected images that were Gaussian distributed around a center location defined by a set of lat/lon coordinates. We further provided a precision parameter (standard deviation of the Gaussian), the number of images to download, a list of zooms, the desired image size, and the number of pixels to crop from the border of the image in order to remove e.g. the Google logo. Another approach consisted in downloading randomly sampled locations from within a rectangle defined by its upper left and lower right lat/long coordinates, respectively.
+Then, we developed an automated pipeline to download several images from a given area, which was selected with different strategies, and for some desired resolutions. In our first approach, we selected images that were Gaussian distributed around a center location from a list of interesting latitude/longitude coordinates. Another way consisted in downloading randomly sampled locations from within a defined rectangle.
 
-Although any of these two approaches would have served to build a complete dataset in an automated fashion, we finally decided to use a different data source due to the following reasons. According to our advisor from Satellogic, Google Maps images have one major drawback regarding the pixel resolution. The Google Maps image is an interpolation from different spectral bands, where the RGB color bands do not necessarily have the expected resolution. Therefore, the resolution estimated by Eq.~\ref{eq:gmaps_res_per_m} is not reliable for the three color channels. We did not further investigate into this issue and instead turned to a different solution, which is discussed next.
+Although any of these approaches would have served to build a complete dataset in an automated fashion, we finally decided to use a different data source. According to advises from Satellogic, Google Maps images have one major drawback regarding the pixel resolution: the images there are an interpolation from different spectral bands, where the RGB color bands do not necessarily have the expected resolution. Therefore, the resolution estimated by Eq.~\ref{eq:gmaps_res_per_m} is not reliable for the three color channels. We did not further investigate into this issue and instead turned to a different solution, which is discussed next.
 
+\section{USGS datasource}
 
+\subsection{Getting the images}\label{usgs_data}
 
-\section{USGS land cover}
+To be able to construct a balanced and representative dataset we were recommended to focus on images of the United States, because of the wealth of available high resolution aerial imagery data from USGS Earthexplorer \parencite{usgs}. A nice side effect of choosing the United States is that a large variety of images of different terrain and topology are available. We combined the aerial imagery datasets from USGS with additional information about land cover and land use from the USGS Land Cover Viewer \parencite{land_cover_viewer}, precisely to guarantee larger variety through the selection of data from distinct land use categories.
 
-\subsection{Getting the data}\label{usgs_data}
-To be able to construct a balanced and representative dataset we were recommended to focus on images of the United States, 
-because of the wealth of available high resolution aerial imagery data from USGS Earthexplorer \parencite{usgs}. A nice side effect of choosing the United States is that a large variety of images of different terrain and topology are available. We combined the aerial imagery datasets from USGS with additional information about land cover and land use from the USGS Land Cover Viewer \parencite{land_cover_viewer}, precisely to guarantee larger variety through the selection of data from distinct land use categories.
+For the determination of relevant geographic locations we excluded cities and highly developed urban areas, and instead focused on unpopulated areas. Specifically, we limited our image search to the four land use categories \textbf{agriculture}, \textbf{shrubland-grassland}, \textbf{semi-desert}, and \textbf{forest-woodland} that can be found in the USGS Land Cover Viewer. Note that these categories served as a rough geographic orientation to pin down geolocations of interest, because not all the images could be assigned with absolute certainty to one unique category. 
+
+Whenever possible, we also tried to collect images from both classes (man-made vs. natural) within a given area/terrain. Additionally, we selected many images from national parks because we found that it is significantly harder to find imagery data that does not show human influence.
+
+Once an area was pointed out as a region of interest using the USGS Land Cove Viewer, we located it on USGS Earthexplorer and downloaded images from that area. In particular, we constructed two datasets with 0.3m and 1m resolution, respectively. The former was taken from the category High Resolution Orthoimagery and the latter from the category National Agriculture Imagery Program (NAIP). Note that the images in these categories usually have a height and a width of several thousand pixels, and hence occupy a few hundreds of Megabytes of disk space. We then cropped smaller images from the raw images, which will be discussed in more detail in the following section. Overall, we downloaded around 100 raw images for each dataset. An example of one of these images is shown in Figure \ref{fig:example-unproc}.
 
 \begin{figure}[h!]
 	\centering
 	\captionsetup{width=1\linewidth}
-	\includegraphics[width=1\textwidth]{Figures/example_unproc.pdf}
-	\caption{\textbf{Example of unprocessed image.} This image has a size of $5000\times5000$ pixels. The continuous white lines are guidelines for the eye to demonstrate how we crop smaller images where we only return a cropped image from the white squares with size $512\times512$ pixels.}
+	\includegraphics[width=0.95\textwidth]{Figures/example_unproc.pdf}
+	\caption{\textbf{Example of unprocessed image.} This image has a size of $5000\times5000$ pixels. The continuous white lines show how we crop smaller images of size $512\times512$ pixels from the original one.}
 	\label{fig:example-unproc}
 \end{figure}
 
-For the determination of relevant geographic locations we excluded cities and highly developed urban areas, and instead focussed on unpopulated areas. Specifically, we limited our image search to the four land use categories agriculture, shrubland-grassland, semi-desert, and forest-woodland that can be found in the USGS Land Cover Viewer. Note that these categories served as a rough geographic orientation to pin down geolocations of interest. However not all the images could be assigned with absolute certainty to one unique category since we were not able to overlay both maps. Further, we selected many images from national parks because we found that it is significantly harder to find imagery data that does not show human influence. Whenever possible we also tried to collect images from both classes (man-made vs. natural) within a given area/terrain.
-
-\begin{figure}[h!]
-	\centering
-	\captionsetup{width=1\linewidth}
-	\includegraphics[width=1\textwidth]{Figures/agriculture_sample.pdf}
-	\caption{\textbf{Example images of category Agricultue.} All images in this figure show clear signs of human impact. The images have a size of $512\times512$ pixels and a resolution of $0.3$m per pixel.}
-	\label{fig:agriculture_sample}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\captionsetup{width=1\linewidth}
-	\includegraphics[width=1\textwidth]{Figures/shrubland-grassland_sample.pdf}
-	\caption{\textbf{Example images of category shrubland-grassland.} The images in the first row do not contain any human influence, while the images in the second row show man-made structures. The images in this figure have a size of $512\times512$ pixels and a resolution of $0.3$m per pixel.}
-	\label{fig:shrubland-sample}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\captionsetup{width=1\linewidth}
-	\includegraphics[width=1\textwidth]{Figures/forest-woodland_sample.pdf}
-	\caption{\textbf{Example images of category forest-woodland.} The images in the first row do not contain any human influence, while the images in the second row show man-made structures. The images in this figure have a size of $512\times512$ pixels and a resolution of $0.3$m per pixel.}
-	\label{fig:forest-sample}
-\end{figure}
-
-\begin{figure}[h!]
-	\centering
-	\captionsetup{width=1\linewidth}
-	\includegraphics[width=1\textwidth]{Figures/semi-desert_sample.pdf}
-	\caption{\textbf{Example images of category semi-desert.} The images in the first row do not contain any human influence, while the images in the second row show man-made structures. The images in this figure have a size of $512\times512$ pixels and a resolution of $0.3$m per pixel.}
-	\label{fig:desert-sample}
-\end{figure}
-
-Once an area was pointed out as a region of interest using the USGS Land Cove Viewer, we located it on USGS Earthexplorer and downloaded images from that area. In particular, we constructed two datasets with 0.3m and 1m resolution, respectively. The former was taken from the category High Resolution Orthoimagery and the latter from the category National Agriculture Imagery Program (NAIP). Note that the images in these categories usually have a height and a width of several thousand pixels, and hence occupy a few hundreds of Megabytes of disk space. We cropped smaller images out of the raw images, which will be discussed in more detail in the following section. Overall, we downloaded about 100 raw images for each dataset. An example is shown in Fig.~\ref{fig:example-unproc}.
-
-
 \subsection{Data processing and labeling}
+
 Our data processing pipeline consists of the following steps:
 \begin{enumerate}
 	\item Download large raw images.
@@ -117,9 +87,9 @@ Our data processing pipeline consists of the following steps:
 	\item Degrade images i.e. reduce number of pixels and thereby resolution per pixel.
 \end{enumerate}
 
-Let us discuss each of these steps in more detail. An illustration of the first and second step of the image processing pipeline is given in Fig.~\ref{fig:example-unproc}. The white lines demonstrate the way we crop smaller images ($512\times512$ pixels) from the large raw image (in this case $5000\times5000$ pixels). We process all raw images in this manner, which yields approximately 80-150 processed images per raw image. We hence obtain about 10,000 processed images for each dataset. Within each category (USGS Land Cover categories) of the processed images we labeled a selected portion of the images by moving them into the folder with the respective label name. 
+Let us discuss each of these steps in more detail. An illustration of the first and second step of the image processing pipeline is given in Fig.~\ref{fig:example-unproc}. The white lines demonstrate the way we crop smaller images ($512\times512$ pixels) from the large raw image (in this case $5000\times5000$ pixels). We process all raw images in this manner, which yields approximately 80-150 processed images per raw image. We hence obtain about 10,000 processed images for each dataset. Then, within each category of the processed images we label a selected portion of the images by distributing the files into folders with the respective label name. 
 
-We have published our datasets via a Google Drive link \parencite{datasets}. The image folder of the published datasets contains the raw images, the processed images, and the labeled images. In this folder we follow a specific folder structure, which is shown below. Here pointy brackets (<parameter>) indicate a parameter and the content in the optional curly braces determines whether it is a folder pertaining to raw images. The first parameter is $pixels = 512$ and the second parameter represents the resolution of the dataset. Note that the label folders only exist in the case of processed images.
+We have published our datasets via a Google Drive link \parencite{datasets}. The image folder of the published datasets contains the raw images, the processed images, and the labeled images. In this folder we follow a specific folder structure, which is shown below. Here, pointy brackets (<parameter>) indicate a parameter and the content in the optional curly braces determines whether it is a folder pertaining to raw images. The first parameter is $pixels = 512$ and the second parameter represents the resolution of the dataset. Note that the label folders only exist in the case of processed images.
 \vspace{10px}
 \dirtree{%
 	.1 \{raw-images-\}usgs-<pixels>-res<resolution>m.
@@ -139,7 +109,52 @@ We have published our datasets via a Google Drive link \parencite{datasets}. The
 	.3 label-2.
 }
 \vspace{10px}
-Annotating the images with labels was performed following certain rules. First, we classified images with no human impact at all into the class with label zero,  while we classified images with clear human influence into the class with label two. Ambigious images i.e. images with minimal human traces, such as a small walking path, were classified into class one. Second, we've put major effort into creating datasets that contain images of similar texture spread across all classes. If we for example classified a set of images of a certain forest type into class zero we classified another set of images with a similar forest type, but containing a building or a street, into the class two. We followed the latter rule for all categories except agriculture. The agriculture images all show human influence. We therefore classified them all with label two. By sticking to these rules, we are able to guarantee that the algorithm learns features that relate to the appearance of man-made structures, and not to image artefacts such as color or texture.
+
+Annotating the images with labels was performed following certain rules, to ensure consistency and variety across the whole dataset.
+
+First, we classified images with no human impact at all into the class with label zero, while we classified images with clear human influence into the class with label two. Ambiguous images i.e. images with minimal human traces, such as a small walking path, were classified into class one.
+
+Also, we put major effort into creating datasets that contain images of similar texture spread across all classes. If we for example classified a set of images of a certain forest type into class zero we classified another set of images with a similar forest type, but containing a building or a street, into the class two. We followed the latter rule for all categories except for agriculture, as all images actually show human influence, and therefore classified all of them with label two. 
+
+By sticking to these rules, we are able to guarantee that the algorithm learns features that relate to the appearance of man-made structures, and not to image artifacts such as color or texture.
+
+\
+
+Figures \ref{fig:agriculture_sample} - \ref{fig:desert-sample} display sample images for each of the four categories, repsectively. These images belong to the dataset that has a pixel resolution of 0.3m. The images from the 1m dataset have similar characteristics, but are not shown due to redundancy. Note that in Figs. \ref{fig:shrubland-sample} - \ref{fig:desert-sample} the first row represents images of label zero and the second row shows images that belong to label two. As mentioned above, the images in Fig.~\ref{fig:agriculture_sample} (agriculture) all contain human influence, and therefore belong to class two. 
+
+\begin{figure}[H]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/agriculture_sample.pdf}
+	\caption{\textbf{Example images of category Agriculture.} All images in this figure show clear signs of human impact. The images have a size of $512\times512$ pixels and a resolution of $0.3$m per pixel.}
+	\label{fig:agriculture_sample}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/shrubland-grassland_sample.pdf}
+	\caption{\textbf{Example images of category shrubland-grassland.} The images in the first row do not contain any human influence, while the images in the second row show man-made structures. The images in this figure have a size of $512\times512$ pixels and a resolution of $0.3$m per pixel.}
+	\label{fig:shrubland-sample}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/forest-woodland_sample.pdf}
+	\caption{\textbf{Example images of category forest-woodland.} The images in the first row do not contain any human influence, while the images in the second row show man-made structures. The images in this figure have a size of $512\times512$ pixels and a resolution of $0.3$m per pixel.}
+	\label{fig:forest-sample}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\captionsetup{width=1\linewidth}
+	\includegraphics[width=1\textwidth]{Figures/semi-desert_sample.pdf}
+	\caption{\textbf{Example images of category semi-desert.} The images in the first row do not contain any human influence, while the images in the second row show man-made structures. The images in this figure have a size of $512\times512$ pixels and a resolution of $0.3$m per pixel.}
+	\label{fig:desert-sample}
+\end{figure}
+
+The distribution of categories and labels is shown in Fig.~\ref{fig:imstats}. Overall, for the 0.3m dataset we classified about 2200 images, and for the 1m dataset we classified about 1450 images. Our main goal consisted in creating a balanced dataset between label zero and label two as can be seen from the distributions. A minority of images, roughly $10\%$ of all annotated images were assigned to label one. These images were used at random to investigate the behaviour of the Machine Learning classifier, which is discussed in chapter~\ref{Chapter5}.
 
 \begin{figure}[h!]
 	\centering
@@ -148,10 +163,6 @@ Annotating the images with labels was performed following certain rules. First, 
 	\caption{\textbf{Number of images per category and label.} (a) Distribution of images for dataset with resolution of 0.3m per pixel. (b) Distribution of images for dataset with resolution of 1m per pixel.}
 	\label{fig:imstats}
 \end{figure}
-
-In Figures \ref{fig:agriculture_sample} - \ref{fig:desert-sample} we display sample images for each of the four categories, repsectively. These images belong to the dataset that has a pixel resolution of 0.3m. The images from the 1m dataset have similar characteristics, but are not shown due to redundancy. Note that in Figs. \ref{fig:shrubland-sample} - \ref{fig:desert-sample} the first row represents images of label zero and the second row shows images that belong to label two. As mentioned above, the images in Fig.~\ref{fig:agriculture_sample} (agriculture) all contain human influence, and therefore belong to class two. 
-
-The distribution of categories and labels is shown in Fig.~\ref{fig:imstats}. Overall, for the 0.3m dataset we classified about 2200 images, and for the 1m dataset we classified about 1450 images. Our main goal consisted in creating a balanced dataset between label zero and label two as can be seen from the distributions. A minority of images, roughly $10\%$ of all annotated images were assigned to label one. These images were used at random to investigate the behaviour of the Machine Learning classifier, which is discussed in chapter~\ref{Chapter5}.
 
 \begin{figure}[h!]
 	\centering

@@ -5,18 +5,8 @@
 \label{Chapter3} % For referencing the chapter elsewhere, use \ref{Chapter1} 
 
 %----------------------------------------------------------------------------------------
-% Define some commands to keep the formatting separated from the content 
-%\newcommand{\keyword}[1]{\textbf{#1}}
-%\newcommand{\tabhead}[1]{\textbf{#1}}
-%\newcommand{\code}[1]{\texttt{#1}}
-%\newcommand{\file}[1]{\texttt{\bfseries#1}}
-%\newcommand{\option}[1]{\texttt{\itshape#1}}
 
 In this chapter, we will provide a short overview of the theoretical concepts and recent advances in the Deep Learning field. We will give a basic introduction to Neural Networks, and discuss Convolutional Neural Networks in more detail as these are the type of algorithms utilized in this work. We further will summarize some of the most popular Convolutional Neural Network architectures.
-
-
-
-%----------------------------------------------------------------------------------------
 
 \section{Introduction to Deep Learning}
 
@@ -58,11 +48,6 @@ Also theoretical advances helped to eliviate the difficulties to train Deep Lear
 \section{Convolutional Neural Networks}
 Convolutional Neural Networks \parencite{vaillant1993, lecun1998} are specifically designed to process input data that has the shape of multiple arrays, such as the pixel values of a 2-dimensional image with three color channels. This is accomplished by using additional layers to preserve spatial structure. In general, a CNN is composed of several convolutional layers followed by a nonlinearity. These are often followed by a pooling layer, and a fully connected layer is used as the last layer of the network. The architecture of a small VGG convolutional net \parencite{simonyan2014}  used for classification is shown in Fig.~\ref{fig:convnet}.
 
-With this design, CNNs take advantage of the natural properties of images. The central element here is the convolutional layer, which takes into account that local pixel values are highly correlated, and that the local statistics of images are invariant to translation \parencite{lawrence1997}. In particular, in a convolutional layer several small filters are slided spatially over the image computing dot products at every spatial location. The filters always extend the full depth of the input volume. For instance, a typical filter for a 3 color channel image might have dimensions $5 \times 5 \times 3$. Sliding this filter over an image of size, say  $32\times32\times3$, would lead to an activation map with dimensions $28\times28\times1$. 
-
-The activation map is produced with one set of weights that belong to this particular filter. This concept is referred to as shared weights, which means that a comparatively small number of weights is shared across the entire image. As it is the case with conventional Neural Networks the weights, or parameters, are learned by applying gradient descent and backprogagation.  The number of parameters per filter is given by the spatial filter size, times the depth of the image plus a bias term. In the usual case of having multiple filters K the number of parameters is multiplied by K, which yields K activation maps. Each of these activation maps relates to one particular feature in the image where a spatial location in the activation map corresponds to the same spatial location in the input image (see Fig.~\ref{fig:convnet}(a)). 
-
-
 \begin{figure}[h!]
 	\centering
 	\captionsetup{width=1\linewidth}
@@ -71,11 +56,9 @@ The activation map is produced with one set of weights that belong to this parti
 	\label{fig:convnet}
 \end{figure}
 
-The dimensions of the output of every convolutional layer are controlled by three parameters: the stride S, zero-padding P, and the number of filters with size F. The stride is the interval at which the filter is slided over the image. Zero-padding has the porpuse to increase the image size by adding pixels with zero value at the border, so that the input and output dimensions can be matched (assuming stride is 1). For an input image of size W the output activation map will have
-\begin{equation}
-\frac{W - F +2P}{S} + 1
-\end{equation}
-pixels along every dimension. 
+With this design, CNNs take advantage of the natural properties of images. The central element here is the convolutional layer, which takes into account that local pixel values are highly correlated, and that the local statistics of images are invariant to translation \parencite{lawrence1997}. In particular, in a convolutional layer several small filters are slided spatially over the image computing dot products at every spatial location. The filters always extend the full depth of the input volume. For instance, a typical filter for a 3 color channel image might have dimensions $5 \times 5 \times 3$. Sliding this filter over an image of size, say  $32\times32\times3$, would lead to an activation map with dimensions $28\times28\times1$. 
+
+The activation map is produced with one set of weights that belong to this particular filter. This concept is referred to as shared weights, which means that a comparatively small number of weights is shared across the entire image. As it is the case with conventional Neural Networks the weights, or parameters, are learned by applying gradient descent and backprogagation.  The number of parameters per filter is given by the spatial filter size, times the depth of the image plus a bias term. In the usual case of having multiple filters K the number of parameters is multiplied by K, which yields K activation maps. Each of these activation maps relates to one particular feature in the image where a spatial location in the activation map corresponds to the same spatial location in the input image (see Fig.~\ref{fig:conv_pooling}(a)). 
 
 \begin{figure}[h!]
 	\centering
@@ -85,6 +68,12 @@ pixels along every dimension.
 }
 	\label{fig:conv_pooling}
 \end{figure}
+
+The dimensions of the output of every convolutional layer are controlled by three parameters: the stride S, zero-padding P, and the number of filters with size F. The stride is the interval at which the filter is slided over the image. Zero-padding has the porpuse to increase the image size by adding pixels with zero value at the border, so that the input and output dimensions can be matched (assuming stride is 1). For an input image of size W the output activation map will have
+\begin{equation}
+\frac{W - F +2P}{S} + 1
+\end{equation}
+pixels along every dimension. 
 
 Pooling layers introduce coarse-graining in order to create invariance to small shifts and to decrease the number of parameters, which makes the representations smaller and more manageable. A pooling layer is applied to every activation map independently. It downsamples its input, in the most common case, by applying a max operator. This is shown schematically in Fig.~\ref{fig:conv_pooling}(b). Note that pooling layers don't have any parameters.
 
@@ -96,7 +85,7 @@ The AlexNet was the first convolutional Neural Network that achieved remarkable 
 \begin{figure}[h!]
 	\centering
 	\captionsetup{width=1\linewidth}
-	\includegraphics[width=0.85\textwidth]{Figures/imagenet_evolution.png}
+	\includegraphics[width=0.8\textwidth]{Figures/imagenet_evolution.png}
 	\caption{Top-5 test error of the winning solutions of the ImageNet Large Scale Visual Recognition Challenge through years 2010 to 2015. Figure is adapted from \parencite{ilsvrc2015}.}
 	\label{fig:imagenet}
 \end{figure}

@@ -26,3 +26,9 @@ report/Appendices/*.bak
 report/Chapters/*.aux
 report/Chapters/*.bak
 report/Chapters/*.log
+
+presentation/*
+!presentation/*.tex
+!presentation/*.pdf
+!presentation/*.bib
+!presentation/data/*
